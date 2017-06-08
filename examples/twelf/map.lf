@@ -1,0 +1,11 @@
+nat : type.
+z : nat.
+s : nat -> nat.
+
+list : type.
+nil : list.
+cons : nat -> list -> list.
+
+mapFun : (nat -> nat) -> list -> list -> type.
+mapNil : mapFun F nil nil.
+mapCons : mapFun F L1 L2 -> mapFun F (cons X L1) (cons (F X) L2).

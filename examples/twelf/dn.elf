@@ -1,0 +1,200 @@
+%{
+
+== Intuitionistic logic ==
+
+}%
+
+iprop : type.  %name iprop A'.
+
+itop : iprop.
+iand : iprop -> iprop -> iprop.
+ibot : iprop.
+ior  : iprop -> iprop -> iprop.
+iimp : iprop -> iprop -> iprop.
+
+%block ipb : block {X : iprop}.
+%worlds (ipb) (iprop).
+
+itrue : iprop -> type.
+
+imt : itrue itop.
+ipair : itrue A -> itrue B -> itrue (iand A B).
+ifst : itrue (iand A B) -> itrue A.
+isnd : itrue (iand A B) -> itrue B.
+iabort : itrue ibot -> itrue C.
+iinl  : itrue A -> itrue (ior A B). 
+iinr  : itrue B -> itrue (ior A B). 
+icase : itrue (ior A B) -> (itrue A -> itrue C) ->  (itrue B -> itrue C) -> itrue C.
+ilam  : (itrue A -> itrue B) -> itrue (iimp A B).
+iapp  : itrue (iimp A B) -> itrue A -> itrue B.
+
+inot : iprop -> iprop = [A] iimp A ibot.
+idn : iprop -> iprop = [A] (inot (inot A)).
+
+dni : itrue A -> itrue (idn A) =
+ [x : itrue A] (ilam [y : itrue (inot A)] (iapp y x)).
+
+tne : itrue (idn (inot A)) -> itrue (inot A) =
+ [x3 : itrue (inot (inot (inot A)))] 
+   ilam [x : itrue A] 
+     iapp x3 (ilam [y : itrue (inot A)] (iapp y x)).
+
+distdnand : itrue (idn (iand A B)) -> itrue (iand (idn A) (idn B)) =
+ [f] (ipair 
+	(ilam [x : itrue (inot A)] iapp f (ilam [p] iapp x (ifst p)))
+	(ilam [x : itrue (inot B)] iapp f (ilam [p] iapp x (isnd p)))
+	).
+
+dnebot : itrue (idn ibot) -> itrue ibot = [x] iapp x (ilam [x] x).
+%abbrev dnetop : itrue (idn itop) -> itrue itop = [x] imt.
+
+distdnimp : itrue (idn (iimp A B)) -> itrue (iimp (idn A) (idn B)) =
+ [f] (ilam [x : itrue (idn A)] 
+	(ilam [y : itrue (inot B)] 
+	   iapp f 
+	   (ilam [g : itrue (iimp A B)]
+	      iapp x (ilam [z : itrue A] iapp y (iapp g z))))). 
+
+%block itb : some {A : iprop} block {D : itrue A}.
+%worlds (ipb | itb) (itrue _). 
+
+
+%{
+
+== Classical logic ==
+
+}%
+
+prop : type.  %name prop A.
+
+top : prop.
+and : prop -> prop -> prop.
+bot : prop.
+or  : prop -> prop -> prop.
+imp : prop -> prop -> prop.
+nbot : prop.
+not : prop -> prop.
+
+%block pb : block {X : prop}.
+%worlds (pb) (prop).
+
+conc : type.
+true  : prop -> conc. %prefix 2 true.
+false : prop -> conc. %prefix 2 false.
+contra : conc. 
+
+>> : conc -> type.  %prefix 3 >>.
+
+mt : >> true top.
+pair : >> true A -> >> true B -> >> true (and A B).
+fst : >> true (and A B) -> >> true A.
+snd : >> true (and A B) -> >> true B.
+abort : >> true bot -> >> J.
+inl  : >> true A -> >> true (or A B). 
+inr  : >> true B -> >> true (or A B). 
+case : >> true (or A B) -> (>> true A -> >> J) ->  (>> true B -> >> J) -> >> J.
+lam  : (>> true A -> >> true B) -> >> true (imp A B).
+app  : >> true (imp A B) -> >> true A -> >> true B.
+
+%% anything follows from contradiction
+cabort : >> contra -> >> J.
+
+%% negative bottom
+nboti : >> contra -> >> true nbot.
+nbote : >> true nbot -> >> contra.
+
+%% falsehood
+cont  : (>> true A -> >> contra) -> >> false A.
+throw : >> false A -> >> true A -> >> contra.
+
+%% negation
+noti    : >> false A -> >> true (not A).
+notcase : >> true (not A) -> (>> false A -> >> J) -> >> J.                                       %% because not should be positive
+
+%% letcc
+letcc : (>> false A -> >> contra) -> >> true A.
+
+%block tb : some {A : prop} block {D : >> true A}.
+%block fb : some {A : prop} block {D : >> false A}.
+%worlds (pb | tb | fb) (>> _).
+
+iff  : prop -> prop -> prop = [A] [B] (and (imp A B) (imp B A)).
+iffi : (>> true A -> >> true B) -> (>> true B -> >> true A) -> (>> true (iff A B)) 
+ = [E1] [E2] (pair (lam E1) (lam E2)).
+iffel : (>> true (iff A B)) -> (>> true A -> >> true B) 
+ = [E1] [E2] (app (fst E1) E2).
+iffer : (>> true (iff A B)) -> (>> true B -> >> true A) 
+ = [E1] [E2] (app (snd E1) E2).
+
+cdni : >> true A -> >> true (not (not A)) =
+[x] (noti (cont [nx] (notcase nx [f] throw f x))).
+
+cdne : >> true (not (not A)) -> >> true A =
+[x] notcase x ([f] letcc [u] throw f (noti u)).
+
+notimpbot : >> true (iff A B) -> >> true (iff (not A) (imp B bot)) =
+[c] (iffi 
+       ([x] notcase x ([f] (lam [y] (cabort (throw f (iffer c y))))))
+       ([x] noti (cont [y] abort (app x (iffel c y))))).
+
+notimpbot2 : >> true (iff (not (not A)) (imp (imp A bot) bot)) =
+notimpbot (notimpbot (iffi ([x] x) ([x] x))).
+   
+%{
+
+== Double-negation translation ==
+
+This is essentially the 
+[http://en.wikipedia.org/wiki/G%C3%B6del%E2%80%93Gentzen_negative_translation Godel-Gentzen Negtive Translation].
+It differs only by De Morgan laws that are provable intuitionistically.  
+}%
+
+* : prop -> iprop -> type.
+%mode * +A -A'.
+
+*/top : * top itop.
+*/and : * (and A B) (iand A' B')
+	 <- * A A'
+	 <- * B B'.
+*/bot : * bot ibot.
+*/or : * (or A B) (inot (inot (ior A' B')))
+	 <- * A A'
+	 <- * B B'.
+*/imp : * (imp A B) (iimp A' B')
+	 <- * A A'
+	 <- * B B'.
+*/nbot : * nbot ibot.
+*/not  : * (not A) (inot A')
+	  <- * A A'.
+
+%block *b : block {X : prop} {X' : iprop} {_ : * X (inot (inot X'))}.
+%worlds (*b) (* _ _).
+%total A (* A _).
+%unique * +A -1A'.
+
+*tot : {A} * A A' -> type.
+%mode *tot +A -D*.
+
+%block *totb : block {X : prop} {X' : iprop} {D* : * X (idn X')} {_ : *tot X D*}.
+%worlds (*totb) (*tot _ _).
+%trustme %total {} (*tot _ _).  %% verified by %total above
+
+id-iprop : iprop -> iprop -> type.
+id-iprop/refl : id-iprop A A.
+
+id-iprop-not-cong : id-iprop A' B' -> id-iprop (inot A') (inot B') -> type.
+%mode id-iprop-not-cong +X1 -X2.
+- : id-iprop-not-cong _ id-iprop/refl.
+%worlds (ipb) (id-iprop-not-cong _ _).
+%total {} (id-iprop-not-cong _ _).
+
+*unique : * A A' -> * A B' -> id-iprop A' B' -> type.
+%mode *unique +X1 +X2 -X3.
+%worlds (*b) (*unique _ _ _).
+%trustme %total {} (*unique _ _ _). %% verified by %unique above
+
+itrue-respects-id : itrue A -> id-iprop A' A -> itrue A' -> type.
+%mode itrue-respects-id +X1 +X2 -X3.
+- : itrue-respects-id D _ D.
+%worlds (itb | ipb) (itrue-respects-id _ _ _).
+%total {} (itrue-respects-id _ _ _).

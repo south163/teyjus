@@ -1,0 +1,16 @@
+tp : type.
+unit : tp.
+arrow : tp -> tp -> tp.
+
+tm : type.
+empty : tm.
+app : tm -> tm -> tm.
+lam : tp -> (tm -> tm) -> tm.
+
+of : {X1: tm}{X2 : tp}type.
+of_empty : of empty unit.
+of_lam : {T : tp}{T2 : tp}{E : tm -> tm}
+               ({X : tm} of X T2 -> of (E X) T) -> 
+               of (lam T2 ([V : tm] E V)) (arrow T2 T).
+of_app : {E1 : tm}{E2 : tm}{T : tp}{T2 : tp}
+               of E1 (arrow T2 T) -> of E2 T2 -> of (app E1 E2) T.
