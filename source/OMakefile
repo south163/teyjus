@@ -184,6 +184,7 @@ LF_ML[] =
     $(LF)/intmap
     $(LF)/lfabsyn
     $(LF)/lfsig
+    $(LF)/printLF
     $(LF)/tstream
     $(LF)/paths
     $(LF)/msg
