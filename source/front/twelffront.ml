@@ -4,6 +4,9 @@
 let inputName = ref ""
 let outputName = ref "top"
 
+(* we have different behavior in different OS *)
+let osSys = ref ""
+
 let setInputName ?(filter=(fun x -> x)) name =
   if !inputName = "" 
   then
@@ -46,10 +49,17 @@ let parse_args () =
 
 (* Compile and link the module before loading *)
 let compile_and_link () =
-  Sys.command "./tjcc top";
-  print_endline "compiled!";
-  Sys.command "./tjlink top";
-  print_endline "linked!"
+  if !osSys = "Win32"
+  then
+    (Sys.command ".\\source\\tjcc.opt top";
+     print_endline "compiled!";
+     Sys.command ".\\source\\tjlink.opt top";
+     print_endline "linked!")
+  else
+    (Sys.command "./tjcc top";
+     print_endline "compiled!";
+     Sys.command "./tjlink top";
+     print_endline "linked!")
 
 
 let string_of_sig kinds constants terms =
@@ -90,7 +100,8 @@ let output_files metadata signature modul =
   close_out out_mod        
 
 (** main *)
-let _ = 
+let _ =
+  let _ = osSys := Sys.os_type in
   let _ = print_string "tjtwelf started!\n" in
   let _ = parse_args () in
   let _ = checkInput () in
