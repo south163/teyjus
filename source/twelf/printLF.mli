@@ -19,3 +19,5 @@ val string_of_id : Lfabsyn.id -> string
 val string_of_term : Lfabsyn.term -> string
 val string_of_typ : Lfabsyn.typ -> string
 
+val pr_iterm : Lfabsyn.typefam Symboltable.table -> (Symb.symbol * int) Symboltable.table -> Format.formatter -> Lfabsyn.term -> unit
+val pt_ityp : Lfabsyn.typefam Symboltable.table -> (Symb.symbol * int) Symboltable.table -> Format.formatter -> Lfabsyn.typ -> unit

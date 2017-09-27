@@ -108,3 +108,44 @@ let string_of_term tm  =
 let string_of_typ ty =
   pr_typ Format.str_formatter ty;
   Format.flush_str_formatter ()
+
+
+(*** This set of functions is for printing implicit LF given  
+     particular type and object tables.                      ***)
+
+
+let rec pr_iterm types objmap ppf = function
+  | Lfabsyn.AbsTerm (id, ty, tm) ->
+      Format.fprintf ppf "@[<2>[@,%a@,:@,%a@,]@ %a@]"
+                     pr_id id (pr_ityp types objmap) ty (pr_iterm types objmap) tm
+  | Lfabsyn.AppTerm(id, tms) ->
+      Format.fprintf ppf "@[<hov 2>%a%a@]" pr_id id (pr_iterms types objmap) tms
+  | Lfabsyn.IdTerm(id) -> pr_id ppf id
+
+and pr_iterm' types objmap ppf = function
+  | Lfabsyn.IdTerm (id) -> pr_id ppf id
+  | t ->
+     Format.fprintf ppf "@[<2>(%a)@]" (pr_iterm types objmap) t
+                        
+and pr_iterms types objmap ppf l =
+  let rec f ppf = function
+    | (tm :: tms) ->
+        Format.fprintf ppf "@ %a%a" (pr_iterm' types objmap) tm f tms
+    | _ -> ()
+  in
+  f ppf l
+    
+and pr_ityp types objmap ppf = function
+  | Lfabsyn.PiType (id, tyl, tyr) ->
+      Format.fprintf ppf "@[<2>{@,%a@ :@ %a@,}@ %a@]"
+                     pr_id id (pr_ityp types objmap) tyl (pr_ityp types objmap) tyr
+  | Lfabsyn.ImpType (tyl, tyr) ->
+      Format.fprintf ppf "@[<hov 2>%a@ %a@ %a@]"
+                     (pr_ityp' types objmap) tyl kwd imp (pr_ityp types objmap) tyr
+  | Lfabsyn.AppType (id, tms) ->
+      Format.fprintf ppf "@[<hov 2>%a%a@]" pr_id id (pr_iterms types objmap) tms
+  | Lfabsyn.IdType (id) -> pr_id ppf id
+
+and pr_ityp' types objmap ppf = function
+  | Lfabsyn.IdType (id) -> pr_id ppf id
+  | t -> Format.fprintf ppf "@[<2>(%a)@]" (pr_ityp types objmap) t
