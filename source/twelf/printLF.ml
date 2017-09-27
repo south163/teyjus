@@ -1,9 +1,13 @@
 (* use ocaml formatting to print LF terms more nicely *)
 
 let imp = "->"
+let typekwd = "type"
 
 let kwd ppf s = Format.fprintf ppf "%s" s
 
+(*** These first functions will print explicit LF terms; they do not 
+     lookup any constants to remove implicit arguments               ***)
+  
 let pr_id ppf = function
   | Lfabsyn.Const (s) 
   | Lfabsyn.Var (s,_) 
@@ -29,7 +33,7 @@ and pr_terms ppf = function
 
 and pr_typ ppf = function
   | Lfabsyn.PiType (id, tyl, tyr) ->
-      Format.fprintf ppf "@[<hov 2>{@,%a@ :@ %a@,}@ %a@]"
+      Format.fprintf ppf "@[<2>{@,%a@ :@ %a@,}@ %a@]"
                      pr_id id pr_typ tyl pr_typ tyr
   | Lfabsyn.ImpType (tyl, tyr) ->
       Format.fprintf ppf "@[<hov 2>%a@ %a@ %a@]" pr_typ' tyl kwd imp pr_typ tyr
@@ -41,14 +45,60 @@ and pr_typ' ppf = function
   | Lfabsyn.IdType (id) -> pr_id ppf id
   | t -> Format.fprintf ppf "@[<2>(%a)@]" pr_typ t
 
+let rec pr_kind ppf = function
+  | Lfabsyn.PiKind (id, ty, k) ->
+      Format.fprintf ppf "@[<2>{@,%a@ :@ %a@,}@ %a@]"
+                     pr_id id pr_typ ty pr_kind k
+  | Lfabsyn.ImpKind (ty, k) ->
+      Format.fprintf ppf "@[<hov 2>%a@ %a@ %a@]" pr_typ' ty kwd imp pr_kind k
+  | Lfabsyn.Type -> Format.fprintf ppf "%a" kwd typekwd
+
+let pr_typefam ppf (Lfabsyn.TypeFam (id, k, _, _, _, _, _)) =
+  Format.fprintf ppf "@[<4>%a :@ %a@]" pr_id id pr_kind k
+
+let pr_obj ppf (Lfabsyn.Object (id, ty, _, _, _, _)) =
+  Format.fprintf ppf "@[<4>%a :@ %a@]" pr_id id pr_typ ty
+
+let pr_query ppf (Lfabsyn.Query (_, id, ty)) =
+  Format.fprintf ppf "@[<4>%a :@ %a@]" pr_id id pr_typ ty
 
 
-(*** use general formmatting functions to print to stdout ***)
+let rec pr_qvars ppf = function
+  | ((id,ty) :: vars) -> Format.fprintf ppf "<%a :@ %a>@," pr_id id pr_qvars vars
+  | _ -> ()
+    
+let pr_query_explicit ppf (Lfabsyn.Query (fvars, id, ty)) =
+  (** Print the logic variables along with their types **)
+  let rec pr_qvars ppf = function
+    | ((id,ty) :: vars) -> Format.fprintf ppf "%a :@ %a.@," pr_id id pr_qvars vars
+    | _ -> ()
+  in
+  Format.fprintf ppf "@[<4>@[<2>%a@]@,%a :@ %a@]" pr_qvars fvars pr_id id pr_typ ty
+
+let pr_subst ppf (id, tm) =
+  Format.fprintf ppf "@[<4>%a =@ %a@]" pr_id id pr_term tm
+
+let pr_dispr ppf (tml, tmr) =
+  Format.fprintf ppf "@[<4><%a,@ %a>@]" pr_term tml pr_term tmr
+
+let rec pr_substs ppf = function
+  | (s :: ss) -> Format.fprintf ppf "%a@,%a" pr_subst s pr_substs ss
+  | _ -> ()
+
+let rec pr_disprs ppf = function
+  | (d :: dd) -> Format.fprintf ppf "%a@,%a" pr_dispr d pr_disprs dd
+    
+let pr_solution ppf (subst, disprs) =
+  Format.fprintf ppf "@[<v 0>%a@,%a@]" pr_substs subst pr_disprs disprs
+
+  
+
+(* use general formmatting functions to print to stdout *)
 let print_id = pr_id Format.std_formatter 
 let print_term = pr_term Format.std_formatter 
 let print_typ = pr_typ Format.std_formatter 
 
-(*** use general formatting functions to generate a string ***)
+(* use general formatting functions to generate a string *)
 let string_of_id id =
   pr_id Format.str_formatter id;
   Format.flush_str_formatter ()
