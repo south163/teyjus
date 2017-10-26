@@ -25,3 +25,10 @@ let printName (n,i,pn) = pn
 
 let id (n,i,pn) = i
 
+let currentId = ref 0
+  
+let gen n =
+  let n' = n ^ (string_of_int (!currentId)) in
+  let _ = currentIf := !currentId + 1 in
+  symbol n'
+

@@ -1,21 +1,20 @@
 (** Descibes the abstract syntax representation for LF. *)
 
-
 val maxPrec : int
 val minPrec : int
 
 (** A type-level declaration. 
-    (constant name, kind, fixity, associativity, precedence,
+    (constant symbol, kind, fixity, associativity, precedence,
     associated object constants, # implicit elements) *)
-type typefam = TypeFam of (id * kind * fixity * assoc * int * (obj ref) list ref * int)
+type typefam = TypeFam of (Symb.symbol * kind * fixity * assoc * int * Symb.symbol list ref * int)
 
 (** An object-level declaration.
-    (constant name, type, fixity, associativity, precedence, # implicit arguments) *)
-and obj = Object of (id * typ * fixity * assoc * int * int)
+    (constant symbol, type, fixity, associativity, precedence, # implicit arguments) *)
+and obj = Object of (Symb.symbol * typ * fixity * assoc * int * int)
 
-and query = Query of (id * typ) list * id * typ
+and query = Query of (symb * typ) list * symb * typ
 
-and solution = (id * term) list * (term * term) list
+and solution = (symb * term) list * (term * term) list
 
 and fixity =
   Infix
@@ -29,25 +28,24 @@ and assoc =
 | Left
 
 and kind =
-  PiKind of (id * typ * kind)
-| ImpKind of (typ * kind)
+  PiKind of (Symb.symbol * typ * kind * bool)
 | Type 
 
 and typ =
-  PiType of (id * typ * typ)
+  PiType of (Symb.symbol * typ * typ * bool)
 | AppType of (id * term list)
-| ImpType of (typ * typ)
 | IdType of (id)
+| Unknown
 
 and term =
-  AbsTerm of (id * typ * term)
+  AbsTerm of (Symb.symbol * typ * term)
 | AppTerm of (id * term list)
 | IdTerm of (id)
 
 and id =
-| Const of (string)
-| Var of (string * typ) 
-| LogicVar of (string * typ)
+| Const of (Symb.symbol)
+| Var of (Symb.symbol * typ) 
+| LogicVar of (Symb.symbol * typ)
 
 val string_of_typefam : typefam -> string
 val string_of_obj : obj -> string
@@ -57,8 +55,10 @@ val string_of_term : term -> string
 val string_of_id : id -> string
 val string_of_query : query -> string
 val string_of_query' : query -> string
-val string_of_solution : typefam Symboltable.table -> (Symb.symbol * int) Symboltable.table-> solution -> string
+val string_of_solution : typefam Symboltable.table -> obj Symboltable.table-> solution -> string
 
+val get_id_symb : id -> Symb.symbol
+  
 val get_typefam_implicit : typefam -> int
 val get_obj_implicit : obj -> int
 

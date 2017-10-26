@@ -15,3 +15,5 @@ val printName : symbol -> string
 (** Returns the unique integer identifying the symbol. *)
 val id : symbol -> int
 
+(** Generate a new name from given string and create a symbol. *)
+val gen : string -> symbol
