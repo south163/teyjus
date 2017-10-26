@@ -19,6 +19,7 @@ val string_of_id : Lfabsyn.id -> string
 val string_of_term : Lfabsyn.term -> string
 val string_of_typ : Lfabsyn.typ -> string
 
+(*
 val pr_iterm : Lfabsyn.typefam Symboltable.table -> (Symb.symbol * int) Symboltable.table -> Format.formatter -> Lfabsyn.term -> unit
 val pt_ityp : Lfabsyn.typefam Symboltable.table -> (Symb.symbol * int) Symboltable.table -> Format.formatter -> Lfabsyn.typ -> unit
 val pt_ikind : Format.formatter -> Lfabsyn.typefam Symboltable.table -> (Symb.symbol * int) Symboltable.table -> Lfabsyn.kind -> unit
@@ -27,3 +28,4 @@ val pt_iobj : Format.formatter -> Lfabsyn.typefam Symboltable.table -> (Symb.sym
 val pt_iquery : Format.formatter -> Lfabsyn.typefam Symboltable.table -> (Symb.symbol * int) Symboltable.table -> Lfabsyn.query -> unit
 val pt_iquery_explicit : Format.formatter -> Lfabsyn.typefam Symboltable.table -> (Symb.symbol * int) Symboltable.table -> Lfabsyn.query -> unit
 val pr_isolution : Format.formatter -> Lfabsyn.typefam Symboltable.table -> (Symb.symbol * int) Symboltable.table -> Lfabsyn.solution -> unit
+*)
