@@ -27,17 +27,16 @@ type idset = id list;;
 
 type idpairset = (id * id) list;;
 
-type pos_ann_type = Pos of (id * aneganntype) list * LFabsyn.typ * LFabsyn.term list
+type pos_ann_type = Pos of (id * aneganntype) list * typ * term list
 
-and neg_ann_type = Neg of (id * aposanntype) list * LFabsyn.typ * LFabsyn.term list * Set.Make(LFabsyn.id)
+and neg_ann_type = Neg of (id * aposanntype) list * typ * term list * id list
 
-and dependency = Dep of idpairset
+and dependency = idpairset
 
-and found = Found of idset
-                   
-and delta = D of idset
+and delta = idset
 
-and gamma = G of idset;;
+ (* context *)
+and gamma = idset;;
 
 val union : idset -> idset -> idset;;
 
@@ -45,13 +44,13 @@ val intersect : idset -> idset -> idset;;
 
 val diff : idset -> idset -> idset;;
 
-val find_strict_vars_pos : typ -> id list -> pos_ann_type * id list
+val find_strict_vars_pos : typ -> gamma -> pos_ann_type * id list
 
-val find_strict_vars_neg : typ -> id list -> neg_ann_type *  id list
+val find_strict_vars_neg : typ -> gamma -> neg_ann_type *  id list
 
-val find_strict_vars_pos_rec : typ -> id list -> (id list * dependency * (id * neg_ann_type) list * tycon * term list)
+val find_strict_vars_pos_rec : typ -> gamma -> (id list * dependency * (id * neg_ann_type) list * tycon * term list)
 
-val find_strict_vars_neg_rec : typ -> id list ->  (id list * dependency * (id * pos_ann_type) list * tycon * term list)
+val find_strict_vars_neg_rec : typ -> gamma ->  (id list * dependency * (id * pos_ann_type) list * tycon * term list)
 
 val find_strict_vars_object : term -> gamma -> delta -> id list
 
