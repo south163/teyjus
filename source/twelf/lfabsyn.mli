@@ -12,9 +12,9 @@ type typefam = TypeFam of (Symb.symbol * kind * fixity * assoc * int * Symb.symb
     (constant symbol, type, fixity, associativity, precedence, # implicit arguments) *)
 and obj = Object of (Symb.symbol * typ * fixity * assoc * int * int)
 
-and query = Query of (symb * typ) list * symb * typ
+and query = Query of (Symb.symbol * typ) list * Symb.symbol * typ
 
-and solution = (symb * term) list * (term * term) list
+and solution = (Symb.symbol * term) list * (term * term) list
 
 and fixity =
   Infix
@@ -70,3 +70,6 @@ val get_typefam_kind : typefam -> kind
 val get_obj_typ : obj -> typ
 
 val get_typ_head : typ -> id
+
+val get_typefam_symb : typefam -> Symb.symbol
+val get_obj_symb : obj -> Symb.symbol

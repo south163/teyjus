@@ -72,14 +72,14 @@ let makeApp h args =
 (** Flatten an LF kind into a simple type. *)
 let rec flatten_kind k =
   match k with
-      Lfabsyn.PiKind(_, ty, body) -> 
+      Lfabsyn.PiKind(_, ty, body,_) -> 
         Absyn.ArrowType((flatten_type ty), (flatten_kind body))
     | Lfabsyn.Type ->
         Absyn.ApplicationType(lftype,[])      
 (** Flatten an LF type into a simple type. *)                                       
 and flatten_type t =
   match t with
-      Lfabsyn.PiType(_, ty, body) ->
+      Lfabsyn.PiType(_, ty, body,dep) ->
         Absyn.ArrowType((flatten_type ty), (flatten_type body))
     | Lfabsyn.AppType(_,_)
     | Lfabsyn.IdType(_) -> Absyn.ApplicationType(lfobj,[])
@@ -87,9 +87,10 @@ and flatten_type t =
 (** Encode an LF term into a simply typed term. *)
 let rec encode_term constants metadata vars tm =
     match tm with
-        Lfabsyn.AbsTerm(s,ty,t) ->
-          let bvar = Absyn.BoundVar(s,ref None,ref false,ref (Some(flatten_type ty))) in
-          let vars' = Table.add s bvar vars in
+      Lfabsyn.AbsTerm(s,ty,t) ->
+          let s' = Symbol.symbolAlias (Symb.name s) (Symb.printName s) in
+          let bvar = Absyn.BoundVar(s',ref None,ref false,ref (Some(flatten_type ty))) in
+          let vars' = Table.add s' bvar vars in
           Absyn.AbstractionTerm(Absyn.NestedAbstraction(bvar,
 							encode_term constants metadata vars' t),
 				Errormsg.none)
@@ -100,37 +101,54 @@ let rec encode_term constants metadata vars tm =
       | Lfabsyn.IdTerm(id) ->
           match id with
               Lfabsyn.Const(s) ->
-                (match (Table.find s constants) with
-                   Some(c) ->
-                     Absyn.ConstantTerm(c, [], Errormsg.none)
-                 | None ->
-                     Errormsg.error Errormsg.none 
-                       ("No constant found for LP symbol: '" ^ (Symbol.printName s) ^ 
-                        "' in LF term: '" ^ (Lfabsyn.string_of_term tm) ^ "'");
-                     Absyn.ErrorTerm)
-            | Lfabsyn.Var(s,t) ->
-                (match (Table.find s vars) with
-                     Some(tysymb) -> Absyn.makeBoundVarTerm tysymb Errormsg.none
-                   | None ->
-                       Errormsg.error Errormsg.none
-                                      ("No variable named `"^(Symb.printName s)^"' found in scope.");
-                       Absyn.ErrorTerm)
+                (match (Metadata.getLP metadata s) with
+                  Some(s') ->
+                    (match (Table.find s' constants) with
+                       Some(c) ->
+                         Absyn.ConstantTerm(c, [], Errormsg.none)
+                     | None ->
+                         Errormsg.error Errormsg.none 
+                           ("No constant found for LP symbol: '" ^ (Symbol.printName s') ^ 
+                            "' in LF term: '" ^ (Lfabsyn.string_of_term tm) ^ "'");
+                         Absyn.ErrorTerm)
+                | None ->
+                    Errormsg.error Errormsg.none
+                      ("No mapping found for LF constant `" ^ (Symb.printName s) ^ "`.");
+                      Absyn.ErrorTerm)
+             | Lfabsyn.Var(s,t) ->
+                (match (Metadata.getLP metadata s) with
+                  Some(s') ->
+                    (match (Table.find s' vars) with
+                         Some(tysymb) -> Absyn.makeBoundVarTerm tysymb Errormsg.none
+                       | None ->
+                           Errormsg.error Errormsg.none
+                                          ("No variable named `"^(Symb.printName s)^"' found in scope.");
+                           Absyn.ErrorTerm)
+                | None ->
+                    Errormsg.error Errormsg.none
+                      ("No mapping found for bound variable `" ^ (Symb.printName s) ^"'.");
+                    Absyn.ErrorTerm)
             | Lfabsyn.LogicVar(s,t) ->
-                (match (Table.find s vars) with
-                     Some(tysymb) -> Absyn.makeFreeVarTerm tysymb Errormsg.none
-                   | None ->
-                       Errormsg.error Errormsg.none
-                                      ("No variable named `"^(Symb.printName s)^"' found in scope.");
-                       Absyn.ErrorTerm)
-                
-
+                (match (Metadata.getLP metadata s) with
+                  Some(s') ->
+                    (match (Table.find s' vars) with
+                         Some(tysymb) -> Absyn.makeFreeVarTerm tysymb Errormsg.none
+                       | None ->
+                           Errormsg.error Errormsg.none
+                                          ("No variable named `"^(Symb.printName s)^"' found in scope.");
+                           Absyn.ErrorTerm)
+                | None ->
+                    Errormsg.error Errormsg.none
+                      ("No mapping found for logic variable `" ^ (Symb.printName s) ^ "'.");
+                    Absyn.ErrorTerm)
+                      
 (** Encode an LF kind as a term.
       @returns a function that when applied to the encoding of an LF 
                constant `a' produces a term encoding the judgement
                `a : k'. *)			    
 let rec encode_kind opt metadata consttbl vars k =
   match k with
-      Lfabsyn.PiKind(s,ty,k) ->
+      Lfabsyn.PiKind(s,ty,k,dep) ->
         fun m ->
           let bvar = Absyn.BoundVar(s, ref None, ref false, ref (Some(flatten_type ty))) in
           let vartm = Absyn.makeBoundVarTerm (bvar) Errormsg.none in
@@ -158,10 +176,10 @@ let rec encode_kind opt metadata consttbl vars k =
                `c : t'. *)
 and encode_type_negative opt metadata consttbl vars ty =
   match ty with
-      Lfabsyn.PiType(s,typ,body) ->
+      Lfabsyn.PiType(s,typ,body,dep) ->
         fun m ->
           let bvar = Absyn.BoundVar(s, ref None, ref false, ref (Some(flatten_type ty))) in
-          let vars' = Table.add (Symbol.symbol (Lfabsyn.get_id_name id)) bvar vars in
+          let vars' = Table.add (Symbol.symbol (Symb.name s)) bvar vars in
           let vartm = Absyn.makeBoundVarTerm bvar Errormsg.none in
           let r = (encode_type_negative opt metadata consttbl vars' body) (makeApp m [vartm]) in
           let bodytm =
@@ -185,9 +203,9 @@ and encode_type_negative opt metadata consttbl vars ty =
              | None -> hastype)
         in
         fun m ->
-          (match (Metadata.getLP metadata (Lfabsyn.get_id_symb id))) with
-               Some(s) ->
-                 (match Table.find s consttbl with
+          (match (Metadata.getLP metadata s) with
+               Some(s') ->
+                 (match Table.find s' consttbl with
                       Some(c) ->
                         let lptms = List.map (encode_term consttbl metadata vars) tms in
                         let tytm = makeApp (Absyn.ConstantTerm(c,[],Errormsg.none)) lptms in
@@ -342,36 +360,38 @@ let initialize_constants metadata types objs =
 
 
 (* Process each type level declaration and each corresponding object level declaration. *)
-let process strictness metadata constants types =
-  let perObj (Lfabsyn.Object(id,typ,_,_,_,_) as o) clauselst =
-    match (Metadata.getLP metadata (Symb.symbol (Lfabsyn.get_id_name id))) with
-        Some(s) ->
-          (match (Table.find s constants) with
-               Some(c) ->
-                 let aterm = Absyn.ConstantTerm(c, [], Errormsg.none) in
-                 let clause = (encode_type_negative strictness metadata constants Table.empty typ) aterm in
-                 List.append clauselst [clause]
-             | None ->
-                 Errormsg.error Errormsg.none 
-                                ("No constant found for LP symbol: '" ^ (Symbol.printName s) ^ 
-                                     "' from LF object decl: '" ^ (Lfabsyn.string_of_obj o) ^ "'");
-                 clauselst)
-      | None ->
-          Errormsg.error Errormsg.none 
-                         ("No mapping found for LF constant: '" ^ (Lfabsyn.string_of_id id) ^
-                              "' from LF object decl: '" ^ (Lfabsyn.string_of_obj o) ^ "'");
-          clauselst
+let process strictness metadata constants types objs =
+  let perObj (Lfabsyn.Object(symb,typ,_,_,_,_) as o) clauselst =
+    match (Symboltable.lookup objs symb) with
+      Some(Lfabsyn.Object(symb,typ,_,_,_,_) as o) ->
+      (match (Metadata.getLP metadata symb) with
+           Some(s) ->
+             (match (Table.find s constants) with
+                  Some(c) ->
+                    let aterm = Absyn.ConstantTerm(c, [], Errormsg.none) in
+                    let clause = (encode_type_negative strictness metadata constants Table.empty typ) aterm in
+                    List.append clauselst [clause]
+                | None ->
+                    Errormsg.error Errormsg.none 
+                                   ("No constant found for LP symbol: '" ^ (Symbol.printName s) ^ 
+                                        "' from LF object decl: '" ^ (Lfabsyn.string_of_obj o) ^ "'");
+                    clauselst)
+         | None ->
+             Errormsg.error Errormsg.none 
+                            ("No mapping found for LF constant: '" ^ (Lfabsyn.string_of_id id) ^
+                                 "' from LF object decl: '" ^ (Lfabsyn.string_of_obj o) ^ "'");
+           clauselst)
+    | None ->
+        Errormsg.error Errormsg.none
+                       ("No object constnat named '" ^ (Symb.printName symb) ^"' found in table.");
+        clauselst
   in
-  let perType symb ((Lfabsyn.TypeFam(id,kind,_,_,_,objs,_)) as t) clauselst =
-    match (Metadata.getLP metadata (Symb.symbol (Lfabsyn.get_id_name id))) with
+  let perType symb ((Lfabsyn.TypeFam(symb,kind,_,_,_,objects,_)) as t) clauselst =
+    match (Metadata.getLP metadata symb) with
         Some(s) ->
           (match (Table.find s constants) with
                Some(c) ->
-                 (* Taking out istype clauses for now. It is unclear how to deal with them 
-                    in the optimizations, or when they might be useful in this application. *)
-                 (*let clause = encode_kind strictness metadata constants kind (Absyn.ConstantTerm(c, [], Errormsg.none)) in
-                 List.fold_left (fun c o -> perObj (!o) c) (List.append clauselst [clause]) (!objs)*)
-                 List.fold_left (fun c o -> perObj (!o) c) clauselst (!objs)
+                 List.fold_left (fun c o -> perObj o c) clauselst (!objects)
              | None ->
                  Errormsg.error Errormsg.none 
                                 ("No constant found for LP symbol: '" ^ (Symbol.printName s) ^ 
@@ -386,17 +406,17 @@ let process strictness metadata constants types =
   Symboltable.fold types perType []
 
 
-let process_query fvars (proofterm, querytype) metadata constTab strictness =
+let process_query fvars (prooftermSymb, querytype) metadata constTab strictness =
   let get_fvars pairs =
-      let f (tysymbs, table) (Lfabsyn.LogicVar(n,_),t) =
-        let tysymb = Absyn.ImplicitVar(Symbol.symbol n, ref None, ref true, ref (Some(flatten_type t))) in
+      let f (tysymbs, table) (s,t) =
+        let tysymb = Absyn.ImplicitVar(s, ref None, ref true, ref (Some(flatten_type t))) in
         let table' = Table.add (Absyn.getTypeSymbolSymbol tysymb) tysymb table in
         ((tysymb :: tysymbs), table')
       in
       List.fold_left f ([], Table.empty) pairs
     in
     let (fvarlist, typesymbTable) = get_fvars fvars in
-    let pt_typsymb = Absyn.ImplicitVar(Symbol.symbol proofterm, ref None, ref true, ref (Some(flatten_type querytype))) in
+    let pt_typsymb = Absyn.ImplicitVar(prooftermSymb, ref None, ref true, ref (Some(flatten_type querytype))) in
     let typesymbTable' = Table.add (Absyn.getTypeSymbolSymbol pt_typsymb) pt_typsymb typesymbTable in
     let varterm = Absyn.makeFreeVarTerm pt_typsymb Errormsg.none in
     let enctype =  (encode_type_positive strictness metadata constTab typesymbTable querytype) varterm in
@@ -406,13 +426,13 @@ module NaiveTranslation : Translator =
 struct
   let translate (Lfsig.Signature(types, objs)) =
     let metadata = initialize_metadata types objs in
-    let kinds = Table.add (Symbol.symbol lfobjStr) lfobj (Table.add (Symbol.symbol lftypeStr) lftype Table.empty) in
+    let kinds = Table.add lfobjSymb lfobj (Table.add lftypeSymb lftype Table.empty) in
     let constants = initialize_constants metadata types in
-    let clauses = process false metadata constants types in
+    let clauses = process false metadata constants types objs in
     (metadata, kinds, constants, clauses)
 
-  let translate_query (Lfabsyn.Query(vars, Lfabsyn.LogicVar(pt,_), ty)) metadata kindTab constTab =
-    process_query vars (pt, ty) metadata constTab false
+  let translate_query (Lfabsyn.Query(vars, symb, ty)) metadata kindTab constTab =
+    process_query vars (symb, ty) metadata constTab false
 end
 
 module OptimizedTranslation : Translator =
@@ -446,14 +466,14 @@ struct
       
   let translate (Lfsig.Signature(types, objs)) =
     let metadata = initialize_metadata types objs in
-    let kinds = Table.add (Symbol.symbol lfobjStr) lfobj (Table.add (Symbol.symbol lftypeStr) lftype Table.empty) in
+    let kinds = Table.add lfobjSymb lfobj (Table.add lftypeSymb lftype Table.empty) in
     let constants = initialize_constants metadata types in
     let clauses = process true metadata constants types in
     let solun = (metadata, kinds, constants, clauses) in
     run_optimizations solun
     
 
-  let translate_query (Lfabsyn.Query(vars, Lfabsyn.LogicVar(pt,_), ty)) metadata kindTab constTab =
-    let (unop_query, fvars) = process_query vars (pt, ty) metadata constTab true in
+  let translate_query (Lfabsyn.Query(vars, ptSymb, ty)) metadata kindTab constTab =
+    let (unop_query, fvars) = process_query vars (ptSymb, ty) metadata constTab true in
     (optimize unop_query, fvars)
 end

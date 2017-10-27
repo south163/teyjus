@@ -12,9 +12,9 @@ type typefam = TypeFam of (Symb.symbol * kind * fixity * assoc * int * Symb.symb
     (constant symbol, type, fixity, associativity, precedence, # implicit arguments) *)
 and obj = Object of (Symb.symbol * typ * fixity * assoc * int * int)
 
-and query = Query of (id * typ) list * id * typ
+and query = Query of (Symb.symbol * typ) list * Symb.symbol * typ
 
-and solution = (id * term) list * (term * term) list
+and solution = (Symb.symbol * term) list * (term * term) list
 
 and fixity =
   Infix
@@ -28,7 +28,7 @@ and assoc =
 | Left
 
 and kind =
-  PiKind of (id * typ * kind * bool)
+  PiKind of (Symb.symbol * typ * kind * bool)
 | Type 
 
 and typ =
@@ -103,7 +103,7 @@ and string_of_typ ty =
     | IdType(id) ->
         string_of_id id
     | Unknown ->
-        Errormsg.err Errormsg.none ("Error: Attempting to print an unknown type."); ""
+        Errormsg.error Errormsg.none ("Error: Attempting to print an unknown type."); ""
 
 and string_of_term tm =
   match tm with
@@ -130,12 +130,12 @@ let get_id_symb id =
     | Var(s,_)
     | LogicVar(s,_) -> s
       
-let string_of_query (Query(_,id,ty)) =
-  (string_of_id id) ^ " : " ^ (string_of_typ ty)
+let string_of_query (Query(_,s,ty)) =
+  (Symb.printName s) ^ " : " ^ (string_of_typ ty)
 
-let string_of_query' (Query(fvars,id,ty)) =
-  let bndrs = List.fold_left (fun s (name,ty) -> s^(string_of_id name)^" : "^(string_of_typ ty)^".") "" fvars in
-  bndrs ^ (string_of_query(Query(fvars,id,ty)))
+let string_of_query' (Query(fvars,s,ty)) =
+  let bndrs = List.fold_left (fun s (symb,ty) -> s^(Symb.printName symb)^" : "^(string_of_typ ty)^".") "" fvars in
+  bndrs ^ (string_of_query(Query(fvars,s,ty)))
 
 
 let rec skip k l =
@@ -185,7 +185,7 @@ and string_of_typ_implicit types objs ty =
                in
                "(" ^ (string_of_id t) ^ " " ^ tmlist ^ ")"
            | None ->
-               Errormsg.error Errormsg.none ("No entry in type table for application head " ^ h_name);
+               Errormsg.error Errormsg.none ("No entry in type table for application head " ^ (Symb.printName h_symb));
                string_of_typ ty )
     | IdType(id) ->
         string_of_id id
@@ -196,9 +196,9 @@ let string_of_solution types objs (subst, disprs) =
   let string_of_subst subst =
     let rec string_of_subst_aux sub =
       match sub with
-          ((id,tm) :: sub') when (get_id_name id) = "" -> string_of_subst_aux sub'
-        | ((id,tm) :: sub') ->
-            (string_of_id id) ^ " = " ^ (string_of_term_implicit types objmap tm) ^ "\n" ^ (string_of_subst_aux sub')
+          ((s,tm) :: sub') when (Symb.name s) = "" -> string_of_subst_aux sub'
+        | ((s,tm) :: sub') ->
+            (Symb.printName s) ^ " = " ^ (string_of_term_implicit types objs tm) ^ "\n" ^ (string_of_subst_aux sub')
         | [] -> ""
     in
     if subst = []
@@ -227,8 +227,8 @@ let get_typefam_implicit (TypeFam(_,_,_,_,_,_,p)) = p
 let get_obj_implicit (Object(_,_,_,_,_,p)) = p
 
 
-let get_typefam_name (TypeFam(name,_,_,_,_,_,_)) = string_of_id name
-let get_obj_name (Object(name,_,_,_,_,_)) = string_of_id name
+let get_typefam_name (TypeFam(s,_,_,_,_,_,_)) = Symb.printName s
+let get_obj_name (Object(s,_,_,_,_,_)) = Symb.printName s
 
 
 let get_typefam_kind (TypeFam(_,k,_,_,_,_,_)) = k
@@ -239,3 +239,6 @@ let rec get_typ_head t =
       PiType(_,_,t',_) -> get_typ_head t'
     | AppType (h,_) -> h
     | IdType(h) -> h
+
+let get_typefam_symb (TypeFam(s,_,_,_,_,_,_)) = s
+let get_obj_symb (Object(s,_,_,_,_,_)) = s

@@ -1,4 +1,3 @@
-
 (** datastructures needed for inverting solutions:
       1. fvartypes
          a symbol table mapping free variables to their LF type
@@ -9,10 +8,10 @@ let fvar_types = ref Table.empty
 
 let freeVarTab = ref Intmap.empty
 
-let fvartypes_init (Lfabsyn.Query(fvars, pt, ty)) =
-  let types = List.fold_left (fun tbl (id,t) -> Table.add (Symbol.symbol (Lfabsyn.get_id_name id)) t tbl) 
+let fvartypes_init (Lfabsyn.Query(fvars, ptSymb, ty)) =
+  let types = List.fold_left (fun tbl (s,t) -> Table.add (Symbol.symbol (Symb.name s)) t tbl) 
                              Table.empty 
-                             ((pt, ty) :: fvars) in
+                             ((ptSymb, ty) :: fvars) in
   fvar_types := types
 
 (* initialize free var table with fvars *)
@@ -45,7 +44,7 @@ let string_of_lpsol (subst, dsprs) =
   let disprStr = List.fold_left (fun str dspr -> str ^ (string_of_dispr dspr)) "" dsprs in
   "substitution:\n" ^ subStr ^ "disagreement pairs:\n" ^ disprStr
 *)
-let show_answers lpmodule ((Lfsig.Signature(_,types,objmap)) as lfsig) metadata = 
+let show_answers lpmodule ((Lfsig.Signature(types,objmap)) as lfsig) metadata = 
   let lpsol = Buildterm.build_solution lpmodule (!freeVarTab) in 
 (*  let _ = print_endline (string_of_lpsol lpsol) in *)
   let lfsol = Inverse.invert lfsig metadata (!fvar_types) lpsol in

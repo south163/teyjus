@@ -28,17 +28,7 @@ let generate_name metadata fvars =
 let reset_namegen_count () = bvar_namegen_count := 0
 
 
-let invert (Lfsig.Signature(_,types, objmap)) metadata fvars (subst, disprs) =
-  (* collect all the object constants into a table for easy lookup
-     ****Move this to somewhere else so it doesn't have to be done
-         every time we invert; the signature does not change so can 
-         be done once.**** *)
-  let constants =
-    let addObjects table objlist =
-      List.fold_left (fun t o -> Symboltable.insert t (Symb.symbol (Lfabsyn.get_obj_name (!o))) (!o)) table objlist
-    in
-    Symboltable.fold types (fun symb (Lfabsyn.TypeFam(_,_,_,_,_,objsref,_)) t -> addObjects t (!objsref)) Symboltable.empty
-  in
+let invert (Lfsig.Signature(types, objs)) metadata fvars (subst, disprs) =
   (* apply_subst : Lfabsyn.typ -> (Lfabsyn.id * Lfabsyn.term) list -> Lfabsyn.typ
      Apply the given substitution to the LF type. *)
   let rec apply_subst lftype substitution =
@@ -48,25 +38,26 @@ let invert (Lfsig.Signature(_,types, objmap)) metadata fvars (subst, disprs) =
             Lfabsyn.AppTerm(id, args)
         | Lfabsyn.AppTerm(id, args'), _ ->
             Lfabsyn.AppTerm(id, List.append args' args)
-        | Lfabsyn.AbsTerm(id, typ, tm), (a :: args') ->
-            let tm' = sub_tm id a tm in
+        | Lfabsyn.AbsTerm(s, typ, tm), (a :: args') ->
+            let tm' = sub_tm s a tm in
             reduce tm' args'
-    and sub_tm id tm t =
+    and sub_tm s tm t =
       match t with
-          Lfabsyn.AbsTerm(n,ty,_) 
-            when (Lfabsyn.get_id_name id) = (Lfabsyn.get_id_name n) ->
-            let newname = generate_name metadata fvars in
+          Lfabsyn.AbsTerm(s',ty,b) 
+            when (Symb.id s) = (Symb.id s') ->
+            (*let newname = generate_name metadata fvars in
             let Lfabsyn.AbsTerm(n',ty',body') = 
               sub_tm id (Lfabsyn.IdTerm(Lfabsyn.Var(newname,ty))) t 
-            in
-            Lfabsyn.AbsTerm(n', subst id tm ty', sub_tm id tm body')
-        | Lfabsyn.AbsTerm(n,ty,body) ->
-            let ty' = subst id tm ty in
-            let body' = sub_tm id tm body in
-            Lfabsyn.AbsTerm(n,ty',body')
+              in 
+              Lfabsyn.AbsTerm(n', subst id tm ty', sub_tm id tm body') *)
+            Lfabsyn.AbsTerm(s',ty,b)
+        | Lfabsyn.AbsTerm(s',ty,body) ->
+            let ty' = subst s tm ty in
+            let body' = sub_tm s tm body in
+            Lfabsyn.AbsTerm(s',ty',body')
         | Lfabsyn.AppTerm(head,args) ->
-            let args' = List.map (sub_tm id tm) args in
-            if (Lfabsyn.get_id_name id) = (Lfabsyn.get_id_name head)
+            let args' = List.map (sub_tm s tm) args in
+            if (Symb.id s) = Symb.id (Lfabsyn.get_id_symb head)
             then
               (match tm with
                    Lfabsyn.IdTerm(ident) ->
@@ -83,29 +74,27 @@ let invert (Lfsig.Signature(_,types, objmap)) metadata fvars (subst, disprs) =
                      reduce tm args )
             else
               Lfabsyn.AppTerm(head, args')
-        | Lfabsyn.IdTerm(n) ->
-            if (Lfabsyn.get_id_name id) = (Lfabsyn.get_id_name n)
+        | Lfabsyn.IdTerm(s') ->
+            if Symb.id s = Symb.id (Lfabsyn.get_id_symb s')
             then tm
             else t
     (* this is very inefficient (walks through the type for each piece of the substitution)
        but is correct and will work. Should be fixed later though. *)
-    and subst id tm ty =
+    and subst s tm ty =
       match ty with
-          Lfabsyn.PiType(n,t,_) 
-            when (Lfabsyn.get_id_name id) = (Lfabsyn.get_id_name n) -> 
+          Lfabsyn.PiType(s',t,_,_) 
+            when (Symb.id s) = (Symb.id s') -> 
             ty
-        | Lfabsyn.PiType(n,t,b) ->
-            Lfabsyn.PiType(n, subst id tm t, subst id tm b)
-        | Lfabsyn.ImpType(l,r) ->
-            Lfabsyn.ImpType(subst id tm l, subst id tm r)
+        | Lfabsyn.PiType(s',t,b,d) ->
+            Lfabsyn.PiType(s', subst s tm t, subst s tm b,d)
         | Lfabsyn.AppType(h,args) ->
-            let args' = List.map (sub_tm id tm) args in
+            let args' = List.map (sub_tm s tm) args in
             Lfabsyn.AppType(h,args')
         | Lfabsyn.IdType(_) -> ty
     in
     match substitution with
-        ((id,tm) :: subs) ->
-          let lftype' = subst id tm lftype in
+        ((s,tm) :: subs) ->
+          let lftype' = subst s tm lftype in
           apply_subst lftype' subs
       | [] -> lftype
   in
@@ -117,7 +106,7 @@ let invert (Lfsig.Signature(_,types, objmap)) metadata fvars (subst, disprs) =
           Absyn.ConstantTerm(c,_,_) ->
             (match (Metadata.getLF metadata (Absyn.getConstantSymbol c)) with
                  Some(symb) ->
-                   (match (Symboltable.lookup constants symb) with
+                   (match (Symboltable.lookup objs symb) with
                         Some(c') -> Some(Lfabsyn.get_obj_typ c')
                       | None ->
                           Errormsg.error Errormsg.none ("No entry found in LF signature for constant "^(Symb.printName symb));
@@ -151,7 +140,7 @@ let invert (Lfsig.Signature(_,types, objmap)) metadata fvars (subst, disprs) =
         Absyn.ConstantTerm(c,_,p) ->
           (match (Metadata.getLF metadata (Absyn.getConstantSymbol c)) with
                Some(symb) ->
-                 (match (Symboltable.lookup constants symb) with
+                 (match (Symboltable.lookup objs symb) with
                       Some(c') -> (Some(Lfabsyn.IdTerm(Lfabsyn.Const(Lfabsyn.get_obj_name c'))), fvars)
                     | None ->
                         Errormsg.error Errormsg.none ("No entry found in LF signature for constant "^(Symb.printName symb));
@@ -163,7 +152,7 @@ let invert (Lfsig.Signature(_,types, objmap)) metadata fvars (subst, disprs) =
              but undexing into bvar list starts at 0. *)
       | Absyn.BoundVarTerm(Absyn.DBIndex(i),p) ->
           let (name, ty) = List.nth bvars (i-1) in
-          (Some(Lfabsyn.IdTerm(Lfabsyn.Var(name, ty))), fvars)
+          (Some(Lfabsyn.IdTerm(Lfabsyn.Var(Symb.symbol name, ty))), fvars)
       | Absyn.FreeVarTerm(Absyn.NamedFreeVar(tysymb), p) ->
           let (ty, fvars'') =
             (match (Table.find (Absyn.getTypeSymbolSymbol tysymb) fvars) with
@@ -174,7 +163,7 @@ let invert (Lfsig.Signature(_,types, objmap)) metadata fvars (subst, disprs) =
                    let fvars' = Table.add (Absyn.getTypeSymbolSymbol tysymb) ty fvars in
                    (ty, fvars'))
           in
-          (Some(Lfabsyn.IdTerm(Lfabsyn.LogicVar(Absyn.string_of_term lpterm, ty))), fvars'')
+          (Some(Lfabsyn.IdTerm(Lfabsyn.LogicVar(Symb.symbol(Absyn.string_of_term lpterm), ty))), fvars'')
       | Absyn.ApplicationTerm(abstm,p) ->
           let (head, args) = Absyn.getTermApplicationHeadAndArguments lpterm in
           if (Absyn.isTermFreeVariable head && 
@@ -188,8 +177,8 @@ let invert (Lfsig.Signature(_,types, objmap)) metadata fvars (subst, disprs) =
 	    let args' = List.map2 (fun x y -> Option.get (fst (invert_term fvars bvars (x,[]) y))) arg_tys args in
 	    (** b/c all args are bound variables we know they are of the correct form when inverted *)
             let h_ty = 
-              List.fold_left (fun body (Lfabsyn.IdTerm((Lfabsyn.Var(_,ty) as id))) -> 
-                                    Lfabsyn.PiType(id,ty,body)) 
+              List.fold_left (fun body (Lfabsyn.IdTerm((Lfabsyn.Var(s,ty) as id))) -> 
+                                    Lfabsyn.PiType(s,ty,body)) 
                              target_ty 
                              (List.rev args') in
             let fvars' = Table.add (Absyn.getTypeSymbolSymbol (Absyn.getTermFreeVariableTypeSymbol head)) h_ty fvars in
@@ -221,13 +210,10 @@ let invert (Lfsig.Signature(_,types, objmap)) metadata fvars (subst, disprs) =
 	      let rec trans_args bty subst fvars args =
 	        let trans_arg bty subst fvars arg =
                   (match bty with
-		       Lfabsyn.PiType(id,ty,body) ->
+		       Lfabsyn.PiType(s,ty,body,dep) ->
   		         let (a',fvars') = invert_term fvars bvars (ty, subst) arg in
-		         (body, (id, Option.get a') :: subst, fvars', a')
-                     | Lfabsyn.ImpType(l,r) ->
-                         let (a', fvars') = invert_term fvars bvars (l, subst) arg in
-                         (r, subst, fvars', a')
-		     | _ -> 
+		         (body, (s, Option.get a') :: subst, fvars', a')
+                     | _ -> 
                        Errormsg.error Errormsg.none ("Error: invert_term: Type of head does not match number of arguments.");
                        (bty, subst, fvars, None))
 	        in
@@ -263,23 +249,13 @@ let invert (Lfsig.Signature(_,types, objmap)) metadata fvars (subst, disprs) =
               recurse to body of abstraction *)
           let bvar_name = generate_name metadata fvars in
           (match apply_subst lftype subst with
-               Lfabsyn.PiType(id, ty, tybody) ->
+               Lfabsyn.PiType(id, ty, tybody,dep) ->
                  let bvars' = List.append [(bvar_name, ty)] bvars in
                  let bvar_term = Lfabsyn.IdTerm(Lfabsyn.Var(bvar_name, ty)) in
 	         let (body', fvars') = invert_term fvars bvars' (tybody,[id, bvar_term]) body in
                  if (Option.isSome body')
                  then
-  	           (Some(Lfabsyn.AbsTerm(Lfabsyn.Var(bvar_name, ty),ty,Option.get body')), fvars')
-                 else
-                   (*error, try to continue *)
-                   (None, fvars')
-             | Lfabsyn.ImpType(l, r) ->
-                 let bvars' = List.append [(bvar_name, l)] bvars in
-                 let bvar_term = Lfabsyn.IdTerm(Lfabsyn.Var(bvar_name, l)) in
-                 let (body', fvars') = invert_term fvars bvars' (r, []) body in
-                 if (Option.isSome body')
-                 then
-                   (Some(Lfabsyn.AbsTerm(Lfabsyn.Var(bvar_name, l),l,Option.get body')), fvars')
+  	           (Some(Lfabsyn.AbsTerm((Symb.symbol bvar_name),ty,Option.get body')), fvars')
                  else
                    (*error, try to continue *)
                    (None, fvars')
@@ -308,7 +284,7 @@ let invert (Lfsig.Signature(_,types, objmap)) metadata fvars (subst, disprs) =
           let (lftm, fvars') = invert_term fvars [] (ty, []) tm in
           if Option.isSome lftm 
           then
-            let id = Lfabsyn.LogicVar(Absyn.getTypeSymbolName tysymb, ty) in
+            let id = Lfabsyn.LogicVar(Symb.symbol (Absyn.getTypeSymbolName tysymb), ty) in
             (* this piece of the substitution may need to be applied to the types for other variables.
                note that we know the find will succeed because we are using table.fold over the free vars. *)
             let fvars'' = Table.fold (fun symb lftyp fvs -> Table.add symb 
@@ -318,7 +294,7 @@ let invert (Lfsig.Signature(_,types, objmap)) metadata fvars (subst, disprs) =
                                      fvars' 
                                      fvars' in
             let (lfsubst, fvars''') = trans_subst fvars'' subst' in
-            ((id, Option.get lftm) :: lfsubst, fvars''')
+            ((Lfabsyn.get_id_symb id, Option.get lftm) :: lfsubst, fvars''')
           else
             (* there was an error in translating, but try to continue. *)
             trans_subst fvars' subst'
@@ -370,19 +346,15 @@ let invert (Lfsig.Signature(_,types, objmap)) metadata fvars (subst, disprs) =
                                     invert_term fvars [] (h_ty, []) head in
               let trans_arg (bty, sub) fvars arg =
                 (match bty with
-                     Lfabsyn.PiType(id,ty,body) ->
+                     Lfabsyn.PiType(s,ty,body,dep) ->
                        let (arg', fvars') = reset_namegen_count ();
                                             invert_term fvars [] (ty, sub) arg in
                        if Option.isSome arg'
                        then
-                         (arg', fvars', (body, ((id, Option.get arg')::sub)))
+                         (arg', fvars', (body, ((s, Option.get arg')::sub)))
                        else
                          (* something went wrong, but try to continue *)
                          (None, fvars', (body, sub))
-                   | Lfabsyn.ImpType(l,r) ->
-                       let (arg', fvars') = reset_namegen_count ();
-                                            invert_term fvars [] (l, sub) arg in
-                         (arg', fvars', (r, sub))
                    | _ ->
                      Errormsg.error Errormsg.none 
                                     ("Error: trans_disprs: Type of head does not match number of arguments in term "^
@@ -431,19 +403,15 @@ let invert (Lfsig.Signature(_,types, objmap)) metadata fvars (subst, disprs) =
                                     invert_term fvars [] (h_ty, []) head in
               let trans_arg (bty, sub) fvars arg =
                 (match bty with
-                     Lfabsyn.PiType(id,ty,body) ->
+                     Lfabsyn.PiType(s,ty,body,dep) ->
                        let (arg', fvars') = reset_namegen_count ();
                                             invert_term fvars [] (ty, sub) arg in
                        if Option.isSome arg'
                        then
-                         (arg', fvars', (body, ((id, Option.get arg')::sub)))
+                         (arg', fvars', (body, ((s, Option.get arg')::sub)))
                        else
                          (* something went wrong, but try to continue *)
                          (None, fvars', (body, sub))
-                   | Lfabsyn.ImpType(l,r) ->
-                       let (arg', fvars') = reset_namegen_count ();
-                                            invert_term fvars [] (l, sub) arg in
-                       (arg', fvars', (r, sub))
                    | _ ->
                      Errormsg.error Errormsg.none 
                                     ("Error: trans_disprs: Type of head does not match number of arguments in term "^

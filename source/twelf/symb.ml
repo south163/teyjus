@@ -29,6 +29,6 @@ let currentId = ref 0
   
 let gen n =
   let n' = n ^ (string_of_int (!currentId)) in
-  let _ = currentIf := !currentId + 1 in
+  let _ = currentId := !currentId + 1 in
   symbol n'
 
