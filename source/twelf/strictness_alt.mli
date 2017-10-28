@@ -22,7 +22,7 @@ and id =
 
 type tycon = id;;
             
-type idset = id list;;
+type idset = Set.Make(OrderedId).t
 
 type idpairset = (id * id) list;;
 

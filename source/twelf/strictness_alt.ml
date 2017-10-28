@@ -1,6 +1,8 @@
 (** Implements the strictness check for translating LF types. *)
 
+open Set
 
+   
 type kind =
   PiKind of (id * typ * kind)
 | ImpKind of (typ * kind)
@@ -22,33 +24,64 @@ and id =
 | Var of (string * typ) 
 | LogicVar of (string * typ)
 
-type idset = id list;;
+let get_id_name id =
+  match id with
+      Const(n) -> n
+    | Var(n,_) -> n
+    | LogicVar(n,_) -> n
 
-type idpairset = (id * id) list;;
+let string_of_id id =
+  match id with
+      Const(n)
+    | Var(n,_) 
+    | LogicVar(n,_) -> n
+                     
 
 
+let compare_id i i' = Pervasives.compare (get_id_name i) (get_id_name i')
+                   
+let compare_id_pairs p p' =
+  let v = compare_id (fst p) (fst p') in
+  match v with
+  | 0 -> compare_id (snd p) (snd p')
+  | _ -> v 
+
+                    
+module OrderedId = struct
+  type t = id
+  let compare = compare_id
+end
+
+module OrderedIdPair = struct
+  type t = (id * id)
+  let compare = compare_id_pairs
+end
+
+module IdSet = Set.Make(OrderedId)
+
+type idset = IdSet.t
+
+module IdPairSet = Set.Make(OrderedIdPair)     
+             
+type idpairset = IdPairSet.t
 
 type aposanntype = Pos of (id * aneganntype) list * id * term list
 
 and aneganntype = Neg of (id * aposanntype) list * id * term list * idset
 
-type dependency = idpairset
-                   
+type dependency = idpairset             
 type delta = idset
-
 type gamma = idset;;
 
-(* Set operations, will be updated afterwards using set instead of list *)
-let union s s' = [];;
+let random_func s n =
+  print_string "Hello, ";
+  print_string s;
+  flush stdout;
+  1+n
+;;
 
-let intersect s s' = [];;
-
-let diff s s' = [];;
-
-let rec add_dep (x : id) (l : id list) : (id*id) list =
-  match l with
-  | [] -> ([] : (id * id) list)
-  | v :: l' -> (x, v) :: (add_dep x l')
+let add_dep (dep : idpairset) (x : id) (l : idset) =
+  dep;;
 
 
 let none_tycon = Const "None";;
@@ -62,29 +95,29 @@ let rec find_strict_vars_pos tp g =
 and find_strict_vars_neg tp g =
   let (s, dep, ann_pairs, c, tms) = find_strict_vars_neg_rec tp g in
   	let s_final = finalize s dep in
-  		(Neg (ann_pairs, c, tms, (diff s_final g)), s_final)
+  		(Neg (ann_pairs, c, tms, (IdSet.diff s_final g)), s_final)
   		
 and find_strict_vars_pos_rec tp g =
   match tp with
     PiType (x, tpA, tpB) -> let (ann_tpA, s_A) = find_strict_vars_neg tpA g
-                          in let (s, dep, ann_pairs, tc, tms) =  find_strict_vars_pos_rec tpB  (x::g)
-                             in (s, union dep (add_dep x (intersect s_A g)), (x, ann_tpA)::ann_pairs, tc, tms)
-  | AppType (c, tms) -> ((union_fsvo_terms tms g), [], [], c, tms)
-  | _ -> ([], [], [], none_tycon, [])
+                          in let (s, dep, ann_pairs, tc, tms) =  find_strict_vars_pos_rec tpB  (IdSet.add x g)
+                             in (s, (add_dep dep x (IdSet.union s_A g)), (x, ann_tpA)::ann_pairs, tc, tms)
+  | AppType (c, tms) -> ((union_fsvo_terms tms g), IdPairSet.empty, [], c, tms)
+  | _ -> (IdSet.empty, IdPairSet.empty, [], none_tycon, [])
 
 and find_strict_vars_neg_rec tp g =
   match tp with
   | PiType (x, tpA, tpB) -> let (ann_tpA, s_A) = find_strict_vars_pos tpA g
-                          in let (s, dep, ann_pairs, tc, tms) =  (find_strict_vars_neg_rec tpB (x::g)) in (s, union dep (add_dep x (intersect s_A g)), (x, ann_tpA)::ann_pairs, tc, tms)
-  | AppType (c, tms) -> ((union_fsvo_terms tms g), [], [], c, tms)
-  | _ -> ([], [], [], none_tycon, [])
+                          in let (s, dep, ann_pairs, tc, tms) =  find_strict_vars_neg_rec tpB  (IdSet.add x g) in (s,  (add_dep dep x (IdSet.union s_A g)), (x, ann_tpA)::ann_pairs, tc, tms)
+  | AppType (c, tms) -> ((union_fsvo_terms tms g), IdPairSet.empty, [], c, tms)
+  | _ -> (IdSet.empty, IdPairSet.empty, [], none_tycon, [])
 
-and  union_fsvo_terms tms g =
+and union_fsvo_terms tms g =
   match tms with
-  | [] -> []
-  | tm :: tms' -> union (find_strict_vars_object tm g []) (union_fsvo_terms tms' g)
+  | [] -> IdSet.empty
+  | tm :: tms' -> IdSet.union (find_strict_vars_object tm g IdSet.empty) (union_fsvo_terms tms' g)
 
-and find_strict_vars_object tm g d = []
+and find_strict_vars_object tm g d = IdSet.empty
 
 and finalize s dep = s;;
 
