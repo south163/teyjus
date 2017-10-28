@@ -49,10 +49,13 @@ end
 
 module IdSet = Set.Make(OrderedId)
 type idset = IdSet.t
-type idMap = (id, id list) Hashtbl.t
+(*convert a set to a list *)
+let tolist = fun s -> IdSet.fold (fun x l -> x::l) s [];; 
+           
+type idMap = (id, idset) Hashtbl.t
 
-(*Helper method to convert a map to a list of pairs*) 
-let topairlist = fun h -> Hashtbl.fold (fun k v acc -> (k, v) :: acc) h [];;
+(*convert a map to a list of pairs*) 
+let topairlist = fun h -> Hashtbl.fold (fun k v acc -> (k, (tolist v)) :: acc) h [];;
 
                
 type aposanntype = Pos of (id * aneganntype) list * id * term list
@@ -101,8 +104,9 @@ and union_fsvo_terms tms g =
 and add_dep (dep : dependency) (x : id) (l : idset) =
   IdSet.fold (fun v (tbl : dependency) ->
       match  Hashtbl.find_opt tbl v with
-      | None -> Hashtbl.add tbl v [x]; tbl
-      | Some lst -> Hashtbl.add tbl v (x::lst); tbl)  l dep
+      | None -> Hashtbl.add tbl v (IdSet.singleton x); tbl
+      | Some set -> Hashtbl.replace tbl v (IdSet.add x set);
+                    tbl)  l dep
 
 (*returns the set of strict variables in a term*)
 and find_strict_vars_object tm g d =
@@ -144,9 +148,11 @@ let dp = Hashtbl.create 16;;
 let u = IdSet.empty;;
 let u = IdSet.add w u;;
 let u = IdSet.add x u;;
+let u = IdSet.add x u;;
 
 add_dep dp y u;;
+topairlist dp;;
+
 let u = IdSet.add y u;;
-add_dep dp y u;;                     
-      
+add_dep dp x u;;                     
 topairlist dp;;
