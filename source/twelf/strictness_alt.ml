@@ -1,7 +1,7 @@
 (** Implements the strictness check for translating LF types. *)
 
 open Set
-
+open List
    
 type kind =
   PiKind of (id * typ * kind)
@@ -57,32 +57,19 @@ module OrderedIdPair = struct
   let compare = compare_id_pairs
 end
 
+
 module IdSet = Set.Make(OrderedId)
-
 type idset = IdSet.t
-
-module IdPairSet = Set.Make(OrderedIdPair)     
-             
+module IdPairSet = Set.Make(OrderedIdPair)
 type idpairset = IdPairSet.t
 
+               
 type aposanntype = Pos of (id * aneganntype) list * id * term list
-
 and aneganntype = Neg of (id * aposanntype) list * id * term list * idset
 
 type dependency = idpairset             
-type delta = idset
-type gamma = idset;;
-
-let random_func s n =
-  print_string "Hello, ";
-  print_string s;
-  flush stdout;
-  1+n
-;;
-
-let add_dep (dep : idpairset) (x : id) (l : idset) =
-  dep;;
-
+type delta = idset (* bounded variables in a type *)
+type gamma = idset (* context *)
 
 let none_tycon = Const "None";;
 
@@ -117,8 +104,41 @@ and union_fsvo_terms tms g =
   | [] -> IdSet.empty
   | tm :: tms' -> IdSet.union (find_strict_vars_object tm g IdSet.empty) (union_fsvo_terms tms' g)
 
-and find_strict_vars_object tm g d = IdSet.empty
+                
+(* union dep with {(x, y) | y \in l} *)
+and add_dep (dep : idpairset) (x : id) (l : idset) =
+  IdSet.fold (fun v pairs -> IdPairSet.add (x, v) pairs) l dep
 
+(*returns the set of strict variables in a term*)
+and find_strict_vars_object tm g d =
+  match tm with
+  | AppTerm (v, tms) -> if (all_ids_are_strict tms d IdSet.empty)
+                        then IdSet.singleton v (*Init0*)
+                        else if not (IdSet.mem v g)
+                        then union_sv_subterms tms g d (*App0*)
+                        else IdSet.empty
+  | AbsTerm (v, tp, tm') ->  find_strict_vars_object tm' g (IdSet.add v d) (*ABS0*)
+  | _ -> IdSet.empty
+
+(*Check if all terms in tms are ids and if they are all bounded (in delta)*)
+and all_ids_are_strict tms d checked : bool =
+  match tms with
+  | [] -> true
+  | (IdTerm v)::tms' -> IdSet.mem v d || not (IdSet.mem v checked) || all_ids_are_strict tms' d (IdSet.add v checked)
+  | _ -> false
+
+(* the union of all strict variables found in tms *)
+and union_sv_subterms tms g d =
+  List.fold_left (fun vars tm -> IdSet.union (find_strict_vars_object tm g d) vars) IdSet.empty tms
+  
+  
+(* 
+   and union_sv_subterms tms g d =
+  match tms with
+  | [] -> IdSet.empty
+  | tm::tms' -> IdSet.union (find_strict_vars_object tm g d) (union_sv_subterms tms' g d) 
+*)
+       
 and finalize s dep = s;;
 
 
