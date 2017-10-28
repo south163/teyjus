@@ -2,6 +2,7 @@
 
 open Set
 open List
+open Hashtbl
    
 type kind =
   PiKind of (id * typ * kind)
@@ -38,36 +39,26 @@ let string_of_id id =
                      
 
 
-let compare_id i i' = Pervasives.compare (get_id_name i) (get_id_name i')
-                   
-let compare_id_pairs p p' =
-  let v = compare_id (fst p) (fst p') in
-  match v with
-  | 0 -> compare_id (snd p) (snd p')
-  | _ -> v 
-
+let compare_id i i' = Pervasives.compare (string_of_id i) (string_of_id i')
                     
 module OrderedId = struct
   type t = id
   let compare = compare_id
 end
 
-module OrderedIdPair = struct
-  type t = (id * id)
-  let compare = compare_id_pairs
-end
-
 
 module IdSet = Set.Make(OrderedId)
 type idset = IdSet.t
-module IdPairSet = Set.Make(OrderedIdPair)
-type idpairset = IdPairSet.t
+type idMap = (id, id list) Hashtbl.t
+
+(*Helper method to convert a map to a list of pairs*) 
+let topairlist = fun h -> Hashtbl.fold (fun k v acc -> (k, v) :: acc) h [];;
 
                
 type aposanntype = Pos of (id * aneganntype) list * id * term list
 and aneganntype = Neg of (id * aposanntype) list * id * term list * idset
 
-type dependency = idpairset             
+type dependency = idMap  
 type delta = idset (* bounded variables in a type *)
 type gamma = idset (* context *)
 
@@ -89,15 +80,16 @@ and find_strict_vars_pos_rec tp g =
     PiType (x, tpA, tpB) -> let (ann_tpA, s_A) = find_strict_vars_neg tpA g
                           in let (s, dep, ann_pairs, tc, tms) =  find_strict_vars_pos_rec tpB  (IdSet.add x g)
                              in (s, (add_dep dep x (IdSet.union s_A g)), (x, ann_tpA)::ann_pairs, tc, tms)
-  | AppType (c, tms) -> ((union_fsvo_terms tms g), IdPairSet.empty, [], c, tms)
-  | _ -> (IdSet.empty, IdPairSet.empty, [], none_tycon, [])
+  | AppType (c, tms) -> ((union_fsvo_terms tms g), Hashtbl.create 16, [], c, tms)
+  | _ -> (IdSet.empty, Hashtbl.create 16, [], none_tycon, [])
 
 and find_strict_vars_neg_rec tp g =
   match tp with
   | PiType (x, tpA, tpB) -> let (ann_tpA, s_A) = find_strict_vars_pos tpA g
-                          in let (s, dep, ann_pairs, tc, tms) =  find_strict_vars_neg_rec tpB  (IdSet.add x g) in (s,  (add_dep dep x (IdSet.union s_A g)), (x, ann_tpA)::ann_pairs, tc, tms)
-  | AppType (c, tms) -> ((union_fsvo_terms tms g), IdPairSet.empty, [], c, tms)
-  | _ -> (IdSet.empty, IdPairSet.empty, [], none_tycon, [])
+                            in let (s, dep, ann_pairs, tc, tms) =  find_strict_vars_neg_rec tpB  (IdSet.add x g)
+                               in (s,  (add_dep dep x (IdSet.union s_A g)), (x, ann_tpA)::ann_pairs, tc, tms)
+  | AppType (c, tms) -> ((union_fsvo_terms tms g), Hashtbl.create 16, [], c, tms)
+  | _ -> (IdSet.empty, Hashtbl.create 16, [], none_tycon, [])
 
 and union_fsvo_terms tms g =
   match tms with
@@ -105,9 +97,12 @@ and union_fsvo_terms tms g =
   | tm :: tms' -> IdSet.union (find_strict_vars_object tm g IdSet.empty) (union_fsvo_terms tms' g)
 
                 
-(* union dep with {(x, y) | y \in l} *)
-and add_dep (dep : idpairset) (x : id) (l : idset) =
-  IdSet.fold (fun v pairs -> IdPairSet.add (x, v) pairs) l dep
+(* add x to (dep[v] : list) for each v in l *)
+and add_dep (dep : dependency) (x : id) (l : idset) =
+  IdSet.fold (fun v (tbl : dependency) ->
+      match  Hashtbl.find_opt tbl v with
+      | None -> Hashtbl.add tbl v [x]; tbl
+      | Some lst -> Hashtbl.add tbl v (x::lst); tbl)  l dep
 
 (*returns the set of strict variables in a term*)
 and find_strict_vars_object tm g d =
@@ -130,18 +125,28 @@ and all_ids_are_strict tms d checked : bool =
 (* the union of all strict variables found in tms *)
 and union_sv_subterms tms g d =
   List.fold_left (fun vars tm -> IdSet.union (find_strict_vars_object tm g d) vars) IdSet.empty tms
-  
-  
-(* 
-   and union_sv_subterms tms g d =
-  match tms with
-  | [] -> IdSet.empty
-  | tm::tms' -> IdSet.union (find_strict_vars_object tm g d) (union_sv_subterms tms' g d) 
-*)
-       
-and finalize s dep = s;;
+
+(*finalize the set of strict variables with dependency information*)
+and finalize s dep = IdSet.empty
 
 
     
+(*test cases*)
+let id1 = Const "int";;
+let id2 = Const "double";;
+let tp1 = IdType (Const "int");;
+let tp2 = IdType (Const "double");;
+let w = Var ("w", tp2);;
+let x = Var ("x", tp1);;
+let y = Var ("y", tp2);;
+let z = Var ("z", tp2);;
+let dp = Hashtbl.create 16;;
+let u = IdSet.empty;;
+let u = IdSet.add w u;;
+let u = IdSet.add x u;;
 
+add_dep dp y u;;
+let u = IdSet.add y u;;
+add_dep dp y u;;                     
       
+topairlist dp;;
