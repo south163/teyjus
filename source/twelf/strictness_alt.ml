@@ -38,7 +38,7 @@ type delta = idset
 
 type gamma = idset;;
 
-(* Set operations, will be updated after using set instead of list *)
+(* Set operations, will be updated afterwards using set instead of list *)
 let union s s' = [];;
 
 let intersect s s' = [];;
