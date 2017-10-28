@@ -206,23 +206,23 @@ let parse_sig filename =
                     (match IntSyn.conDecUni conDec with
                          IntSyn.Kind ->
                            let typefam = conDec_to_typeFam conDec in
-                           let decls' = Symboltable.insert types (Lfabsyn.get_typefam_symb typefam) typefam in
+                           let types' = Symboltable.insert types (Lfabsyn.get_typefam_symb typefam) typefam in
                            aux stream' types' objs
                        | IntSyn.Type ->
                            let (obj, target) = conDec_to_obj conDec in
                            let objs' = Symboltable.insert objs (Lfabsyn.get_obj_symb obj) obj in
-                           match Symboltable.lookup types (Symb.symbol target) with
-                               None -> Errormsg.error Errormsg.none ("Type constructor "^target^" not found in signature.");
+                           match Symboltable.lookup types target with
+                               None -> Errormsg.error Errormsg.none ("Type constructor "^(Symb.printName target)^" not found in signature.");
                                      (* try to continue if error *)
-                                     aux stream' decls objmap
+                                     aux stream' types objs
                              | Some(Lfabsyn.TypeFam(a,b,c,d,e,objs,f)) -> 
                                  
-                                 let _ = objs := (List.append !objs (Lfabsyn.get_obj_symb obj)) in
+                                 let _ = objs := (List.append !objs [Lfabsyn.get_obj_symb obj]) in
                                  aux stream' types objs')
                 | None ->  
                     aux stream' types objs)
       in
-      let (decls', objmap') = aux stream types objs in
+      let (types', objs') = aux stream types objs in
       Lfsig.Signature(types', objs')
     in
     let lfsig = readDec parseStream (Lfsig.Signature(Symboltable.empty, Symboltable.empty)) in

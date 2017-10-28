@@ -67,13 +67,6 @@ and appears_strict_tm s tm bndrs =
 
 (** Checks if the given variable appears strictly in the given
     type. *)
-let appears_strict id ty =
-  match id with
-      Lfabsyn.Const(_) ->
-        Errormsg.warning Errormsg.none 
-                         ("Attempting to check strictness of a constant " ^ (Lfabsyn.string_of_id id) ^ 
-                          " in term " ^ (Lfabsyn.string_of_typ ty)); true
-    | Lfabsyn.Var(s,_)
-    | Lfabsyn.LogicVar(s,_) ->
+let appears_strict s ty =
         appears_strict_ty s ty []
       

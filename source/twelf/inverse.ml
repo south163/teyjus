@@ -141,7 +141,7 @@ let invert (Lfsig.Signature(types, objs)) metadata fvars (subst, disprs) =
           (match (Metadata.getLF metadata (Absyn.getConstantSymbol c)) with
                Some(symb) ->
                  (match (Symboltable.lookup objs symb) with
-                      Some(c') -> (Some(Lfabsyn.IdTerm(Lfabsyn.Const(Lfabsyn.get_obj_name c'))), fvars)
+                      Some(c') -> (Some(Lfabsyn.IdTerm(Lfabsyn.Const(Lfabsyn.get_obj_symb c'))), fvars)
                     | None ->
                         Errormsg.error Errormsg.none ("No entry found in LF signature for constant "^(Symb.printName symb));
                         (None, fvars))
@@ -178,7 +178,7 @@ let invert (Lfsig.Signature(types, objs)) metadata fvars (subst, disprs) =
 	    (** b/c all args are bound variables we know they are of the correct form when inverted *)
             let h_ty = 
               List.fold_left (fun body (Lfabsyn.IdTerm((Lfabsyn.Var(s,ty) as id))) -> 
-                                    Lfabsyn.PiType(s,ty,body)) 
+                                    Lfabsyn.PiType(s,ty,body,true)) 
                              target_ty 
                              (List.rev args') in
             let fvars' = Table.add (Absyn.getTypeSymbolSymbol (Absyn.getTermFreeVariableTypeSymbol head)) h_ty fvars in
@@ -251,7 +251,7 @@ let invert (Lfsig.Signature(types, objs)) metadata fvars (subst, disprs) =
           (match apply_subst lftype subst with
                Lfabsyn.PiType(id, ty, tybody,dep) ->
                  let bvars' = List.append [(bvar_name, ty)] bvars in
-                 let bvar_term = Lfabsyn.IdTerm(Lfabsyn.Var(bvar_name, ty)) in
+                 let bvar_term = Lfabsyn.IdTerm(Lfabsyn.Var(Symb.symbol bvar_name, ty)) in
 	         let (body', fvars') = invert_term fvars bvars' (tybody,[id, bvar_term]) body in
                  if (Option.isSome body')
                  then
@@ -289,7 +289,7 @@ let invert (Lfsig.Signature(types, objs)) metadata fvars (subst, disprs) =
                note that we know the find will succeed because we are using table.fold over the free vars. *)
             let fvars'' = Table.fold (fun symb lftyp fvs -> Table.add symb 
                                                                       (apply_subst (Option.get (Table.find symb fvs)) 
-                                                                                   [id, Option.get lftm])
+                                                                                   [Lfabsyn.get_id_symb id, Option.get lftm])
                                                                       fvs) 
                                      fvars' 
                                      fvars' in
