@@ -131,7 +131,14 @@ and union_sv_subterms tms g d =
   List.fold_left (fun vars tm -> IdSet.union (find_strict_vars_object tm g d) vars) IdSet.empty tms
 
 (*finalize the set of strict variables with dependency information*)
-and finalize s dep = IdSet.empty
+and finalize s dep =
+  let s' = IdSet.union (IdSet.fold (fun v set ->
+                             match (Hashtbl.find_opt dep v) with
+                             | None -> set
+                             | Some s -> IdSet.union s set) s IdSet.empty) s
+  in if s' = s then s'
+     else finalize s' dep;;
+         
 
 
     
@@ -149,6 +156,11 @@ let u = IdSet.empty;;
 let u = IdSet.add w u;;
 let u = IdSet.add x u;;
 let u = IdSet.add x u;;
+
+let v = IdSet.empty;;
+let v = IdSet.add w v;;
+let v = IdSet.add x v;;
+let v = IdSet.add x v;;
 
 add_dep dp y u;;
 topairlist dp;;
