@@ -1,7 +1,5 @@
 (** Implements the strictness check for translating LF types. *)
 
-
-   
 type kind =
   PiKind of (id * typ * kind)
 | ImpKind of (typ * kind)
@@ -40,6 +38,7 @@ let string_of_id id =
 open Set
 open List
 open Hashtbl
+open Printf
 
 let compare_id i i' = Pervasives.compare (string_of_id i) (string_of_id i')
                     
@@ -58,7 +57,7 @@ let mapcopy map = Hashtbl.fold (fun k v m -> Hashtbl.add m k (setcopy v); m) map
 
   
 (*convert a set to a list *)
-let tolist = fun s -> IdSet.fold (fun x l -> x::l) s [];; 
+let tolist = fun s -> IdSet.fold (fun x l -> (string_of_id x)::l) s [];; 
 (*convert a map to a list of pairs*) 
 let topairlist = fun h -> Hashtbl.fold (fun k v acc -> (k, (tolist v)) :: acc) h [];;
 
@@ -70,7 +69,7 @@ type gamma = idset (* context *)
 type aposanntype = Pos of (id * aneganntype) list * id * term list
 and aneganntype = Neg of (id * aposanntype) list * id * term list * idset
 
-           
+
 
 (* annotate tp given a context gamma*)
 let rec find_strict_vars_pos tp g =
@@ -88,9 +87,9 @@ and find_strict_vars_neg tp g =
         given positive type and context g *)
 and find_strict_vars_pos_rec tp g =
   match tp with
-    PiType (x, tpA, tpB) -> let (ann_tpA, sA) = find_strict_vars_neg tpA (setcopy g)
+    PiType (x, tpA, tpB) -> let (ann_tpA, sA) = find_strict_vars_neg tpA g
                           in let (s, dep, ann_pairs, tc, tms) =  find_strict_vars_pos_rec tpB  (IdSet.add x g)
-                             in (s, (add_dep dep x (IdSet.union sA g)), (x, ann_tpA)::ann_pairs, tc, tms)
+                             in (s, (add_dep dep x (IdSet.inter sA g)), (x, ann_tpA)::ann_pairs, tc, tms)
   | AppType (c, tms) -> ((union_fsvo_terms tms g), Hashtbl.create 16, [], c, tms)
   | ImpType (tpA, tpB) -> find_strict_vars_pos_rec tpB g                       
   | IdType t -> (IdSet.empty, Hashtbl.create 16, [], t, [])
@@ -99,9 +98,9 @@ and find_strict_vars_pos_rec tp g =
         given negative type and context g *)
 and find_strict_vars_neg_rec tp g =
   match tp with
-  | PiType (x, tpA, tpB) -> let (ann_tpA, sA) = find_strict_vars_pos tpA (setcopy g)
-                            in let (s, dep, ann_pairs, tc, tms) =  find_strict_vars_neg_rec tpB  (IdSet.add x (setcopy g))
-                               in (s, (add_dep dep x (IdSet.union sA g)), (x, ann_tpA)::ann_pairs, tc, tms)
+  | PiType (x, tpA, tpB) -> let (ann_tpA, sA) = find_strict_vars_pos tpA g
+                            in let (s, dep, ann_pairs, tc, tms) =  find_strict_vars_neg_rec tpB  (IdSet.add x g)
+                               in (s, (add_dep dep x (IdSet.inter sA g)), (x, ann_tpA)::ann_pairs, tc, tms)
   | AppType (c, tms) -> ((union_fsvo_terms tms g), Hashtbl.create 16, [], c, tms)
   | ImpType (tpA, tpB) -> find_strict_vars_neg_rec tpB g                         
   | IdType t -> (IdSet.empty, Hashtbl.create 16, [], t, [])
@@ -111,7 +110,7 @@ and find_strict_vars_neg_rec tp g =
 and union_fsvo_terms tms g =
   match tms with
   | [] -> IdSet.empty
-  | tm :: tms' -> IdSet.union (find_strict_vars_term tm (setcopy g) IdSet.empty) (union_fsvo_terms tms' g)
+  | tm :: tms' -> IdSet.union (find_strict_vars_term tm g IdSet.empty) (union_fsvo_terms tms' g)
 
                 
 (* add x to (dep[v] : list) for each v in l *)
@@ -142,15 +141,20 @@ and all_ids_are_strict tms d checked : bool =
 
 (* the union of all strict variables found in tms *)
 and union_sv_subterms tms g d =
-  List.fold_left (fun vars tm -> IdSet.union (find_strict_vars_term tm g (setcopy d)) vars) IdSet.empty tms
+  List.fold_left (fun vars tm -> IdSet.union (find_strict_vars_term tm g d) vars) IdSet.empty tms
 
 (*finalize the set of strict variables with dependency information*)
 and finalize s dep =
+  let () = List.iter (printf "%s, ") (tolist s) in 
+  let ()= printf "]1\n" in 
   let s' = IdSet.union (IdSet.fold (fun v set ->
                              match (Hashtbl.find_opt dep v) with
                              | None -> set
                              | Some s -> IdSet.union s set) s IdSet.empty) s
-  in if s' = s then s'
+in   let () = List.iter (printf "%s, ") (tolist s) in 
+  let ()= printf "]2\n" in
+  let ()= printf "%b\n" (tolist s' = tolist s)
+  in if (tolist s' = tolist s) then s'
      else finalize s' dep;;
        
 
@@ -158,25 +162,31 @@ and finalize s dep =
 let idtp1 = Const "tp1";;
 let idtp2 = Const "tp2";;
 let idtp3 = Const "tp3";;
+let idtp4 = Const "tp4";;
+
 
 let tp1 = IdType idtp1;;
 let tp2 = IdType idtp2;;
 let tp3 = IdType idtp3;;
+let tp4 = IdType idtp4;;
+
 
 let v1 = Var ("v1", tp1);;
 let v2 = Var ("v2", tp2);;
-let v3 = Var ("v3", tp2);;
+let v3 = Var ("v3", tp3);;
+let v4 = Var ("v4", tp4);;
 
-let tm1 = AbsTerm (v3 , tp2 , AppTerm (v1, [IdTerm v3]));;
+
+let tm1 = AbsTerm (v4 , tp4 , AppTerm (v1, [IdTerm v4]));;
 let tm2 = IdTerm v2;;
 
 let tycon = Const "tycon";;
 
 let tmlist = [tm1; tm2];;
 
-let testtp = PiType (v1, tp1, (PiType (v2, tp2, AppType (tycon, tmlist))));;
+let testtp = PiType (v1, tp1, PiType(v2, tp2, (PiType (v3, tp3, AppType (tycon, tmlist)))));;
 
-(* [v1].[v2]. c ({v3}.v1 v3)(v2) *)
+(* [v1].[v3]. c ({v4}.v1 v4)(v2) *)
 let test = find_strict_vars_neg testtp IdSet.empty;;
 
 let print_neg_ann_type tp =
