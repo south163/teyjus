@@ -4,17 +4,31 @@ open List
 open Hashtbl
 open Printf
 
-let compare_id i i' = Pervasives.compare (Lfabsyn.string_of_id i) (Lfabsyn.string_of_id i')
+(* ---------------------------------------------------------------------------------- *)
+(*Definitions of data types*)
 
+
+(*Definition of an Id set and Id map*)
+let compare_id i i' = Pervasives.compare (Lfabsyn.string_of_id i) (Lfabsyn.string_of_id i')
 module OrderedId = struct
   type t = Lfabsyn.id
   let compare = compare_id
 end
 module IdSet = Set.Make(OrderedId)
-type idset = IdSet.t
 
-       
+type idset = IdSet.t
 type idMap = (Lfabsyn.id, idset) Hashtbl.t
+
+(*Definition of types involved in the strictness functions*)
+type dependency = idMap (* id -> P(id), if x -> {y}, then if x is strict, then y is strict*)
+type delta = idset (* bounded variables in a type *)
+type gamma = idset (* context *)
+
+type aposanntype = Pos of (Lfabsyn.id * aneganntype) list * Lfabsyn.id * Lfabsyn.term list
+and aneganntype = Neg of (Lfabsyn.id * aposanntype) list * Lfabsyn.id * Lfabsyn.term list * idset
+
+
+(*Helper methods*)
 
 (*Duplicate a set/map, might not be necessary*)
 let setcopy set = IdSet.fold (fun x s -> IdSet.add x s) set IdSet.empty;;
@@ -27,9 +41,8 @@ let rec printlist_rec l =
   [] -> ()
   | x::l' -> printf "%s; " (x); printlist_rec l';;
 
+(*print a string list*)
 let printlist l = printf "["; printlist_rec l; printf "]";;
-
-
 
 
 (*convert a map to a list of pairs*) 
@@ -37,22 +50,8 @@ let topairlist = fun h -> Hashtbl.fold (fun k v acc -> (k, (tolist v)) :: acc) h
 
 
 
-type dependency = idMap (* id -> P(id), if x -> {y}, then if x is strict, then y is strict*)
-type delta = idset (* bounded variables in a type *)
-type gamma = idset (* context *)
-
-type aposanntype = Pos of (Lfabsyn.id * aneganntype) list * Lfabsyn.id * Lfabsyn.term list
-and aneganntype = Neg of (Lfabsyn.id * aposanntype) list * Lfabsyn.id * Lfabsyn.term list * idset
-
-
-let rec print_neg_ann_type tp =
-  match tp with
-    Neg (ls, tycon, tms, s) -> (ls, tycon, tms, tolist s)
-
-and print_pos_ann_type tp = 
-    match tp with
-    Pos (ls, tycon, tms) -> (ls, tycon, tms);;
-
+(* ---------------------------------------------------------------------------------- *)
+(*Strictness functions*)
 
 (* annotate tp given a context gamma*)
 let rec find_strict_vars_pos tp g =
