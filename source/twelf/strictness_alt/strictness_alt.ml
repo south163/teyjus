@@ -8,7 +8,7 @@ open Printf
 (*Definitions of data types*)
 
 
-(*Definition of an Id set and Id map*)
+(*Definition of Id set and Id map*)
 let compare_id i i' = Pervasives.compare (Lfabsyn.string_of_id i) (Lfabsyn.string_of_id i')
 module OrderedId = struct
   type t = Lfabsyn.id
@@ -34,15 +34,16 @@ and aneganntype = Neg of (Lfabsyn.id * aposanntype) list * Lfabsyn.id * Lfabsyn.
 let setcopy set = IdSet.fold (fun x s -> IdSet.add x s) set IdSet.empty;;
 let mapcopy map = Hashtbl.fold (fun k v m -> Hashtbl.add m k (setcopy v); m) map (Hashtbl.create 16);; 
 
-(*convert a set to a list *)
+(*convert a set of id to a string list *)
 let tolist = fun s -> IdSet.fold (fun x l -> (Lfabsyn.string_of_id x)::l) s [];; 
-let rec printlist_rec l =
+
+
+(*print a string list*)
+let rec printlist l = printf "["; printlist_rec l; printf "]"
+and printlist_rec l =
   match l with
   [] -> ()
   | x::l' -> printf "%s; " (x); printlist_rec l';;
-
-(*print a string list*)
-let printlist l = printf "["; printlist_rec l; printf "]";;
 
 
 (*convert a map to a list of pairs*) 
