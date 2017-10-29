@@ -54,7 +54,7 @@ type idset = IdSet.t
 type idMap = (id, idset) Hashtbl.t
 
 let setcopy set = IdSet.fold (fun x s -> IdSet.add x s) set IdSet.empty;;
-let mapcopy map = Hashtbl.fold (fun k v m -> Hashtbl.add m k (setcopy v)) map (Hashtbl.create 16);; 
+let mapcopy map = Hashtbl.fold (fun k v m -> Hashtbl.add m k (setcopy v); m) map (Hashtbl.create 16);; 
 
   
 (*convert a set to a list *)
@@ -100,7 +100,7 @@ and find_strict_vars_pos_rec tp g =
 and find_strict_vars_neg_rec tp g =
   match tp with
   | PiType (x, tpA, tpB) -> let (ann_tpA, sA) = find_strict_vars_pos tpA (setcopy g)
-                            in let (s, dep, ann_pairs, tc, tms) =  find_strict_vars_neg_rec tpB  (IdSet.add x setcopy g)
+                            in let (s, dep, ann_pairs, tc, tms) =  find_strict_vars_neg_rec tpB  (IdSet.add x (setcopy g))
                                in (s, (add_dep dep x (IdSet.union sA g)), (x, ann_tpA)::ann_pairs, tc, tms)
   | AppType (c, tms) -> ((union_fsvo_terms tms g), Hashtbl.create 16, [], c, tms)
   | ImpType (tpA, tpB) -> find_strict_vars_neg_rec tpB g                         
@@ -172,7 +172,7 @@ let tm2 = IdTerm v2;;
 
 let tycon = Const "tycon";;
 
-let tmlist = [tm1];;
+let tmlist = [tm1; tm2];;
 
 let testtp = PiType (v1, tp1, (PiType (v2, tp2, AppType (tycon, tmlist))));;
 
