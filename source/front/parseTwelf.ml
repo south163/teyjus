@@ -127,13 +127,10 @@ and exp_to_term bvars e =
           let ty_head = exp_to_type bvars ty in
           let ty = build_type_from_dctx bvars ty_head dctx in
           Lfabsyn.IdTerm(Lfabsyn.LogicVar(Symb.symbol name, ty))
-    | IntSyn.EClo(e', IntSyn.Shift(0)) -> exp_to_term bvars e'
+    | IntSyn.EClo(e', IntSyn.Shift(_)) -> exp_to_term bvars e'
     | IntSyn.EClo (e',sub) -> 
-        let e'' = exp_to_term bvars e' in
-        (match (e'', sub) with
-             (_, IntSyn.Shift(0)) -> e''
-           | (Lfabsyn.IdTerm(id), _) ->
-               Lfabsyn.AppTerm(id, List.rev (sub_to_args bvars sub)) )
+        let (Lfabsyn.IdTerm(id)) = exp_to_term bvars e' in
+        Lfabsyn.AppTerm(id, List.rev (sub_to_args bvars sub))
     | _ ->
         Errormsg.error Errormsg.none ("exp_to_term: This expression: `"^(IntSyn.exp_to_string e)^"' is not a valid term.");
         (* try to continue with dummy term? *)
@@ -212,7 +209,7 @@ let parse_sig filename =
                            let (obj, target) = conDec_to_obj conDec in
                            let objs' = Symboltable.insert objs (Lfabsyn.get_obj_symb obj) obj in
                            match Symboltable.lookup types target with
-                               None -> Errormsg.error Errormsg.none ("Type constructor "^(Symb.printName target)^" not found in signature.");
+                               None -> Errormsg.error Errormsg.none ("Type constructor "^(Symb.name target)^" not found in signature.");
                                      (* try to continue if error *)
                                      aux stream' types objs
                              | Some(Lfabsyn.TypeFam(a,b,c,d,e,objs,f)) -> 

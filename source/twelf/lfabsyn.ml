@@ -54,10 +54,10 @@ let get_id_name id =
     | LogicVar(s,_) -> Symb.name s
 
 let rec string_of_typefam (TypeFam(s,k,_,_,_,_,implicit)) =
-  (Symb.printName s) ^ " : " ^ (string_of_kind (skip_kind implicit k)) ^ "."
+  (Symb.name s) ^ " : " ^ (string_of_kind (skip_kind implicit k)) ^ "."
 
 and string_of_obj (Object(s,ty,_,_,_,implicit)) =
-  (Symb.printName s) ^ " : " ^ (string_of_typ (skip_typ implicit ty)) ^ "."
+  (Symb.name s) ^ " : " ^ (string_of_typ (skip_typ implicit ty)) ^ "."
 
 and skip_kind k knd =
   match (k, knd) with
@@ -80,7 +80,7 @@ and string_of_kind k =
       PiKind(s,ty,body,dep) ->
         (if dep
          then 
-           "({ " ^ (Symb.printName s) ^ " : " ^ (string_of_typ ty) ^ "} "
+           "({ " ^ (Symb.name s) ^ " : " ^ (string_of_typ ty) ^ "} "
          else
            "(" ^ (string_of_typ ty) ^ " -> ")
         ^ (string_of_kind body) ^ ")"
@@ -91,7 +91,7 @@ and string_of_typ ty =
       PiType(s,t1,t2,dep) ->
         (if dep
          then
-            "({ " ^ (Symb.printName s) ^ " : " ^ (string_of_typ t1) ^ "} "
+            "({ " ^ (Symb.name s) ^ " : " ^ (string_of_typ t1) ^ "} "
          else
             "(" ^ (string_of_typ t1) ^ " -> ")
         ^ (string_of_typ t2) ^ ")"
@@ -108,9 +108,9 @@ and string_of_typ ty =
 and string_of_term tm =
   match tm with
       AbsTerm(s, Unknown, body) ->
-        "([" ^ (Symb.printName s) ^ "] " ^ (string_of_term body) ^ ")"
+        "([" ^ (Symb.name s) ^ "] " ^ (string_of_term body) ^ ")"
     | AbsTerm(s,ty,body) -> 
-        "([" ^ (Symb.printName s) ^ " : " ^ (string_of_typ ty) ^"] " ^ (string_of_term body) ^ ")"
+        "([" ^ (Symb.name s) ^ " : " ^ (string_of_typ ty) ^"] " ^ (string_of_term body) ^ ")"
     | AppTerm(head, tms) -> 
         let tmlist = 
           List.fold_left (fun s t -> s ^ " " ^ (string_of_term t)) "" tms
@@ -122,7 +122,7 @@ and string_of_id id =
   match id with
       Const(s)
     | Var(s,_) 
-    | LogicVar(s,_) -> Symb.printName s
+    | LogicVar(s,_) -> Symb.name s
 
 let get_id_symb id =
   match id with
@@ -131,10 +131,10 @@ let get_id_symb id =
     | LogicVar(s,_) -> s
       
 let string_of_query (Query(_,s,ty)) =
-  (Symb.printName s) ^ " : " ^ (string_of_typ ty)
+  (Symb.name s) ^ " : " ^ (string_of_typ ty)
 
 let string_of_query' (Query(fvars,s,ty)) =
-  let bndrs = List.fold_left (fun s (symb,ty) -> s^(Symb.printName symb)^" : "^(string_of_typ ty)^".") "" fvars in
+  let bndrs = List.fold_left (fun s (symb,ty) -> s^(Symb.name symb)^" : "^(string_of_typ ty)^".") "" fvars in
   bndrs ^ (string_of_query(Query(fvars,s,ty)))
 
 
@@ -149,9 +149,9 @@ let rec skip k l =
 let rec string_of_term_implicit types objs tm =
   let rec aux tm =
     match tm with
-      AbsTerm(symb, Unknown, body) -> "([" ^ (Symb.printName symb) ^"] "^ (aux body) ^ ")"
+      AbsTerm(symb, Unknown, body) -> "([" ^ (Symb.name symb) ^"] "^ (aux body) ^ ")"
     | AbsTerm(symb,ty,body) -> 
-        "([" ^ (Symb.printName symb) ^ " : " ^ (string_of_typ_implicit types objs ty) ^"] " ^ (aux body) ^ ")"
+        "([" ^ (Symb.name symb) ^ " : " ^ (string_of_typ_implicit types objs ty) ^"] " ^ (aux body) ^ ")"
     | AppTerm(head, tms) -> 
         let h_symb = get_id_symb head in
         let k =
@@ -162,7 +162,7 @@ let rec string_of_term_implicit types objs tm =
         let tmlist = 
           List.fold_left (fun s t -> s ^ " " ^ (aux t)) "" (skip k tms)
         in
-        "(" ^ (Symb.printName h_symb) ^ " " ^ tmlist ^ ")"
+        "(" ^ (Symb.name h_symb) ^ " " ^ tmlist ^ ")"
     | IdTerm(id) -> string_of_id id
   in
   aux tm
@@ -172,7 +172,7 @@ and string_of_typ_implicit types objs ty =
       PiType(symb,t1,t2,dep) ->
         (if dep
          then
-            "({ " ^ (Symb.printName symb) ^ " : " ^ (aux t1) ^ "} "
+            "({ " ^ (Symb.name symb) ^ " : " ^ (aux t1) ^ "} "
          else
             "(" ^ (aux t1) ^ " -> ")
         ^ (aux t2) ^ ")"
@@ -185,7 +185,7 @@ and string_of_typ_implicit types objs ty =
                in
                "(" ^ (string_of_id t) ^ " " ^ tmlist ^ ")"
            | None ->
-               Errormsg.error Errormsg.none ("No entry in type table for application head " ^ (Symb.printName h_symb));
+               Errormsg.error Errormsg.none ("No entry in type table for application head " ^ (Symb.name h_symb));
                string_of_typ ty )
     | IdType(id) ->
         string_of_id id
@@ -198,7 +198,7 @@ let string_of_solution types objs (subst, disprs) =
       match sub with
           ((s,tm) :: sub') when (Symb.name s) = "" -> string_of_subst_aux sub'
         | ((s,tm) :: sub') ->
-            (Symb.printName s) ^ " = " ^ (string_of_term_implicit types objs tm) ^ "\n" ^ (string_of_subst_aux sub')
+            (Symb.name s) ^ " = " ^ (string_of_term_implicit types objs tm) ^ "\n" ^ (string_of_subst_aux sub')
         | [] -> ""
     in
     if subst = []
@@ -227,8 +227,8 @@ let get_typefam_implicit (TypeFam(_,_,_,_,_,_,p)) = p
 let get_obj_implicit (Object(_,_,_,_,_,p)) = p
 
 
-let get_typefam_name (TypeFam(s,_,_,_,_,_,_)) = Symb.printName s
-let get_obj_name (Object(s,_,_,_,_,_)) = Symb.printName s
+let get_typefam_name (TypeFam(s,_,_,_,_,_,_)) = Symb.name s
+let get_obj_name (Object(s,_,_,_,_,_)) = Symb.name s
 
 
 let get_typefam_kind (TypeFam(_,k,_,_,_,_,_)) = k

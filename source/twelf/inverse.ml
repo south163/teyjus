@@ -109,7 +109,7 @@ let invert (Lfsig.Signature(types, objs)) metadata fvars (subst, disprs) =
                    (match (Symboltable.lookup objs symb) with
                         Some(c') -> Some(Lfabsyn.get_obj_typ c')
                       | None ->
-                          Errormsg.error Errormsg.none ("No entry found in LF signature for constant "^(Symb.printName symb));
+                          Errormsg.error Errormsg.none ("No entry found in LF signature for constant "^(Symb.name symb));
                           None)
                | None ->
                    Errormsg.error Errormsg.none ("No mapping found for LP constant "^(Absyn.getConstantName c));
@@ -143,7 +143,7 @@ let invert (Lfsig.Signature(types, objs)) metadata fvars (subst, disprs) =
                  (match (Symboltable.lookup objs symb) with
                       Some(c') -> (Some(Lfabsyn.IdTerm(Lfabsyn.Const(Lfabsyn.get_obj_symb c'))), fvars)
                     | None ->
-                        Errormsg.error Errormsg.none ("No entry found in LF signature for constant "^(Symb.printName symb));
+                        Errormsg.error Errormsg.none ("No entry found in LF signature for constant "^(Symb.name symb));
                         (None, fvars))
              | None ->
                  Errormsg.error Errormsg.none ("No mapping found for LP constant "^(Absyn.getConstantName c));
