@@ -46,7 +46,7 @@ printlist (tolist (snd test));
 printf "\n\n";;
 
 
-(* testtp3 = [v1:tp1].[v2:tp2].[v5: tp5]. tycon' ({v6}. v5 v6)(v2) *)
+(* Test case 3: testtp3 = [v1:tp1].[v2:tp2].[v5: tp5]. tycon' ({v6}. v5 v6)(v2), where v2 appears strict in tp5, v1 appears strict in tp2 *)
 let tm0 = Lfabsyn.AbsTerm (v0, tp1 , Lfabsyn.AppTerm (v1, [Lfabsyn.IdTerm v0]));;
 let tmlist = [tm0];;
 let tp2 = Lfabsyn.AppType (tycon, tmlist);;
