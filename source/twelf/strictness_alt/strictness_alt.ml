@@ -133,7 +133,7 @@ and finalize s dep =
   let s' = IdSet.union (IdSet.fold (fun v set ->
                              match (Hashtbl.find_opt dep v) with
                              | None -> set
-                             | Some s -> IdSet.union s set) s IdSet.empty) s
+                             | Some s' -> IdSet.union s' set) s IdSet.empty) s
   in if (tolist s' = tolist s) then s'
      else finalize s' dep;;
        
