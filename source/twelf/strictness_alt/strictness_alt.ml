@@ -21,7 +21,7 @@ type idMap = (Lfabsyn.id, idset) Hashtbl.t
 
 (*Definition of types involved in the strictness functions*)
 type dependency = idMap (* id -> P(id), if x -> {y}, then if x is strict, then y is strict*)
-type delta = idset (* bounded variables in a type *)
+type delta = idset (* bounded variables in a term *)
 type gamma = idset (* context *)
 
 type aposanntype = Pos of (Lfabsyn.id * aneganntype) list * Lfabsyn.id * Lfabsyn.term list
