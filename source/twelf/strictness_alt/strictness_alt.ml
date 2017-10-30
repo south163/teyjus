@@ -67,8 +67,8 @@ and find_strict_vars_neg tp g =
   		(Neg (ann_pairs, c, tms, (IdSet.diff s_final g)), s_final)
 
               
-(* find (incomplete) strict variables, dependency information, and elements to construct pos_ann_type 
-        given positive type and context g *)
+(* find a (incomplete) set of strict variables, dependency information, and elements to construct pos_ann_type 
+        given a positive type tp and context g *)
 and find_strict_vars_pos_rec tp g =
   match tp with
     Lfabsyn.PiType (x, tpA, tpB) -> let (ann_tpA, sA) = find_strict_vars_neg tpA g in
@@ -79,8 +79,8 @@ and find_strict_vars_pos_rec tp g =
   | Lfabsyn.IdType t -> (IdSet.empty, Hashtbl.create 16, [], t, [])
 
 
-(* find (incomplete) strict variables, dependency information, and elements to construct neg_ann_type 
-        given negative type and context g *)
+(* find a (incomplete) set of strict variables, dependency information, and elements to construct neg_ann_type 
+        given a negative type and context g *)
 and find_strict_vars_neg_rec tp g =
   match tp with
   | Lfabsyn.PiType (x, tpA, tpB) -> let (ann_tpA, sA) = find_strict_vars_pos tpA g in
