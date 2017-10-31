@@ -5,7 +5,7 @@ module OrderedSymb : sig
   val compare : t -> t -> int
   end
                      
-module SymbSet = Set.Make(OrderedSymb)
+module SymbSet = Set.S
 
 type symbset = SymbSet.t
 type symbMap = (Symb.symbol, symbset) Hashtbl.t
