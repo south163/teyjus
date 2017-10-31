@@ -48,12 +48,39 @@ and id =
 | Var of (string * typ) 
 | LogicVar of (string * typ)
 
-let get_id_name id =
-  match id with
-      Const(n) -> n
-    | Var(n,_) -> n
-    | LogicVar(n,_) -> n
 
+let rec string_of_kind k =
+  match k with
+      PiKind(id,ty,body) -> 
+        "({ " ^ (string_of_id id) ^ " : " ^ (string_of_typ ty) ^ "} " ^ (string_of_kind body) ^ ")"
+    | ImpKind(ty,body) -> 
+        "(" ^ (string_of_typ ty) ^ " -> " ^ (string_of_kind body) ^ ")"
+    | Type -> "type"
+
+and string_of_typ ty =
+  match ty with
+      PiType(id,t1,t2) -> 
+        "({ " ^ (string_of_id id) ^ " : " ^ (string_of_typ t1) ^ "} " ^ (string_of_typ t2) ^ ")"
+    | AppType(t,tms) ->
+        let tmlist =
+          List.fold_left (fun s tm -> s ^ " " ^ (string_of_term tm)) "" tms
+        in
+        "(" ^ (string_of_id t) ^ " " ^ tmlist ^ ")"
+    | ImpType(t1,t2) ->
+        "(" ^ (string_of_typ t1) ^ " -> " ^ (string_of_typ t2) ^ ")"
+    | IdType(id) ->
+        string_of_id id
+
+and string_of_term tm =
+  match tm with
+      AbsTerm(id,ty,body) -> 
+        "([" ^ (string_of_id id) ^ " : " ^ (string_of_typ ty) ^"] " ^ (string_of_term body) ^ ")"
+    | AppTerm(head, tms) -> 
+        let tmlist = 
+          List.fold_left (fun s t -> s ^ " " ^ (string_of_term t)) "" tms
+        in
+        "(" ^ (string_of_id head) ^ " " ^ tmlist ^ ")"
+    | IdTerm(id) -> string_of_id id
 
 and string_of_id id =
   match id with
@@ -61,4 +88,9 @@ and string_of_id id =
     | Var(n,_) 
     | LogicVar(n,_) -> n
 
+and get_id_name id =
+  match id with
+      Const(n) -> n
+    | Var(n,_) -> n
+    | LogicVar(n,_) -> n
 
