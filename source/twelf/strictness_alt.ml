@@ -4,38 +4,39 @@ open List
 open Hashtbl
 open Printf
 
+
 (* ---------------------------------------------------------------------------------- *)
 (*Definitions of data types*)
 
 
-(*Definition of Id set and Id map*)
-let compare_id s1 s2 = Pervasives.compare (Symb.id s1) (Symb.id s2)
-module OrderedId = struct
+(*Definition of symbol set and symbol map*)
+let compare_symb sym sym' = Pervasives.compare (Symb.id sym) (Symb.id sym')
+module OrderedSymb = struct
   type t = Symb.symbol
-  let compare = compare_id
+  let compare = compare_symb
 end
-module IdSet = Set.Make(OrderedId)
+module SymbSet = Set.Make(OrderedSymb)
 
-type idset = IdSet.t
-type idMap = (Symb.symbol, idset) Hashtbl.t
+type symbset = SymbSet.t
+type symbMap = (Symb.symbol, symbset) Hashtbl.t
 
 (*Definition of types involved in the strictness functions*)
-type dependency = idMap (* id -> P(id), if x -> {y}, then if x is strict, then y is strict*)
-type delta = idset (* bounded variables in a term *)
-type gamma = idset (* context *)
+type dependency = symbMap (* id -> P(id), if x -> {y}, then if x is strict, then y is strict*)
+type delta = symbset (* bounded variables in a term *)
+type gamma = symbset (* context *)
 
 type aposanntype = Pos of (Symb.symbol * aneganntype) list * Lfabsyn.id * Lfabsyn.term list
-and aneganntype = Neg of (Symb.symbol * aposanntype) list * Lfabsyn.id * Lfabsyn.term list * idset
+and aneganntype = Neg of (Symb.symbol * aposanntype) list * Lfabsyn.id * Lfabsyn.term list * symbset
 
 
 (*Helper methods*)
 
 (*Duplicate a set/map, might not be necessary*)
-let setcopy set = IdSet.fold (fun x s -> IdSet.add x s) set IdSet.empty;;
+let setcopy set = SymbSet.fold (fun x s -> SymbSet.add x s) set SymbSet.empty;;
 let mapcopy map = Hashtbl.fold (fun k v m -> Hashtbl.add m k (setcopy v); m) map (Hashtbl.create 16);; 
 
 (*convert a set of id to a string list *)
-let tolist = fun s -> IdSet.fold (fun x l -> (Symb.name x)::l) s [];; 
+let tolist = fun s -> SymbSet.fold (fun x l -> (Symb.id x)::l) s [];; 
 
 
 (*print a string list*)
@@ -56,103 +57,87 @@ let topairlist = fun h -> Hashtbl.fold (fun k v acc -> (k, (tolist v)) :: acc) h
 
 (* annotate tp given a context gamma*)
 let rec find_strict_vars_pos tp g =
-  let (s, dep, ann_pairs, c, tms) = find_strict_vars_pos_rec tp g in
+  let (s, dep, ann_pairs, c, tms, g') = find_strict_vars_pos_rec tp g in
   	let s_final = finalize s dep in
-  		(Pos (ann_pairs, c, tms), s_final)
+  		(Pos (ann_pairs, c, tms), (SymbSet.inter g' s_final))
 
 
 and find_strict_vars_neg tp g =
-  let (s, dep, ann_pairs, c, tms) = find_strict_vars_neg_rec tp g in
+  let (s, dep, ann_pairs, c, tms, g') = find_strict_vars_neg_rec tp g in
   	let s_final = finalize s dep in
-  		(Neg (ann_pairs, c, tms, (IdSet.diff s_final g)), s_final)
+  		(Neg (ann_pairs, c, tms, (SymbSet.diff s_final g')), (SymbSet.inter g' s_final))
 
               
 (* find a (incomplete) set of strict variables, dependency information, and elements to construct pos_ann_type 
         given a positive type tp and context g *)
 and find_strict_vars_pos_rec tp g =
   match tp with
-    Lfabsyn.PiType (x, tpA, tpB, dep) ->
-      if dep
-      then
-        let (ann_tpA, sA) = find_strict_vars_neg tpA g in
-        let (s, dep, ann_pairs, tc, tms) = find_strict_vars_pos_rec tpB  (IdSet.add x g) in
-        (s, (add_dep dep x (IdSet.inter sA g)), (x, ann_tpA)::ann_pairs, tc, tms)
-      else
-        find_strict_vars_pos_rec tpB g  
-  | Lfabsyn.AppType (c, tms) ->
-     ((union_fsvo_terms tms g), Hashtbl.create 16, [], c, tms)                     
-  | Lfabsyn.IdType t ->
-     (IdSet.empty, Hashtbl.create 16, [], t, [])
+    Lfabsyn.PiType (x, tpA, tpB, true) -> let (ann_tpA, sA) = find_strict_vars_neg tpA g in
+                            let (s, dep, ann_pairs, tc, tms, g') = find_strict_vars_pos_rec tpB (SymbSet.add x g)
+                            in (s, (add_dep dep x (SymbSet.inter sA g)), (x, ann_tpA)::ann_pairs, tc, tms, (SymbSet.add x g'))
+  | Lfabsyn.PiType (x, tpA, tpB, false) -> find_strict_vars_pos_rec tpB g
+  | Lfabsyn.AppType (c, tms) -> ((union_fsvo_terms tms g), Hashtbl.create 16, [], c, tms, g)
+  | Lfabsyn.IdType t -> (SymbSet.empty, Hashtbl.create 16, [], t, [], SymbSet.empty)
+  | Lfabsyn.Unknown -> exit(1)
 
 
 (* find a (incomplete) set of strict variables, dependency information, and elements to construct neg_ann_type 
         given a negative type and context g *)
 and find_strict_vars_neg_rec tp g =
   match tp with
-  | Lfabsyn.PiType (x, tpA, tpB, dep) ->
-     if dep
-     then
-       let (ann_tpA, sA) = find_strict_vars_pos tpA g in
-       let (s, dep, ann_pairs, tc, tms) = find_strict_vars_neg_rec tpB  (IdSet.add x g) in
-       (s, (add_dep dep x (IdSet.inter sA g)), (x, ann_tpA)::ann_pairs, tc, tms)
-     else
-       find_strict_vars_neg_rec tpB g
-  | Lfabsyn.AppType (c, tms) ->
-     ((union_fsvo_terms tms g), Hashtbl.create 16, [], c, tms)                      
-  | Lfabsyn.IdType t ->
-     (IdSet.empty, Hashtbl.create 16, [], t, [])
+  | Lfabsyn.PiType (x, tpA, tpB, true) -> let (ann_tpA, sA) = find_strict_vars_pos tpA g in
+                            let (s, dep, ann_pairs, tc, tms, g') = find_strict_vars_neg_rec tpB  (SymbSet.add x g)
+                            in (s, (add_dep dep x (SymbSet.inter sA g)), (x, ann_tpA)::ann_pairs, tc, tms, (SymbSet.add x g'))
+  | Lfabsyn.PiType (x, tpA, tpB, false) -> find_strict_vars_neg_rec tpB g                         
+  | Lfabsyn.AppType (c, tms) -> ((union_fsvo_terms tms g), Hashtbl.create 16, [], c, tms, g)
+  | Lfabsyn.IdType t -> (SymbSet.empty, Hashtbl.create 16, [], t, [], SymbSet.empty)
+  | Lfabsyn.Unknown -> exit(1)
 
 
 (* find all the strict variables in a list of terms *)
 and union_fsvo_terms tms g =
   match tms with
-  | [] -> IdSet.empty
-  | tm :: tms' -> IdSet.union (find_strict_vars_term tm g IdSet.empty) (union_fsvo_terms tms' g)
+  | [] -> SymbSet.empty
+  | tm :: tms' -> SymbSet.union (find_strict_vars_term tm g SymbSet.empty) (union_fsvo_terms tms' g)
 
                 
 (* add x to (dep[v] : list) for each v in l *)
-and add_dep (dep : dependency) (x : Symb.symbol) (l : idset) =
-  IdSet.fold (fun v (tbl : dependency) ->
-                try
-                  let set = Hashtbl.find tbl x in
-                  Hashtbl.replace tbl x (IdSet.add v set); tbl
-                with Not_found -> Hashtbl.add tbl x (IdSet.singleton v); tbl)
-             l dep
-      
+and add_dep (dep : dependency) (x : Symb.symbol) (l : symbset) =
+  SymbSet.fold (fun v (tbl : dependency) ->
+      match  Hashtbl.find_opt tbl x with
+      | None -> Hashtbl.add tbl x (SymbSet.singleton v); tbl
+      | Some set -> Hashtbl.replace tbl x (SymbSet.add v set);
+                    tbl) l dep
+
 (*returns the set of strict variables in a term*)
 and find_strict_vars_term tm g d =
   match tm with
-  | Lfabsyn.AppTerm (v, tms) ->
-     if (all_ids_are_strict tms d IdSet.empty)
-     then IdSet.singleton (Lfabsyn.get_id_symb v) (*Init0*)
-     else if not (IdSet.mem (Lfabsyn.get_id_symb v) g)
-     then union_sv_subterms tms g d (*App0*)
-     else IdSet.empty
-  | Lfabsyn.AbsTerm (v, tp, tm') ->  find_strict_vars_term tm' g (IdSet.add v d) (*ABS0*)
-  | _ -> IdSet.empty
+  | Lfabsyn.AppTerm (id, tms) -> if (all_ids_are_strict tms d SymbSet.empty)
+                        then SymbSet.singleton (Lfabsyn.get_id_symb id) (*Init0*)
+                        else if not (SymbSet.mem (Lfabsyn.get_id_symb id) g)
+                        then union_sv_subterms tms g d (*App0*)
+                        else SymbSet.empty
+  | Lfabsyn.AbsTerm (x, tp, tm') ->  find_strict_vars_term tm' g (SymbSet.add x d) (*ABS0*)
+  | Lfabsyn.IdTerm id -> SymbSet.singleton (Lfabsyn.get_id_symb id)
 
 (*Check if all terms in tms are ids and if they are all bounded (in delta)*)
 and all_ids_are_strict tms d checked : bool =
   match tms with
   | [] -> true
-  | (Lfabsyn.IdTerm v)::tms' ->
-       let s = Lfabsyn.get_id_symb v in
-       IdSet.mem s d && not (IdSet.mem s checked) && all_ids_are_strict tms' d (IdSet.add s checked)
+  | (Lfabsyn.IdTerm id)::tms' -> SymbSet.mem (Lfabsyn.get_id_symb id) d && not (SymbSet.mem (Lfabsyn.get_id_symb id) checked) 
+                            && all_ids_are_strict tms' d (SymbSet.add (Lfabsyn.get_id_symb id) checked)
   | _ -> false
 
 (* the union of all strict variables found in tms *)
 and union_sv_subterms tms g d =
-  List.fold_left (fun vars tm -> IdSet.union (find_strict_vars_term tm g d) vars) IdSet.empty tms
+  List.fold_left (fun vars tm -> SymbSet.union (find_strict_vars_term tm g d) vars) SymbSet.empty tms
 
 (*finalize the set of strict variables with dependency information*)
 and finalize s dep =
-  let s' =
-    IdSet.union (IdSet.fold (fun v set ->
-                               try
-                                 let s' = Hashtbl.find dep v in
-                                 IdSet.union s' set
-                               with Not_found -> set)
-                            s IdSet.empty) s
+  let s' = SymbSet.union (SymbSet.fold (fun v set ->
+                             match (Hashtbl.find_opt dep v) with
+                             | None -> set
+                             | Some s' -> SymbSet.union s' set) s SymbSet.empty) s
   in if (tolist s' = tolist s) then s'
      else finalize s' dep;;
        
