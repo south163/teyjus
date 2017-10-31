@@ -200,7 +200,11 @@ printf "\tStricts: ";;
 printlist (tolist (snd test));;
 printf "\n\n";;
 
-
+let gm = IdSet.add ff (IdSet.add l1 (IdSet.add l2 (IdSet.singleton xx)));;
+let test = find_strict_vars_term (AppTerm (cons_id, [IdTerm xx; IdTerm l1])) gm IdSet.empty;;
+printf "\tStricts in term: ";;
+printlist (tolist (test));;
+printf "\n\n";;
 
 
 

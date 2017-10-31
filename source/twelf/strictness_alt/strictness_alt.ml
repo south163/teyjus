@@ -5,6 +5,7 @@ open Hashtbl
 open Printf
 open Lfabsyn
 
+
 (* ---------------------------------------------------------------------------------- *)
 (*Definitions of data types*)
 
