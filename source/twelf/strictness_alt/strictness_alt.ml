@@ -50,8 +50,6 @@ and printlist_rec l =
 (*convert a map to a list of pairs*) 
 let topairlist = fun h -> Hashtbl.fold (fun k v acc -> (k, (tolist v)) :: acc) h [];;
 
-
-
 (* ---------------------------------------------------------------------------------- *)
 (*Strictness functions*)
 
@@ -104,7 +102,7 @@ and union_fsvo_terms tms g =
 (* add x to (dep[v] : list) for each v in l *)
 and add_dep (dep : dependency) (x : Symb.symbol) (l : symbset) =
   SymbSet.fold (fun v (tbl : dependency) ->
-		    let set = Hashtbl.find tbl x in Hashtbl.replace tbl x (SymbSet.add v set); tbl
+		    try let set = Hashtbl.find tbl x in Hashtbl.replace tbl x (SymbSet.add v set); tbl
 		    with Not_found -> Hashtbl.add tbl x (SymbSet.singleton v); tbl) l dep
 
 (*returns the set of strict variables in a term*)
@@ -133,7 +131,7 @@ and union_sv_subterms tms g d =
 (*finalize the set of strict variables with dependency information*)
 and finalize s dep =
   let s' = SymbSet.union (SymbSet.fold (fun v set ->
-					    let s' = (Hashtbl.find dep v) in SymbSet.union s' set
+					    try let s' = (Hashtbl.find dep v) in SymbSet.union s' set
 					    with Not_found -> set) s SymbSet.empty) s
   in if (tolist s' = tolist s) then s'
      else finalize s' dep;;

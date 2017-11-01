@@ -39,12 +39,12 @@ let mapcopy map = Hashtbl.fold (fun k v m -> Hashtbl.add m k (setcopy v); m) map
 let tolist = fun s -> SymbSet.fold (fun x l -> (Symb.id x)::l) s [];; 
 
 
-(*print a string list*)
-let rec printlist l = printf "["; printlist_rec l; printf "]"
+(*print a symbset*)
+let rec printset s = printf "["; printlist_rec (tolist s); printf "]"
 and printlist_rec l =
   match l with
   [] -> ()
-  | x::l' -> printf "%s; " (x); printlist_rec l';;
+  | x::l' -> printf "%d; " (x); printlist_rec l';;
 
 
 (*convert a map to a list of pairs*) 
@@ -64,6 +64,7 @@ let rec find_strict_vars_pos tp g =
 
 and find_strict_vars_neg tp g =
   let (s, dep, ann_pairs, c, tms, g') = find_strict_vars_neg_rec tp g in
+
   	let s_final = finalize s dep in
   		(Neg (ann_pairs, c, tms, (SymbSet.diff s_final g')), (SymbSet.inter g' s_final))
 
@@ -72,26 +73,25 @@ and find_strict_vars_neg tp g =
         given a positive type tp and context g *)
 and find_strict_vars_pos_rec tp g =
   match tp with
-    Lfabsyn.PiType (x, tpA, tpB, true) -> let (ann_tpA, sA) = find_strict_vars_neg tpA g in
+    Lfabsyn.PiType (x, tpA, tpB, _) -> printf "Var: %s\n" (Symb.name x); let (ann_tpA, sA) = find_strict_vars_neg tpA g in
                             let (s, dep, ann_pairs, tc, tms, g') = find_strict_vars_pos_rec tpB (SymbSet.add x g)
                             in (s, (add_dep dep x (SymbSet.inter sA g)), (x, ann_tpA)::ann_pairs, tc, tms, (SymbSet.add x g'))
-  | Lfabsyn.PiType (x, tpA, tpB, false) -> find_strict_vars_pos_rec tpB g
   | Lfabsyn.AppType (c, tms) -> ((union_fsvo_terms tms g), Hashtbl.create 16, [], c, tms, g)
-  | Lfabsyn.IdType t -> (SymbSet.empty, Hashtbl.create 16, [], t, [], SymbSet.empty)
-  | Lfabsyn.Unknown -> exit(1)
+  | Lfabsyn.IdType t -> printf "Type: %s \n" (Lfabsyn.string_of_id t); (SymbSet.empty, Hashtbl.create 16, [], t, [], SymbSet.empty)
+  | Lfabsyn.Unknown -> printf "Unknown type"; exit(1)
 
 
-(* find a (incomplete) set of strict variables, dependency information, and elements to construct neg_ann_type 
+(* find a (incomplete) set of strict variables, dependency information, and elements to construct neg_ann_type
         given a negative type and context g *)
 and find_strict_vars_neg_rec tp g =
   match tp with
-  | Lfabsyn.PiType (x, tpA, tpB, true) -> let (ann_tpA, sA) = find_strict_vars_pos tpA g in
+  | Lfabsyn.PiType (x, tpA, tpB, _) -> printf "Var: %s\n" (Symb.name x); let (ann_tpA, sA) = find_strict_vars_pos tpA g in
                             let (s, dep, ann_pairs, tc, tms, g') = find_strict_vars_neg_rec tpB  (SymbSet.add x g)
                             in (s, (add_dep dep x (SymbSet.inter sA g)), (x, ann_tpA)::ann_pairs, tc, tms, (SymbSet.add x g'))
-  | Lfabsyn.PiType (x, tpA, tpB, false) -> find_strict_vars_neg_rec tpB g                         
+ (* | Lfabsyn.PiType (x, tpA, tpB, false) -> find_strict_vars_neg_rec tpB g*)
   | Lfabsyn.AppType (c, tms) -> ((union_fsvo_terms tms g), Hashtbl.create 16, [], c, tms, g)
-  | Lfabsyn.IdType t -> (SymbSet.empty, Hashtbl.create 16, [], t, [], SymbSet.empty)
-  | Lfabsyn.Unknown -> exit(1)
+  | Lfabsyn.IdType t -> printf "Type: %s \n" (Lfabsyn.string_of_id t); (SymbSet.empty, Hashtbl.create 16, [], t, [], SymbSet.empty)
+  | Lfabsyn.Unknown -> printf "Unknown type"; exit(1)
 
 
 (* find all the strict variables in a list of terms *)
@@ -100,7 +100,7 @@ and union_fsvo_terms tms g =
   | [] -> SymbSet.empty
   | tm :: tms' -> SymbSet.union (find_strict_vars_term tm g SymbSet.empty) (union_fsvo_terms tms' g)
 
-                
+
 (* add x to (dep[v] : list) for each v in l *)
 and add_dep (dep : dependency) (x : Symb.symbol) (l : symbset) =
   SymbSet.fold (fun v (tbl : dependency) ->
