@@ -56,13 +56,10 @@ and exp_to_type bvars e =
         let Names.Qid(_,name) = Names.constQid(cid) in
         let args = spine_map (exp_to_term bvars) spine in
         Lfabsyn.AppType(Lfabsyn.Const(Symb.symbol name),args)
-    | IntSyn.EClo(e', IntSyn.Shift(0)) -> exp_to_type bvars e'
+    | IntSyn.EClo(e', IntSyn.Shift(_)) -> exp_to_type bvars e'
     | IntSyn.EClo (e',sub) -> 
-        let e'' = exp_to_type bvars e' in
-        (match (e'', sub) with
-             (_, IntSyn.Shift(0)) -> e''
-           | (Lfabsyn.IdType(id), _) ->
-               Lfabsyn.AppType(id, List.rev (sub_to_args bvars sub)) )
+        let Lfabsyn.IdType(id) = exp_to_type bvars e' in
+        Lfabsyn.AppType(id, List.rev (sub_to_args bvars sub))
     | _ ->
         Errormsg.error Errormsg.none ("exp_to_type: This expression type: `"^(IntSyn.exp_to_string e)^"' is not a valid type.");
         (* try to continue with dummy type? *)
