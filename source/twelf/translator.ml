@@ -141,9 +141,7 @@ let rec encode_kind opt metadata consttbl vars k =
         fun m ->
           let bvar = Absyn.BoundVar(Symbol.symbol (Symb.name s), ref None, ref false, ref (Some(flatten_type ty))) in
           let vartm = Absyn.makeBoundVarTerm (bvar) Errormsg.none in
-          let () = printf "Currently processing: %s\n" (Lfabsyn.string_of_typ ty) in
           let (pos_tp, stricts) = (Strictness_alt.find_strict_vars_pos ty Strictness_alt.SymbSet.empty) in
-          let () = Strictness_alt.printset stricts in
           let l = (encode_type_positive opt metadata consttbl vars ty pos_tp) vartm in
           let r = (encode_kind opt metadata consttbl vars k) (makeApp m [vartm]) in
           let bodytm = makeApp (Absyn.ConstantTerm(Pervasive.implConstant,[],Errormsg.none)) [l;r] in
@@ -422,9 +420,7 @@ let process_query fvars (prooftermSymb, querytype) metadata constTab strictness 
   let pt_typsymb = Absyn.ImplicitVar(Symbol.symbol (Symb.name prooftermSymb), ref None, ref true, ref (Some(flatten_type querytype))) in
   let typesymbTable' = Table.add (Absyn.getTypeSymbolSymbol pt_typsymb) pt_typsymb typesymbTable in
   let varterm = Absyn.makeFreeVarTerm pt_typsymb Errormsg.none in
-  let () = printf "Currently processing: %s\n" (Lfabsyn.string_of_typ querytype) in
   let (pos_tp, stricts) = (Strictness_alt.find_strict_vars_pos querytype Strictness_alt.SymbSet.empty) in
-  let () = Strictness_alt.printset stricts in
   let enctype =  (encode_type_positive strictness metadata constTab typesymbTable querytype pos_tp) varterm in
   (enctype, pt_typsymb :: fvarlist)
 

@@ -66,18 +66,18 @@ and find_strict_vars_neg tp g =
   let (s, dep, ann_pairs, c, tms, g') = find_strict_vars_neg_rec tp g in
 
   	let s_final = finalize s dep in
-  		(Neg (ann_pairs, c, tms, (SymbSet.diff s_final g')), (SymbSet.inter g' s_final))
+  		(Neg (ann_pairs, c, tms, (SymbSet.inter s_final g')), (SymbSet.inter g' s_final))
 
-              
+
 (* find a (incomplete) set of strict variables, dependency information, and elements to construct pos_ann_type 
         given a positive type tp and context g *)
 and find_strict_vars_pos_rec tp g =
   match tp with
-    Lfabsyn.PiType (x, tpA, tpB, _) -> printf "Var: %s\n" (Symb.name x); let (ann_tpA, sA) = find_strict_vars_neg tpA g in
+    Lfabsyn.PiType (x, tpA, tpB, _) -> let (ann_tpA, sA) = find_strict_vars_neg tpA g in
                             let (s, dep, ann_pairs, tc, tms, g') = find_strict_vars_pos_rec tpB (SymbSet.add x g)
                             in (s, (add_dep dep x (SymbSet.inter sA g)), (x, ann_tpA)::ann_pairs, tc, tms, (SymbSet.add x g'))
   | Lfabsyn.AppType (c, tms) -> ((union_fsvo_terms tms g), Hashtbl.create 16, [], c, tms, g)
-  | Lfabsyn.IdType t -> printf "Type: %s \n" (Lfabsyn.string_of_id t); (SymbSet.empty, Hashtbl.create 16, [], t, [], SymbSet.empty)
+  | Lfabsyn.IdType t -> (SymbSet.empty, Hashtbl.create 16, [], t, [], SymbSet.empty)
   | Lfabsyn.Unknown -> printf "Unknown type"; exit(1)
 
 
@@ -85,12 +85,12 @@ and find_strict_vars_pos_rec tp g =
         given a negative type and context g *)
 and find_strict_vars_neg_rec tp g =
   match tp with
-  | Lfabsyn.PiType (x, tpA, tpB, _) -> printf "Var: %s\n" (Symb.name x); let (ann_tpA, sA) = find_strict_vars_pos tpA g in
+  | Lfabsyn.PiType (x, tpA, tpB, _) -> let (ann_tpA, sA) = find_strict_vars_pos tpA g in
                             let (s, dep, ann_pairs, tc, tms, g') = find_strict_vars_neg_rec tpB  (SymbSet.add x g)
                             in (s, (add_dep dep x (SymbSet.inter sA g)), (x, ann_tpA)::ann_pairs, tc, tms, (SymbSet.add x g'))
  (* | Lfabsyn.PiType (x, tpA, tpB, false) -> find_strict_vars_neg_rec tpB g*)
   | Lfabsyn.AppType (c, tms) -> ((union_fsvo_terms tms g), Hashtbl.create 16, [], c, tms, g)
-  | Lfabsyn.IdType t -> printf "Type: %s \n" (Lfabsyn.string_of_id t); (SymbSet.empty, Hashtbl.create 16, [], t, [], SymbSet.empty)
+  | Lfabsyn.IdType t -> (SymbSet.empty, Hashtbl.create 16, [], t, [], SymbSet.empty)
   | Lfabsyn.Unknown -> printf "Unknown type"; exit(1)
 
 
