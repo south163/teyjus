@@ -159,8 +159,10 @@ let _ =
       print_endline "\nno (more) solutions\n"
   in
   let solveQuery query =
-    (match query with 
-         Some(lfquery) -> 
+    (match query with
+         Some(Lfabsyn.Query(_,_,Lfabsyn.PiType(_,_,_,_))) ->
+           print_string "Error: Only queries which are base types are supported at this time.\n"
+       | Some(lfquery) -> 
 (*           print_endline ("LF query: " ^ Lfabsyn.string_of_query' lfquery); *)
            if Lfquery.submit_query lfquery md (Absyn.getModuleKindTable currmod) (Absyn.getModuleConstantTable currmod) then 
              solveQueryInteract ()
