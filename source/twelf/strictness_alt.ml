@@ -33,21 +33,24 @@ and aneganntype = Neg of (Symb.symbol * aposanntype) list * Lfabsyn.id * Lfabsyn
 
 (*Duplicate a set/map, might not be necessary*)
 let setcopy set = SymbSet.fold (fun x s -> SymbSet.add x s) set SymbSet.empty;;
-let mapcopy map = Hashtbl.fold (fun k v m -> Hashtbl.add m k (setcopy v); m) map (Hashtbl.create 16);; 
+let mapcopy map = Hashtbl.fold (fun k v m -> Hashtbl.add m k (setcopy v); m) map (Hashtbl.create 16);;
 
 (*convert a set of id to a string list *)
-let tolist = fun s -> SymbSet.fold (fun x l -> (Symb.id x)::l) s [];; 
+let tolist = fun s -> SymbSet.fold (fun x l -> (Symb.name x)::l) s [];;
 
 
 (*print a symbset*)
 let rec printset s = printf "["; printlist_rec (tolist s); printf "]"
+
+and printlist l =  printf "["; printlist_rec l; printf "]\n"
+
 and printlist_rec l =
   match l with
   [] -> ()
-  | x::l' -> printf "%d; " (x); printlist_rec l';;
+  | x::l' -> printf "%s; " (x); printlist_rec l';;
 
 
-(*convert a map to a list of pairs*) 
+(*convert a map to a list of pairs*)
 let topairlist = fun h -> Hashtbl.fold (fun k v acc -> (k, (tolist v)) :: acc) h [];;
 
 
@@ -76,7 +79,7 @@ and find_strict_vars_pos_rec tp g =
     Lfabsyn.PiType (x, tpA, tpB, _) -> let (ann_tpA, sA) = find_strict_vars_neg tpA g in
                             let (s, dep, ann_pairs, tc, tms, g') = find_strict_vars_pos_rec tpB (SymbSet.add x g)
                             in (s, (add_dep dep x (SymbSet.inter sA g)), (x, ann_tpA)::ann_pairs, tc, tms, (SymbSet.add x g'))
-  | Lfabsyn.AppType (c, tms) -> ((union_fsvo_terms tms g), Hashtbl.create 16, [], c, tms, g)
+  | Lfabsyn.AppType (c, tms) -> printf "Tycon and Terms: %s\n" (Lfabsyn.string_of_typ tp);((union_fsvo_terms tms g), Hashtbl.create 16, [], c, tms, g)
   | Lfabsyn.IdType t -> (SymbSet.empty, Hashtbl.create 16, [], t, [], SymbSet.empty)
   | Lfabsyn.Unknown -> printf "Unknown type"; exit(1)
 
@@ -89,7 +92,7 @@ and find_strict_vars_neg_rec tp g =
                             let (s, dep, ann_pairs, tc, tms, g') = find_strict_vars_neg_rec tpB  (SymbSet.add x g)
                             in (s, (add_dep dep x (SymbSet.inter sA g)), (x, ann_tpA)::ann_pairs, tc, tms, (SymbSet.add x g'))
  (* | Lfabsyn.PiType (x, tpA, tpB, false) -> find_strict_vars_neg_rec tpB g*)
-  | Lfabsyn.AppType (c, tms) -> ((union_fsvo_terms tms g), Hashtbl.create 16, [], c, tms, g)
+  | Lfabsyn.AppType (c, tms) -> printf "Tycon and Terms: %s\n" (Lfabsyn.string_of_typ tp); ((union_fsvo_terms tms g), Hashtbl.create 16, [], c, tms, g)
   | Lfabsyn.IdType t -> (SymbSet.empty, Hashtbl.create 16, [], t, [], SymbSet.empty)
   | Lfabsyn.Unknown -> printf "Unknown type"; exit(1)
 

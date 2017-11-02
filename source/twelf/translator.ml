@@ -367,7 +367,7 @@ let process strictness metadata constants types objs =
                     let aterm = Absyn.ConstantTerm(c, [], Errormsg.none) in
                     let () = printf "Currently processing: %s\n" (Lfabsyn.string_of_typ typ) in
                     let (neg_typ, stricts) = Strictness_alt.find_strict_vars_neg typ (Strictness_alt.SymbSet.empty) in
-                    let () = Strictness_alt. printset stricts in
+                    let () = Strictness_alt. printset stricts; printf "\n" in
                     let clause = (encode_type_negative strictness metadata constants Table.empty typ neg_typ) aterm in
                     List.append clauselst [clause]
                 | None ->

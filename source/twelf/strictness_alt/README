@@ -1,5 +1,0 @@
-ocamlopt -c symb.ml
-ocamlopt -c lfabsyn.ml 
-ocamlopt -c strictness_alt.ml 
-ocamlopt -c strictness_test.ml 
-ocamlopt -o test symb.cmx lfabsyn.cmx strictness_alt.cmx strictness_test.cmx
