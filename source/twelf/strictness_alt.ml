@@ -25,9 +25,13 @@ type dependency = symbMap (* id -> P(id), if x -> {y}, then if x is strict, then
 type delta = symbset (* bounded variables in a term *)
 type gamma = symbset (* context *)
 
-type aposanntype = Pos of (Symb.symbol * aneganntype) list * Lfabsyn.id * Lfabsyn.term list
-and aneganntype = Neg of (Symb.symbol * aposanntype) list * Lfabsyn.id * Lfabsyn.term list * symbset
+type aposanntype = 
+  | Pos of (Symb.symbol * aneganntype) list * Lfabsyn.id * Lfabsyn.term list
+  | PosNone
 
+and aneganntype = 
+  | Neg of (Symb.symbol * aposanntype) list * Lfabsyn.id * Lfabsyn.term list * symbset
+  | NegNone
 
 (*Helper methods*)
 
