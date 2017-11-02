@@ -405,7 +405,7 @@ let process strictness metadata constants types objs =
              (match (Table.find s constants) with
                   Some(c) ->
                     let aterm = Absyn.ConstantTerm(c, [], Errormsg.none) in
-                    let () = printf "Currently processing: %s\n" (Lfabsyn.string_of_typ typ) in
+                    (*let () = printf "Currently processing: %s\n" (Lfabsyn.string_of_typ typ) in*)
                     let neg_typ =
                       if strictness
                       then fst (Strictness_alt.find_strict_vars_neg typ (Strictness_alt.SymbSet.empty))
