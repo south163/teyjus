@@ -27,19 +27,46 @@ let generate_name metadata fvars =
   generate_aux ()
 let reset_namegen_count () = bvar_namegen_count := 0
 
+
+  
 (** apply_subst : (Syb.symbol * Lfabsyn.term) -> Lfabsyn.typ -> (Symb.symbol * Lfabsyn.typ) list ->
                   Lfabsyn.typ 
     Apply an instantiation to an LF type. Keep track of bound varaibles to avoid capture. **)
-let apply_subst subst typ bvars =
+let rec apply_subst subst typ bvars =
   let rec app_ty ty bvars =
     match ty with
       Lfabsyn.PiType(s,bty,tybody,dep) ->
         Lfabsyn.PiType(s,app_ty bty bvars, app_ty tybody ((s,bty):: bvars),dep)
     | Lfabsyn.AppType(id,args) ->
-        let args' = List.map (fun arg -> app_tm arg bvars) args in
+        let args' = List.map (fun arg -> apply_subst_tm subst arg bvars) args in
         Lfabsyn.AppType(id, args')
-    | Lfabsyn.IdType(_) -> ty
-  and app_tm (Lfabsyn.IdTerm(id)) bvars =
+    | Lfabsyn.IdType(_) -> ty 
+  in
+  if List.length subst = 0 then typ else
+  app_ty typ bvars
+    
+and apply_subst_tm subst tm bvars =
+  let rec reduce head args sub =
+    match (head, args) with
+      (_, []) -> head
+    | (Lfabsyn.IdTerm(id), _) ->
+        apply_subst_tm sub (Lfabsyn.AppTerm(id, args)) []
+    | (Lfabsyn.AppTerm(id,args'),_) ->
+        apply_subst_tm sub (Lfabsyn.AppTerm(id, List.append args' args)) []
+    | (Lfabsyn.AbsTerm(s,bty,body), (a::args')) ->
+        reduce body args' ((s,a) :: sub)
+  and app_tm tm bvars =
+    match tm with
+      Lfabsyn.IdTerm(id) ->
+        app_id id bvars
+    | Lfabsyn.AbsTerm(s,bty,body) ->
+        Lfabsyn.AbsTerm(s,apply_subst subst bty bvars, app_tm body ((s,bty)::bvars) )
+    | Lfabsyn.AppTerm(id,args) ->
+        let h = app_id id bvars in
+        let args' = List.map (fun a -> app_tm a bvars) args in
+        reduce h args' []
+  (*        Lfabsyn.AppTerm(app_id id bvars, List.map (fun a -> app_tm a bvars) args) *)
+  and app_id id bvars =
     match id with
       Lfabsyn.Const(s) -> Lfabsyn.IdTerm(id)
     | Lfabsyn.Var(s,_) 
@@ -53,8 +80,10 @@ let apply_subst subst typ bvars =
             app_tm tm []
           with Not_found -> Lfabsyn.IdTerm(id)
   in
-  app_ty typ bvars
+  if List.length subst = 0 then tm else
+  app_tm tm bvars
 
+          
 (** Lookup the corresponding LF type for the given const/var term. **)
 let get_type (Lfsig.Signature(_,objs)) metadata fvars bvars lpterm =
   match lpterm with
@@ -102,12 +131,12 @@ let invert_subst (Lfsig.Signature(types, objs)) metadata fvars subst =
           Lfabsyn.AppTerm(Lfabsyn.LogicVar(s, Lfabsyn.Unknown), lfargs)
         (* If anything else, we have a type to invert arguments with. *)
         else
-          let rec trans_arglst (Lfabsyn.PiType(s,bty,tybody,dep)) subst args =
-            (match args with
-              (arg :: args') ->
+          let rec trans_arglst typ subst args =
+            (match (typ, args) with
+              ((Lfabsyn.PiType(s,bty,tybody,dep)),(arg :: args')) ->
                  let lfarg = invert_term bvars (bty, subst) arg in
                  (lfarg :: trans_arglst tybody ((s, lfarg) :: subst) args')
-            | [] -> [] )
+            | (_,[]) -> [] )
           in
           let lfheadty = get_type (Lfsig.Signature(types, objs)) metadata fvars bvars lphead in
           let Lfabsyn.IdTerm(lfhead) = invert_term bvars (lfheadty, tysub) lphead in
