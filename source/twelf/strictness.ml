@@ -25,7 +25,7 @@ let rec check_args tmlist bndrlist =
 let rec appears_strict_ty s ty bndrs =
   match ty with
       Lfabsyn.PiType(name,typ,body,dep) ->
-        (appears_strict_ty s typ bndrs) || 
+        ((appears_strict_ty s typ bndrs) && (appears_strict_ty name body bndrs)) || 
         (appears_strict_ty s body (name :: bndrs))
     | Lfabsyn.AppType(name, tms) ->
         let check =
