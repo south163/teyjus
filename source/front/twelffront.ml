@@ -3,14 +3,14 @@
 (* the signature file to parse. Should become a parameter. *)
 let inputName = ref ""
 let outputName = ref "top"
-
+                     
 (* we have different behavior in different OS *)
 let osSys = ref ""
 
 let setInputName ?(filter=(fun x -> x)) name =
   if !inputName = "" 
   then
-    inputName := filter name 
+    inputName := filter name
   else
     (prerr_endline "Error: More than one input file specified.";
      exit 1)
@@ -29,7 +29,7 @@ let checkInput () =
       exit 1)
 
 let specList = Parseargs.dualArgs
-  [("-s", "--sig", Arg.Set_string inputName,
+  [("-s", "--sig", Arg.String setInputName,
       " Specifies name of the input signature.") ;
    ("-o", "--output", Arg.Set_string outputName,
       " Specifies name of the generated Lambda Prolog module. Default is `top'.") ;

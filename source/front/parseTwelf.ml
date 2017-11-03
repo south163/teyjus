@@ -173,57 +173,76 @@ let query_to_query (queryty, name_op, evars) =
   let qty = exp_to_type [] queryty in
   let fvars = List.fold_left f [] evars in
   Lfabsyn.Query(fvars, Symb.symbol ptName, qty)
-
-
-let parse_sig filename =
-  try
-    let inchann = open_in filename in
-    let parseStream = Parser.parseStream inchann in
-    let _ = context := Some(Names.newNamespace ()) in
-    let readDec stream (Lfsig.Signature(types, objs)) =
-      let rec aux stream types objs =
-        match Tparsing.Parsing.Lexer'.Stream'.expose stream with
-  	    Tparsing.Parsing.Lexer'.Stream'.Empty -> (types, objs)
-          | Tparsing.Parsing.Lexer'.Stream'.Cons((Parser.ConDec(condec), r), stream') ->
-	     let (conDec_op, occTree_op) = ReconCondec.condecToConDec (condec, Paths.Loc("test", r), false) in
-             (match conDec_op with
-                  Some(conDec) ->
-                    let cid = IntSyn.sgnAdd conDec in
-                    let _ = 
-                      try
-                        match !context with
-                            Some(namespace) -> Names.insertConst (namespace,cid)
-                          | None -> ()
-                      with Names.Error msg -> raise (Names.Error (Paths.wrap (r, msg)))
-                    in
-                    let _ = Names.installConstName cid in
-                    (match IntSyn.conDecUni conDec with
-                         IntSyn.Kind ->
-                           let typefam = conDec_to_typeFam conDec in
-                           let types' = Symboltable.insert types (Lfabsyn.get_typefam_symb typefam) typefam in
-                           aux stream' types' objs
-                       | IntSyn.Type ->
-                           let (obj, target) = conDec_to_obj conDec in
-                           let objs' = Symboltable.insert objs (Lfabsyn.get_obj_symb obj) obj in
-                           match Symboltable.lookup types target with
-                               None -> Errormsg.error Errormsg.none ("Type constructor "^(Symb.name target)^" not found in signature.");
+  
+let parse_file filename lfsig =
+  let inchann = open_in filename in
+  let parseStream = Parser.parseStream inchann in
+  let _ = context := Some(Names.newNamespace ()) in
+  let readDec stream (Lfsig.Signature(types, objs)) =
+    let rec aux stream types objs =
+      match Tparsing.Parsing.Lexer'.Stream'.expose stream with
+          Tparsing.Parsing.Lexer'.Stream'.Empty -> (types, objs)
+        | Tparsing.Parsing.Lexer'.Stream'.Cons((Parser.ConDec(condec), r), stream') ->
+            let (conDec_op, occTree_op) = ReconCondec.condecToConDec (condec, Paths.Loc("test", r), false) in
+            (match conDec_op with
+               Some(conDec) ->
+                 let cid = IntSyn.sgnAdd conDec in
+                 let _ = 
+                   try
+                     match !context with
+                         Some(namespace) -> Names.insertConst (namespace,cid)
+                       | None -> ()
+                   with Names.Error msg -> raise (Names.Error (Paths.wrap (r, msg)))
+                 in
+                 let _ = Names.installConstName cid in
+                   (match IntSyn.conDecUni conDec with
+                        IntSyn.Kind ->
+                          let typefam = conDec_to_typeFam conDec in
+                          let types' = Symboltable.insert types (Lfabsyn.get_typefam_symb typefam) typefam in
+                          aux stream' types' objs
+                      | IntSyn.Type ->
+                          let (obj, target) = conDec_to_obj conDec in
+                          let objs' = Symboltable.insert objs (Lfabsyn.get_obj_symb obj) obj in
+                          match Symboltable.lookup types target with
+                             None -> Errormsg.error Errormsg.none ("Type constructor "^(Symb.name target)^" not found in signature.");
                                      (* try to continue if error *)
                                      aux stream' types objs
-                             | Some(Lfabsyn.TypeFam(a,b,c,d,e,objs,f)) -> 
-                                 
-                                 let _ = objs := (List.append !objs [Lfabsyn.get_obj_symb obj]) in
-                                 aux stream' types objs')
-                | None ->  
-                    aux stream' types objs)
-      in
-      let (types', objs') = aux stream types objs in
-      Lfsig.Signature(types', objs')
+                           | Some(Lfabsyn.TypeFam(a,b,c,d,e,objs,f)) ->       
+                               let _ = objs := (List.append !objs [Lfabsyn.get_obj_symb obj]) in
+                               aux stream' types objs')
+             | None ->  
+                 aux stream' types objs)
     in
-    let lfsig = readDec parseStream (Lfsig.Signature(Symboltable.empty, Symboltable.empty)) in
-    close_in inchann; Some(lfsig)
+    let (types', objs') = aux stream types objs in
+    Lfsig.Signature(types', objs')
+  in
+  let lfsig = readDec parseStream lfsig in
+  close_in inchann; lfsig
+  
+let parse_config filename =
+  let path = Filename.dirname filename in
+  let inchann = open_in filename in
+  let rec get_files filelist =
+    try
+      let fn = Filename.concat path (input_line inchann) in
+      if Sys.file_exists fn
+      then get_files (fn :: filelist)
+      else (prerr_endline ("Error: Invalid file in config: `"^ fn ^"'.");  get_files filelist)
+    with End_of_file -> filelist
+  in 
+  let filelist = get_files [] in
+  List.fold_right parse_file filelist (Lfsig.Signature(Symboltable.empty, Symboltable.empty))
+                    
+let parse_sig filename =
+  try
+    if Filename.check_suffix filename ".cfg"
+    then Some(parse_config filename)
+    else if (Filename.check_suffix filename ".lf") || (Filename.check_suffix filename ".elf")
+    then Some(parse_file filename (Lfsig.Signature(Symboltable.empty, Symboltable.empty)))
+    else None 
   with
     Failure(s) -> (print_endline ("Error: " ^ s ^ "."); None)
-
+                 
 (* parse the implicit LF (Twelf-style) query *)
 let parse_query () =
   let parseStream = Parser.parseTerminalQ("["^"top"^"] ?- ", "    ") in
