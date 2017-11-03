@@ -26,12 +26,16 @@ let checkInput () =
       ()
     else
       (prerr_endline ("Error: Invalid input file: `"^ !inputName ^"'.");
-      exit 1)
+       exit 1)
+
+(* NOTE: should figure out valid module names in Teyjus and check here *)        
+let setOutputName name =
+  outputName := name    
 
 let specList = Parseargs.dualArgs
   [("-s", "--sig", Arg.String setInputName,
       " Specifies name of the input signature.") ;
-   ("-o", "--output", Arg.Set_string outputName,
+   ("-o", "--output", Arg.String setOutputName,
       " Specifies name of the generated Lambda Prolog module. Default is `top'.") ;
    ("-t", "--translation", Arg.String(Translator.set_translation),
       " Specifies the desired translation. Options: naive, optimized. Default is `optimized'.") ;
@@ -49,17 +53,11 @@ let parse_args () =
 
 (* Compile and link the module before loading *)
 let compile_and_link () =
-  if !osSys = "Win32"
-  then
-    (Sys.command ".\\source\\tjcc.opt top";
-     print_endline "compiled!";
-     Sys.command ".\\source\\tjlink.opt top";
-     print_endline "linked!")
-  else
-    (Sys.command "./tjcc top";
-     print_endline "compiled!";
-     Sys.command "./tjlink top";
-     print_endline "linked!")
+  let executable_dir = Filename.dirname Sys.executable_name in
+  (Sys.command ((Filename.concat executable_dir "tjcc.opt") ^ " " ^ !outputName );
+   print_endline "compiled!";
+   Sys.command ((Filename.concat executable_dir "tjlink.opt") ^ " " ^ !outputName);
+   print_endline "linked!")
 
 
 let string_of_sig kinds constants terms =
@@ -81,10 +79,10 @@ let string_of_sig kinds constants terms =
                           constants 
                           ((Table.fold (fun s k b -> b ^ (per_kind k) ^ "\n") 
                                        kinds 
-                                       "sig top.\n%%%kind decls\n") ^ "%%%const decls\n")
+                                       ("sig "^ !outputName ^".\n%%%kind decls\n")) ^ "%%%const decls\n")
   in
   let modstr = List.fold_left (fun s t -> s ^ (per_term t) ^ "\n")
-                              "module top.\n"
+                              ("module " ^ !outputName ^ ".\n")
                               terms
                               
   in (sigstr, modstr)
