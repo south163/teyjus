@@ -109,7 +109,7 @@ let _ =
     (match res with
          Some(s) -> (*print_string (Lfsig.string_of_sig s); *)
                     s
-       | None -> print_string "failed to parse.\n";
+       | None -> prerr_endline "\nError: Failed to parse signature.\n";
                  exit 1) in
 
   (* translate LF sig and generate files. *)
@@ -159,14 +159,14 @@ let _ =
   let solveQuery query =
     (match query with
          Some(Lfabsyn.Query(_,_,Lfabsyn.PiType(_,_,_,_))) ->
-           print_string "Error: Only queries which are base types are supported at this time.\n"
+           prerr_endline "Error: Only queries which are base types are supported at this time."
        | Some(lfquery) -> 
 (*           print_endline ("LF query: " ^ Lfabsyn.string_of_query' lfquery); *)
            if Lfquery.submit_query lfquery md (Absyn.getModuleKindTable currmod) (Absyn.getModuleConstantTable currmod) then 
              solveQueryInteract ()
            else
              prerr_endline ""
-       | None -> print_string "failed to parse query.\n");
+       | None -> prerr_endline "\nError: Failed to parse query.\n");
     Module.cleanModule (); 
     Front.simulatorReInit false ;
     Module.initModuleContext ()  

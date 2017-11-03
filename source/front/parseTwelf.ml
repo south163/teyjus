@@ -248,7 +248,9 @@ let parse_query () =
   let parseStream = Parser.parseTerminalQ("["^"top"^"] ?- ", "    ") in
   match Tparsing.Parsing.Lexer'.Stream'.expose parseStream with
       Tparsing.Parsing.Lexer'.Stream'.Cons(query, parseStream') ->
-        let (ty, name_op, evars) = ReconQuery.queryToQuery(query, Paths.Loc ("stdIn", Paths.Reg(0,0))) in
-        let query = query_to_query (ty, name_op, evars) in
-        Some(query)
+       (try
+          let (ty, name_op, evars) = ReconQuery.queryToQuery(query, Paths.Loc ("stdIn", Paths.Reg(0,0))) in
+          let query = query_to_query (ty, name_op, evars) in
+          Some(query)
+        with _ -> None )
     | Tparsing.Parsing.Lexer'.Stream'.Empty -> None

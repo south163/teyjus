@@ -231,8 +231,9 @@
       else ()
   
     let findOmitted ((g : dec IntSyn.ctx), qid, r) =
-          (error (r, "Undeclared identifier "
-                     ^ Names.qidToString (Option.get (Names.constUndef qid)));
+          (error (r, "Undeclared identifier '"
+                     ^ Names.qidToString (Option.get (Names.constUndef qid))
+                     ^ "'");
            ExtSyn.omitted (r))
 
     let rec findBVar' args =
