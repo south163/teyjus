@@ -1,7 +1,0 @@
-% < T : tp >. M : of (lam unit ([X : tm] (X : tm))) < T : tp >.
-
-% < T : tp >. M : of (lam unit ([X : tm] empty)) < T : tp >.
-
-% < T : tp >. M : of (app (lam unit ([X : tm] (X : tm))) empty) < T : tp >.
-
-< T : tm >. M : of < T : tm > (arrow (arrow unit unit) unit).

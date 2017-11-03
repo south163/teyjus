@@ -1,5 +1,0 @@
-% < L  : list >. M  : append nil < L : list > < L : list >.
-% < L1 : list > < L2 : list >. M : append < L1 : list > < L2 : list > (cons z (cons (s z) nil)).
-% < L : list >. M : append (cons z (cons (s z) nil)) (cons (s (s z)) nil) < L : list >.
-
-< L1 : list > < L2 : list >. M : append < L1 : list > (cons z (cons z nil)) < L2 : list >.

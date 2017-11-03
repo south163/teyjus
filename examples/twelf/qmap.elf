@@ -1,7 +1,0 @@
- < F : nat -> nat > . M  : mapFun < F : nat -> nat > nil nil.
-% < F : nat -> nat > < X : nat > . M : mapFun < F : nat -> nat > (cons z (cons (s z) nil)) (cons (s z) (cons < X : nat > nil)).
-% < F : nat -> nat > < G : nat -> nat > . M : mapFun < F : nat -> nat > (cons z nil)
-%                                            (cons (< G : nat -> nat > z)  nil).
-
-% < F : nat -> nat > < G : nat -> nat > . M : mapFun < F : nat -> nat > (cons z (cons (s z) nil)) 
-%                                            (cons (< G : nat -> nat > z) (cons (< G : nat -> nat > (s z)) nil)). 
