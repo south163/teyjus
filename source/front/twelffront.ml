@@ -113,9 +113,11 @@ let _ =
                  exit 1) in
 
   (* translate LF sig and generate files. *)
+  (*
   let _ = Translator.set_translation "optimized";
           Optimization.Swap.set true;
           Optimization.Specialize.set true in
+  *)
   let (metadata, kinds, constants, terms) = 
     match Translator.get_translation () with
         "optimized" -> Translator.OptimizedTranslation.translate sign 
