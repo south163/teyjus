@@ -143,8 +143,8 @@ let rec encode_kind opt metadata consttbl vars k =
           let vartm = Absyn.makeBoundVarTerm (bvar) Errormsg.none in
           let pos_tp =
             if opt
-            then fst (Strictness_alt.find_strict_vars_pos ty Strictness_alt.SymbSet.empty)
-            else Strictness_alt.PosNone
+            then fst (Strictness.find_strict_vars_pos ty Strictness.SymbSet.empty)
+            else Strictness.PosNone
           in
           let l = (encode_type_positive opt metadata consttbl vars ty pos_tp) vartm in
           let r = (encode_kind opt metadata consttbl vars k) (makeApp m [vartm]) in
@@ -175,15 +175,15 @@ and encode_type_negative opt metadata consttbl vars ty neg_tp =
       fun m ->
         (
           match neg_tp with
-          | Strictness_alt.Neg (binders, tycon, tms, stricts) ->
+          | Strictness.Neg (binders, tycon, tms, stricts) ->
             let s' = Symbol.symbol (Symb.name s) in
             let bvar = Absyn.BoundVar(s', ref None, ref false, ref (Some(flatten_type ty))) in
             let vars' = Table.add s' bvar vars in
             let vartm = Absyn.makeBoundVarTerm bvar Errormsg.none in
-            let neg_tp' = Strictness_alt.Neg(List.tl binders, tycon, tms, stricts) in
+            let neg_tp' = Strictness.Neg(List.tl binders, tycon, tms, stricts) in
             let r = (encode_type_negative opt metadata consttbl vars' body neg_tp') (makeApp m [vartm]) in
             let bodytm =
-              if (Strictness_alt.SymbSet.mem s stricts)
+              if (Strictness.SymbSet.mem s stricts)
               then
                 r
               else
@@ -196,14 +196,14 @@ and encode_type_negative opt metadata consttbl vars ty neg_tp =
                 Errormsg.none)
             in
             makeApp (Absyn.ConstantTerm(Pervasive.allConstant, [], Errormsg.none)) [abstm]
-          | Strictness_alt.NegNone ->
+          | Strictness.NegNone ->
             let s' = Symbol.symbol (Symb.name s) in
             let bvar = Absyn.BoundVar(s', ref None, ref false, ref (Some(flatten_type ty))) in
             let vars' = Table.add s' bvar vars in
             let vartm = Absyn.makeBoundVarTerm bvar Errormsg.none in
             let r = (encode_type_negative opt metadata consttbl vars' body neg_tp) (makeApp m [vartm]) in
             let bodytm =
-              let l = (encode_type_positive opt metadata consttbl vars' typ Strictness_alt.PosNone) vartm in
+              let l = (encode_type_positive opt metadata consttbl vars' typ Strictness.PosNone) vartm in
               makeApp (Absyn.ConstantTerm(Pervasive.implConstant, [], Errormsg.none)) [l;r]
             in
             let abstm =
@@ -265,13 +265,13 @@ and encode_type_positive opt metadata consttbl vars ty pos_tp =
     fun m ->
       (
         match pos_tp with
-        | Strictness_alt.Pos (binders, tycon, tms) ->
+        | Strictness.Pos (binders, tycon, tms) ->
           let s' = Symbol.symbol (Symb.name s) in
           let bvar = Absyn.BoundVar(s', ref None, ref false, ref (Some(flatten_type ty))) in
           let vars' = Table.add s' bvar vars in
           let vartm = Absyn.makeBoundVarTerm bvar Errormsg.none in
           let l = (encode_type_negative opt metadata consttbl vars' typ (snd(List.hd binders))) vartm in
-          let pos_tp' = Strictness_alt.Pos(List.tl binders, tycon, tms) in
+          let pos_tp' = Strictness.Pos(List.tl binders, tycon, tms) in
           let r = (encode_type_positive opt metadata consttbl vars' body pos_tp') (makeApp m [vartm]) in
           let bodytm = makeApp (Absyn.ConstantTerm(Pervasive.implConstant, [], Errormsg.none)) [l;r] in
           let abstm =
@@ -280,12 +280,12 @@ and encode_type_positive opt metadata consttbl vars ty pos_tp =
               Errormsg.none)
           in
           makeApp (Absyn.ConstantTerm(Pervasive.allConstant, [], Errormsg.none)) [abstm]
-        | Strictness_alt.PosNone ->
+        | Strictness.PosNone ->
           let s' = Symbol.symbol (Symb.name s) in
           let bvar = Absyn.BoundVar(s', ref None, ref false, ref (Some(flatten_type ty))) in
           let vars' = Table.add s' bvar vars in
           let vartm = Absyn.makeBoundVarTerm bvar Errormsg.none in
-          let l = (encode_type_negative opt metadata consttbl vars' typ Strictness_alt.NegNone) vartm in
+          let l = (encode_type_negative opt metadata consttbl vars' typ Strictness.NegNone) vartm in
           let r = (encode_type_positive opt metadata consttbl vars' body pos_tp) (makeApp m [vartm]) in
           let bodytm = makeApp (Absyn.ConstantTerm(Pervasive.implConstant, [], Errormsg.none)) [l;r] in
           let abstm =
@@ -405,14 +405,16 @@ let process strictness metadata constants types objs =
              (match (Table.find s constants) with
                   Some(c) ->
                     let aterm = Absyn.ConstantTerm(c, [], Errormsg.none) in
-                    let () = printf "Currently processing: %s\n" (Lfabsyn.string_of_typ typ) in
-                    printf "  Strict vars: ";
-                    Strictness_alt.printset (snd (Strictness_alt.find_strict_vars_neg typ (Strictness_alt.SymbSet.empty)));
-                    printf "\n\n";
-                    let neg_typ =
+                    let (neg_typ, str_vars) =
                       if strictness
-                      then fst (Strictness_alt.find_strict_vars_neg typ (Strictness_alt.SymbSet.empty))
-                      else Strictness_alt.NegNone
+                      then
+                        (printf "\n\nCurrently processing: %s\n" (Lfabsyn.string_of_typ typ);
+                        (Strictness.find_strict_vars_neg typ (Strictness.SymbSet.empty)))
+                      else (Strictness.NegNone, Strictness.SymbSet.empty)
+                    in let () =
+                         if strictness
+                         then (printf "  Strict vars: "; Strictness.printset str_vars; printf "\n\n")
+                         else printf "";
                     in let clause = (encode_type_negative strictness metadata constants Table.empty typ neg_typ) aterm in
                     List.append clauselst [clause]
                 | None ->
@@ -467,8 +469,8 @@ let process_query fvars (prooftermSymb, querytype) metadata constTab strictness 
   let varterm = Absyn.makeFreeVarTerm pt_typsymb Errormsg.none in
   let pos_tp =
     if strictness
-    then fst (Strictness_alt.find_strict_vars_pos querytype Strictness_alt.SymbSet.empty)
-    else Strictness_alt.PosNone
+    then fst (Strictness.find_strict_vars_pos querytype Strictness.SymbSet.empty)
+    else Strictness.PosNone
   in
   let enctype =  (encode_type_positive strictness metadata constTab typesymbTable querytype pos_tp) varterm in
   (enctype, pt_typsymb :: fvarlist)
