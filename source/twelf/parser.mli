@@ -1,7 +1,9 @@
 (* This is taken from the Twelf implementation *)
 
   type fileParseResult =
-      ConDec of ExtSyn.condec
+      ConDec of ExtConDec.condec
+    | AbbrevDec of ExtConDec.condec
+    | FixDec of (Names.qid * Paths.region) * Fixity.fixity
     | FQuery of ExtSyn.query (* A *)
     (* Further declarations to be added here *)
 

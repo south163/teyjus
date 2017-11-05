@@ -129,12 +129,13 @@
     ConDec of string * mid option * int * status
                                         (* a : K : kind  or           *)
               * exp * uni	        (* c : A : type               *)
-(*  | ConDef of string * mid option * int	(* a = A : K : kind  or       *)
+  | ConDef of string * mid option * int	(* a = A : K : kind  or       *)
               * exp * exp * uni		(* d = M : A : type           *)
               * ancestor                (* Ancestor info for d or a   *)
   | AbbrevDef of string * mid option * int
                                         (* a = A : K : kind  or       *)
               * exp * exp * uni		(* d = M : A : type           *)
+(*
   | BlockDec of string * mid option     (* %block l : SOME G1 PI G2   *)
               * dec ctx * dec list
   | BlockDef of string * mid option * cid list
@@ -226,7 +227,7 @@
   val sgnStructLookup : mid -> strDec
 
   val constType   : cid -> exp		(* type of c or d             *)
-  (* val constDef    : cid -> exp		(* definition of d            *) *)
+  val constDef    : cid -> exp		(* definition of d            *) 
   val constImp    : cid -> int
   val constStatus : cid -> status
   val constUni    : cid -> uni

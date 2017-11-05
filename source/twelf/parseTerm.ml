@@ -4,15 +4,15 @@
   (* Operators and atoms for operator precedence parsing *)
   type 'a operator =
         Atom of 'a
-      | Infix of (int * Lfabsyn.assoc) * ('a * 'a -> 'a)
-      | Prefix of int * ('a -> 'a)
-      | Postfix of int * ('a -> 'a)
+      | Infix of (Fixity.precedence * Fixity.associativity) * ('a * 'a -> 'a)
+      | Prefix of Fixity.precedence * ('a -> 'a)
+      | Postfix of Fixity.precedence * ('a -> 'a)
 
     (* Predeclared infix operators *)
-  let juxOp = Infix ((Lfabsyn.maxPrec+1, Lfabsyn.Left), ExtSyn.app) (* juxtaposition *)
-  let arrowOp = Infix ((Lfabsyn.minPrec-1, Lfabsyn.Right), ExtSyn.arrow)
-  let backArrowOp = Infix ((Lfabsyn.minPrec-1, Lfabsyn.Left), ExtSyn.backarrow)
-  let colonOp = Infix ((Lfabsyn.minPrec-2, Lfabsyn.Left), ExtSyn.hastype)
+  let juxOp = Infix ((Fixity.inc Fixity.maxPrec, Fixity.Left), ExtSyn.app) (* juxtaposition *)
+  let arrowOp = Infix ((Fixity.dec Fixity.minPrec, Fixity.Right), ExtSyn.arrow)
+  let backArrowOp = Infix ((Fixity.dec Fixity.minPrec, Fixity.Left), ExtSyn.backarrow)
+  let colonOp = Infix ((Fixity.dec (Fixity.dec Fixity.minPrec), Fixity.Left), ExtSyn.hastype)
 
   let infixOp (infixity, tm) =
           Infix (infixity, (fun (tm1, tm2) -> ExtSyn.app (ExtSyn.app (tm, tm1), tm2)))
@@ -135,14 +135,14 @@
       let rec resolve (r, opr, p) =
         match (r, opr, p) with
             (r, Infix((prec, assoc), _), (Atom(_)::Infix((prec', assoc'), _)::p')) ->
-	      (match (prec-prec', assoc, assoc') with
+	      (match (Fixity.compare(prec,prec'), assoc, assoc') with
 	           (n,_,_) when n > 0 -> shift(r, opr, p)
 	         | (n,_,_) when n < 0 -> resolve (r, opr, reduce(p))
-	         | (0, Lfabsyn.Left, Lfabsyn.Left) -> resolve (r, opr, reduce(p))
-	         | (0, Lfabsyn.Right, Lfabsyn.Right) -> shift(r, opr, p)
+	         | (0, Fixity.Left, Fixity.Left) -> resolve (r, opr, reduce(p))
+	         | (0, Fixity.Right, Fixity.Right) -> shift(r, opr, p)
 	         | _ -> Tparsing.Parsing.error (r, "Ambiguous: infix following infix of identical precedence"))
 	  | (r, Infix ((prec, assoc), _), (Atom(_)::Prefix(prec', _)::p')) ->
-	      (match prec-prec' with
+	      (match Fixity.compare(prec,prec') with
 	           n when n > 0 -> shift(r, opr, p)
 	         | n when n < 0 -> resolve (r, opr, reduce(p))
 	         | 0 -> Tparsing.Parsing.error (r, "Ambiguous: infix following prefix of identical precedence"))
@@ -156,13 +156,13 @@
 
 	(* always reduce postfix, possibly after prior reduction *)
 	  | (r, Postfix(prec, _), (Atom _::Prefix(prec', _)::p')) ->
-	      (match prec-prec' with
+	      (match Fixity.compare(prec,prec') with
 	           n when n > 0 -> reduce (shift (r, opr, p))
 	  	 | n when n < 0 -> resolve (r, opr, reduce (p))
 		 | 0 -> Tparsing.Parsing.error (r, "Ambiguous: postfix following prefix of identical precedence"))
 	(* always reduce postfix *)
 	  | (r, Postfix(prec, _), (Atom _::Infix((prec', _), _)::p')) ->
-	      (match prec - prec' with
+	      (match Fixity.compare(prec,prec') with
 	           n when n > 0 -> reduce (shift (r, opr, p))
 	         | n when n < 0 -> resolve (r, opr, reduce (p))
                  | 0 -> Tparsing.Parsing.error (r, "Ambiguous: postfix following infix of identical precedence"))
@@ -213,10 +213,18 @@
           decideRBracket (r, parseDec (s), p)
       | (Tparsing.Parsing.Lexer'.Stream'.Cons((Tparsing.Parsing.Lexer'.RBRACKET,r), s), p) ->
 	  (P.reduceAll (r, p), f)
+      | (Tparsing.Parsing.Lexer'.Stream'.Cons((Tparsing.Parsing.Lexer'.EQUAL,r), s), p) ->
+	  (P.reduceAll (r, p), f)
       | (Tparsing.Parsing.Lexer'.Stream'.Cons((Tparsing.Parsing.Lexer'.DOT,r), s), p) ->
 	  (P.reduceAll (r, p), f)
       | (Tparsing.Parsing.Lexer'.Stream'.Cons((Tparsing.Parsing.Lexer'.EOF,r), s), p) ->
+          (P.reduceAll (r, p), f)
+      | (Tparsing.Parsing.Lexer'.Stream'.Cons((Tparsing.Parsing.Lexer'.SOLVE,r), s), p) ->
 	  (P.reduceAll (r, p), f)
+      | (Tparsing.Parsing.Lexer'.Stream'.Cons((Tparsing.Parsing.Lexer'.DEFINE,r), s), p) ->
+	  (P.reduceAll (r, p), f)
+      | (Tparsing.Parsing.Lexer'.Stream'.Cons((Tparsing.Parsing.Lexer'.STRING(str),r), s), p) ->
+	  parseExp (s, P.shiftAtom (ExtSyn.scon (str,r), p))
       | (Tparsing.Parsing.Lexer'.Stream'.Cons((Tparsing.Parsing.Lexer'.ID _, r0), _), p) ->
           let ((ids, (Tparsing.Parsing.Lexer'.ID (idCase, name), r1)), f') = parseQualId' f in
           let r = Paths.join (r0, r1) in
@@ -225,8 +233,16 @@
           (* Thus isQuoted always returns false *)
           if isQuoted (idCase)
           then parseExp' (f', P.shiftAtom (tm, p))
-          else parseExp' (f', P.shiftAtom (tm, p))
-
+          else 
+            (match Names.fixityLookup (Names.Qid (ids, name)) with
+              Fixity.Nonfix ->
+                parseExp' (f', P.shiftAtom (tm, p))
+            | Fixity.Infix (prec,assoc) ->
+              parseExp' (f', P.resolve (r, infixOp ((prec,assoc), tm), p))
+            | Fixity.Prefix (prec) ->
+              parseExp' (f', P.resolve (r, prefixOp (prec, tm), p))
+            | Fixity.Postfix (prec) ->
+              parseExp' (f', P.resolve (r, postfixOp (prec, tm), p)) )
       | (Tparsing.Parsing.Lexer'.Stream'.Cons((t,r), s), p) ->
 	  (* possible error recovery: insert DOT *)
 	  Tparsing.Parsing.error (r, "Unexpected token " ^ Tparsing.Parsing.Lexer'.toString t

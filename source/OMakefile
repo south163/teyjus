@@ -188,8 +188,10 @@ LF_ML[] =
     $(LF)/paths
     $(LF)/msg
     $(LF)/extSyn
+    $(LF)/extConDec
     $(LF)/lexer
     $(LF)/tparsing
+    $(LF)/parseFixity
     $(LF)/parseTerm
     $(LF)/parseCondec
     $(LF)/parseQuery
@@ -206,6 +208,7 @@ LF_ML[] =
     $(LF)/abstract
     $(LF)/approx
     $(LF)/reconTerm
+    $(LF)/strict
     $(LF)/reconCondec
     $(LF)/reconQuery
     $(LF)/metadata

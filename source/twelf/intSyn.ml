@@ -150,12 +150,13 @@
     ConDec of string * mid option * int * status
                                         (* a : K : kind  or           *)
               * exp * uni	        (* c : A : type               *)
-(*  | ConDef of string * mid option * int	(* a = A : K : kind  or       *)
+  | ConDef of string * mid option * int	(* a = A : K : kind  or       *)
               * exp * exp * uni		(* d = M : A : type           *)
               * ancestor                (* Ancestor info for d or a   *)
   | AbbrevDef of string * mid option * int
                                         (* a = A : K : kind  or       *)
               * exp * exp * uni		(* d = M : A : type           *)
+(*
   | BlockDec of string * mid option     (* %block l : Some G1 PI G2   *)
               * dec ctx * dec list
   | BlockDef of string * mid option * cid list
@@ -249,9 +250,9 @@
   let conDecName c =
     match c with
         (ConDec (name, _, _, _, _, _)) -> name
- (*     | (ConDef (name, _, _, _, _, _, _)) -> name
       | (AbbrevDef (name, _, _, _, _, _)) -> name
-      | (SkoDec (name, _, _, _, _)) -> name
+      | (ConDef (name, _, _, _, _, _, _)) -> name 
+(*      | (SkoDec (name, _, _, _, _)) -> name
       | (BlockDec (name, _, _, _)) -> name
       | (BlockDef (name, _, _)) -> name
   *)
@@ -259,9 +260,9 @@
   let conDecParent c =
     match c with
         (ConDec (_, parent, _, _, _, _)) -> parent
-(*      | (ConDef (_, parent, _, _, _, _, _)) -> parent
       | (AbbrevDef (_, parent, _, _, _, _)) -> parent
-      | (SkoDec (_, parent, _, _, _)) -> parent
+      | (ConDef (_, parent, _, _, _, _, _)) -> parent 
+ (*     | (SkoDec (_, parent, _, _, _)) -> parent
       | (BlockDec (_, parent, _, _)) -> parent
       | (BlockDef (_, parent, _)) -> parent
  *)  
@@ -276,9 +277,9 @@
   let conDecImp c = 
     match c with
         (ConDec (_, _, i, _, _, _)) -> i
- (*     | (ConDef (_, _, i, _, _, _, _)) -> i
       | (AbbrevDef (_, _, i, _, _, _)) -> i
-      | (SkoDec (_, _, i, _, _)) -> i
+      | (ConDef (_, _, i, _, _, _, _)) -> i
+ (*     | (SkoDec (_, _, i, _, _)) -> i
       | (BlockDec (_, _,  _, _)) -> 0   (* watch out -- carsten *)
   *)
   let conDecStatus c =
@@ -296,9 +297,9 @@
   let conDecType c =
     match c with
         (ConDec (_, _, _, _, v, _)) -> v
- (*     | (ConDef (_, _, _, _, v, _, _)) -> v
       | (AbbrevDef (_, _, _, _, v, _)) -> v
-      | (SkoDec (_, _, _, v, _)) -> v
+      | (ConDef (_, _, _, _, v, _, _)) -> v
+ (*     | (SkoDec (_, _, _, v, _)) -> v
   *)
 
   (* conDecBlock (CD) ->  (Gsome, Lpi)
@@ -320,9 +321,9 @@
   let conDecUni c =
     match c with
         (ConDec (_, _, _, _, _, l)) -> l
-   (*   | (ConDef (_, _, _, _, _, l, _)) -> l
       | (AbbrevDef (_, _, _, _, _, l)) -> l
-      | (SkoDec (_, _, _, _, l)) -> l
+      | (ConDef (_, _, _, _, _, l, _)) -> l
+    (*  | (SkoDec (_, _, _, _, l)) -> l
     *)
 
   let strDecName (StrDec (name, _)) = name
@@ -389,20 +390,20 @@
   let rename (cid, n) =
     let newConDec =
       match sgnLookup cid with
-           ConDec (n,m,i,s,e,u) -> ConDec(n,m,i,s,e,u)
-(*         | ConDef (n,m,i,e,e',u,a) -> ConDef(n,m,i,e,e',u,a)
-         | AbbrevDef (n,m,i,e,e',u) -> AbbrevDef (n,m,i,e,e',u)
-         | BlockDec (n,m,d,d') -> BlockDec (n,m,d,d')
+        ConDec (n,m,i,s,e,u) -> ConDec(n,m,i,s,e,u)
+      | AbbrevDef (n,m,i,e,e',u) -> AbbrevDef (n,m,i,e,e',u)
+      | ConDef (n,m,i,e,e',u,a) -> ConDef(n,m,i,e,e',u,a)
+(*         | BlockDec (n,m,d,d') -> BlockDec (n,m,d,d')
          | SkoDec (n,m,i,e,u) -> SkoDec (n,m,i,e,u) *)
    in
    Array.set sgnArray cid newConDec
 
-(*
+
   let constDef (d) =
     (match sgnLookup (d) with
          ConDef(_, _, _, u,_, _, _) -> u
        | AbbrevDef (_, _, _, u,_, _) -> u)
- *)
+
   let constType (c) = conDecType (sgnLookup c)
   let constImp (c) = conDecImp (sgnLookup c)
   let constUni (c) = conDecUni (sgnLookup c)
@@ -643,20 +644,20 @@
     match arg with
         (None) -> Anc(None, 0, None)
       | (Some(Const(c))) -> Anc(Some(c), 1, Some(c))
-(*      | (Some(Def(d))) ->
+      | (Some(Def(d))) ->
           (match sgnLookup(d) with
-               ConDef(_, _, _, _, _, _, Anc(_, height, cOpt)) -> Anc(Some(d), height+1, cOpt)) *)
+               ConDef(_, _, _, _, _, _, Anc(_, height, cOpt)) -> Anc(Some(d), height+1, cOpt)) 
       | (Some _) -> (* FgnConst possible, BVar impossible by strictness *)
           Anc(None, 0, None)
   (* ancestor(U) = ancestor info for d = U *)
   let ancestor (u) = ancestor' (headOpt u)
 
-(*
+
   (* defAncestor(d) = ancestor of d, d must be defined *)
   let defAncestor (d) =
     (match sgnLookup(d) with
          ConDef(_, _, _, _, _, _, anc) -> anc)
-*)
+
 
  (* Type related functions *)
 

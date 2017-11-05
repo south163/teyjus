@@ -10,7 +10,7 @@
 
   (* Weak head normalization *)
   val whnf : IntSyn.eclo -> IntSyn.eclo
-(*  val expandDef : IntSyn.eclo -> IntSyn.eclo *)
+  val expandDef : IntSyn.eclo -> IntSyn.eclo 
   val whnfExpandDef : IntSyn.eclo -> IntSyn.eclo
   val etaExpandRoot : IntSyn.exp -> IntSyn.exp
   val whnfEta : (IntSyn.eclo * IntSyn.eclo) -> (IntSyn.eclo * IntSyn.eclo)
