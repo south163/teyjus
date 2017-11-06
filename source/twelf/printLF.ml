@@ -190,9 +190,9 @@ let needsParens opfix opassoc opprec context fix assoc prec =
       (match (fix, assoc) with
         (Lfabsyn.Infix, Lfabsyn.None)
       | (Lfabsyn.Infix, Lfabsyn.Left)
-      | (Lfabsyn.Postfix, Lfabsyn.None) -> checkLE ()
+      | (Lfabsyn.Prefix, Lfabsyn.None) -> checkLE ()
       | (Lfabsyn.Infix, Lfabsyn.Right)
-      | (Lfabsyn.Postfix, Lfabsyn.Right) -> checkRight ()
+      | (Lfabsyn.Prefix, Lfabsyn.Right) -> checkRight ()
       | _ -> (Errormsg.impossible Errormsg.none "PrintLF.needsParens: invalid fixity"))
   | WholeTermContext -> false
     
@@ -282,7 +282,7 @@ let rec pr_iterm types objs context fix assoc prec ppf tm =
     if needsParens Lfabsyn.Postfix opassoc opprec context fix assoc prec
     then Format.fprintf ppf "(%a)" f (s, a)
     else f ppf (s, a)
-  and pr_term (context : atermcontext) (fix : Lfabsyn.fixity) (assoc : Lfabsyn.assoc) (prec : int) ppf = function
+  and pr_term context fix assoc prec ppf = function
     | Lfabsyn.AbsTerm (_, _, _) as tm ->
       if needsParens bindFixity bindAssoc bindPrec context fix assoc prec
       then Format.fprintf ppf "(%a)" (pr_abs context fix assoc prec) tm
