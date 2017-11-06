@@ -338,7 +338,9 @@ and encode_type_positive opt metadata consttbl vars ty pos_tp =
            ("No mapping found for LF constant: '" ^ (Lfabsyn.string_of_id id) ^ "'");
          Absyn.ErrorTerm)
 
-let trans_fixity fix assoc =
+(* the translated constants are not assigned fixity *)
+  (*
+let trans_fixity fix assoc = 
   match (fix, assoc) with
       (Lfabsyn.NoFixity,_) -> Absyn.NoFixity
     | (Lfabsyn.Infix,Lfabsyn.Left) -> Absyn.Infixl
@@ -348,7 +350,7 @@ let trans_fixity fix assoc =
     | (Lfabsyn.Prefix,_) -> Absyn.Prefix
     | (Lfabsyn.Postfix,Lfabsyn.Left) ->	Absyn.Postfixl
     | (Lfabsyn.Postfix,_) -> Absyn.Postfix
-
+  *)
 
 (* set up the name mapping for constants.
      Per typefam:
@@ -369,7 +371,7 @@ let initialize_constants metadata types objs =
   let perObj symb (Lfabsyn.Object(s, ty,fix,assoc,prec,_)) constants =
     let lpsymb = Option.get (Metadata.getLP metadata s) in
     let objconst =
-      Absyn.Constant(lpsymb, ref (trans_fixity fix assoc), ref prec,
+      Absyn.Constant(lpsymb, ref Absyn.NoFixity, ref 0,
                      ref true, ref false, ref false, ref false, ref false, ref false,
                      ref (Some(Absyn.Skeleton(flatten_type ty, ref None, ref false))),
                      ref 0, ref None, ref None, ref None, ref Absyn.GlobalConstant,
@@ -380,7 +382,7 @@ let initialize_constants metadata types objs =
   let perType symb (Lfabsyn.TypeFam(s,kind,fix,assoc,prec,objs,_)) constants =
     let lpsymb = Option.get (Metadata.getLP metadata symb) in
     let tyconst =
-      Absyn.Constant(lpsymb, ref (trans_fixity fix assoc), ref prec,
+      Absyn.Constant(lpsymb, ref Absyn.NoFixity, ref 0,
 	  	     ref true, ref false, ref false, ref false, ref false, ref false,
 		     ref (Some(Absyn.Skeleton(flatten_kind kind, ref None, ref false))),
 		     ref 0, ref None, ref None, ref None, ref Absyn.GlobalConstant,
