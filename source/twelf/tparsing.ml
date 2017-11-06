@@ -28,6 +28,8 @@ sig
 
   exception Error of string
   val error : Paths.region * string -> 'a	(* always raises Error *)
+
+  val warning : Paths.region * string -> unit
 end (* signature PARSING *)
 
 module ParsingFunc (L : Lexer.LEXER) : PARSING =
@@ -53,6 +55,9 @@ struct
   exception Error of string
   let error (r, msg) = raise (Error(Paths.wrap (r, msg)))
 
+  let warning (r, msg) =
+    prerr_endline (Paths.toString r ^ msg)
+    
 end  (* functor Parsing *)
 
 module Parsing =

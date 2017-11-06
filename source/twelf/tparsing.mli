@@ -27,6 +27,7 @@ sig
 
   exception Error of string
   val error : Paths.region * string -> 'a	(* always raises Error *)
+  val warning : Paths.region * string -> unit
 end (* signature PARSING *)
 
 module ParsingFunc : functor (L : Lexer.LEXER) -> PARSING

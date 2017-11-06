@@ -22,5 +22,7 @@
     match f with
        (Tparsing.Parsing.Lexer'.Stream'.Cons ((Tparsing.Parsing.Lexer'.ID (Tparsing.Parsing.Lexer'.Upper, name), r), s')) ->
          parseQuery1 (name, f, Tparsing.Parsing.Lexer'.Stream'.expose s')
-     | f ->
+    | (Tparsing.Parsing.Lexer'.Stream'.Cons ((Tparsing.Parsing.Lexer'.EOF , _), s')) ->
+         print_endline "Goodbye."; exit 1
+    | f ->
          returnQuery (None, ParseTerm.parseTerm' f)

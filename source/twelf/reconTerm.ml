@@ -231,8 +231,9 @@
       else ()
   
     let findOmitted ((g : dec IntSyn.ctx), qid, r) =
-          (error (r, "Undeclared identifier "
-                     ^ Names.qidToString (Option.get (Names.constUndef qid)));
+          (error (r, "Undeclared identifier '"
+                     ^ Names.qidToString (Option.get (Names.constUndef qid))
+                     ^ "'");
            ExtSyn.omitted (r))
 
     let rec findBVar' args =
@@ -260,9 +261,8 @@
             | Some cid ->
 	      (match IntSyn.sgnLookup cid with
 		    IntSyn.ConDec _ -> ExtSyn.Constant (IntSyn.Const cid, r)
-(*	          | IntSyn.ConDef _ -> constant (IntSyn.Def cid, r)
-		  | IntSyn.AbbrevDef _ -> constant (IntSyn.NSDef cid, r)
-*)
+	          | IntSyn.ConDef _ -> ExtSyn.Constant (IntSyn.Def cid, r)
+		  | IntSyn.AbbrevDef _ -> ExtSyn.Constant (IntSyn.NSDef cid, r)
 		  | _ -> 
 		    (error (r, "Invalid identifier\n"
 			    ^ "Identifier `" ^ Names.qidToString qid
@@ -494,7 +494,7 @@
     match arg with
         (IntSyn.BVar n) -> bvarElim n
       | (IntSyn.FVar(n,e,s)) -> fvarElim (n,e,s)
-(*      | (IntSyn.NSDef d) -> redexElim (IntSyn.constDef d) *)
+      | (IntSyn.NSDef d) -> redexElim (IntSyn.constDef d) 
       | (h) ->
         (match IntSyn.conDecStatus (headConDec h) with
             IntSyn.Foreign (csid, f) -> (fun (s, ss) -> f ss)

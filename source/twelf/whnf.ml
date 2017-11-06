@@ -301,11 +301,11 @@
        and   G |- (U @ S) [s] == U' [s'] : W'
        and   (U', s') in whnf
     *)
-(*
+
   and expandDef (Root (Def (d), ss), s) =
           (* why the call to whnf?  isn't constDef (d) in nf? -kw *)
-    whnfRedex (whnf (constDef (d), id), (ss, s))
-*)
+    whnfRedex (whnf (IntSyn.constDef (d), id), (ss, s))
+
   and whnfExpandDefW us =
     match us with
         (*((Root (Def _, _), _)) -> whnfExpandDefW (expandDef us) *)

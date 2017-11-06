@@ -61,3 +61,5 @@ source/tjtwelf
 source/tjtwelf.opt
 source/tjtwelf.exe
 top.*
+.omakedb
+.omakedb.lock

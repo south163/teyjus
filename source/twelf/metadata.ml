@@ -26,7 +26,7 @@ let new_mapping metadata lfs =
 
 let string_of_metadata ((lf_to_lp, _),_) =
   let string_of_entry lfs lps str =
-    str  ^ (Symb.printName lfs) ^ " " ^ (Symbol.printName lps) ^ "\n" 
+    str  ^ (Symb.name lfs) ^ " " ^ (Symbol.printName lps) ^ "\n" 
   in Symboltable.fold lf_to_lp string_of_entry "" 
 
 let empty = ((Symboltable.empty, Table.empty), Symboltable.empty)
