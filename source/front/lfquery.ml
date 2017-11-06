@@ -48,4 +48,4 @@ let show_answers lpmodule ((Lfsig.Signature(types,objmap)) as lfsig) metadata =
   let lpsol = Buildterm.build_solution lpmodule (!freeVarTab) in 
 (*  let _ = print_endline (string_of_lpsol lpsol) in *)
   let lfsol = Inverse.invert lfsig metadata (!fvar_types) lpsol in
-  print_endline (Lfabsyn.string_of_solution types objmap lfsol)
+  print_endline (PrintLF.string_of_solution_implicit types objmap lfsol)

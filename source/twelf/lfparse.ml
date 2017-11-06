@@ -64,12 +64,12 @@ let parse_query string =
       let () = Lflexer.setFileName lexbuf string in
       let result = Lfparser.parseQuery Lflexer.initial lexbuf in
       let _ = closeFile inchannel close_in;
-              print_endline ("The query:\n"^(Lfabsyn.string_of_query result)^"\n") in
+              print_endline ("The query:\n"^(PrintLF.string_of_query result)^"\n") in
       Some result
     else
       let lexbuf = Lexing.from_string string in
       let result = Lfparser.parseQuery Lflexer.initial lexbuf in
-      let _ = print_endline ("The query:\n"^(Lfabsyn.string_of_query result)^"\n") in
+      let _ = print_endline ("The query:\n"^(PrintLF.string_of_query result)^"\n") in
       Some result
   with
       Parsing.Parse_error -> 

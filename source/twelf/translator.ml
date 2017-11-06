@@ -1,5 +1,4 @@
 (** Translators for translating LF specifications into LP programs. *)
-open Printf
 
 module type Translator =
 sig
@@ -110,7 +109,7 @@ let rec encode_term constants metadata vars tm =
                      | None ->
                          Errormsg.error Errormsg.none
                            ("No constant found for LP symbol: '" ^ (Symbol.printName s') ^
-                            "' in LF term: '" ^ (Lfabsyn.string_of_term tm) ^ "'");
+                            "' in LF term: '" ^ (PrintLF.string_of_term tm) ^ "'");
                          Absyn.ErrorTerm)
                 | None ->
                     Errormsg.error Errormsg.none
@@ -229,13 +228,13 @@ and encode_type_negative opt metadata consttbl vars ty neg_tp =
                         makeApp (Absyn.ConstantTerm(hastype, [], Errormsg.none)) [m;tytm]
                     | None ->
                         Errormsg.error Errormsg.none
-                                       ("No constant found for LP symbol: '" ^ (Lfabsyn.string_of_id id) ^
-                                            "' in LF type: '" ^ (Lfabsyn.string_of_typ ty) ^ "'");
+                                       ("No constant found for LP symbol: '" ^ (PrintLF.string_of_id id) ^
+                                            "' in LF type: '" ^ (PrintLF.string_of_typ ty) ^ "'");
                         Absyn.ErrorTerm)
              | None ->
                  Errormsg.error Errormsg.none
-                                ("No mapping found for LF constant: '" ^ (Lfabsyn.string_of_id id) ^
-                                     "' in LF type: '" ^ (Lfabsyn.string_of_typ ty) ^ "'");
+                                ("No mapping found for LF constant: '" ^ (PrintLF.string_of_id id) ^
+                                     "' in LF type: '" ^ (PrintLF.string_of_typ ty) ^ "'");
                  Absyn.ErrorTerm)
     | Lfabsyn.IdType(id) ->
         let hastype =
@@ -254,7 +253,7 @@ and encode_type_negative opt metadata consttbl vars ty neg_tp =
                         Absyn.ErrorTerm)
              | None ->
                  Errormsg.error Errormsg.none
-                                ("No mapping found for LF constant: '" ^ (Lfabsyn.string_of_id id) ^ "'");
+                                ("No mapping found for LF constant: '" ^ (PrintLF.string_of_id id) ^ "'");
                  Absyn.ErrorTerm)
 
 (** Similar to {!encode_type_negative} but generates a term representing
@@ -335,7 +334,7 @@ and encode_type_positive opt metadata consttbl vars ty pos_tp =
             Absyn.ErrorTerm)
        | None ->
          Errormsg.error Errormsg.none
-           ("No mapping found for LF constant: '" ^ (Lfabsyn.string_of_id id) ^ "'");
+           ("No mapping found for LF constant: '" ^ (PrintLF.string_of_id id) ^ "'");
          Absyn.ErrorTerm)
 
 let trans_fixity fix assoc =
@@ -408,24 +407,20 @@ let process strictness metadata constants types objs =
                     let (neg_typ, str_vars) =
                       if strictness
                       then
-                        (printf "\n\nCurrently processing: %s\n" (Lfabsyn.string_of_typ typ);
-                        (Strictness.find_strict_vars_neg typ (Strictness.SymbSet.empty)))
+                        (Strictness.find_strict_vars_neg typ (Strictness.SymbSet.empty))
                       else (Strictness.NegNone, Strictness.SymbSet.empty)
-                    in let () =
-                         if strictness
-                         then (printf "  Strict vars: "; Strictness.printset str_vars; printf "\n\n")
-                         else printf "";
-                    in let clause = (encode_type_negative strictness metadata constants Table.empty typ neg_typ) aterm in
+                    in 
+                    let clause = (encode_type_negative strictness metadata constants Table.empty typ neg_typ) aterm in
                     List.append clauselst [clause]
                 | None ->
                     Errormsg.error Errormsg.none
                                    ("No constant found for LP symbol: '" ^ (Symbol.printName s) ^
-                                        "' from LF object decl: '" ^ (Lfabsyn.string_of_obj o) ^ "'");
+                                        "' from LF object decl: '" ^ (PrintLF.string_of_obj o) ^ "'");
                     clauselst)
          | None ->
              Errormsg.error Errormsg.none
                             ("No mapping found for LF constant: '" ^ (Symb.name symb) ^
-                                 "' from LF object decl: '" ^ (Lfabsyn.string_of_obj o) ^ "'");
+                                 "' from LF object decl: '" ^ (PrintLF.string_of_obj o) ^ "'");
            clauselst)
     | None ->
         Errormsg.error Errormsg.none
@@ -443,12 +438,12 @@ let process strictness metadata constants types objs =
              | None ->
                  Errormsg.error Errormsg.none 
                                 ("No constant found for LP symbol: '" ^ (Symbol.printName s) ^ 
-                                     "' from LF type decl: '" ^ (Lfabsyn.string_of_typefam t) ^ "'");
+                                     "' from LF type decl: '" ^ (PrintLF.string_of_typefam t) ^ "'");
                  clauselst)
       | None ->
           Errormsg.error Errormsg.none 
                          ("No mapping found for LF constant: '" ^ (Symb.name symb) ^
-                              "' from LF type decl: '" ^ (Lfabsyn.string_of_typefam t) ^ "'");
+                              "' from LF type decl: '" ^ (PrintLF.string_of_typefam t) ^ "'");
           clauselst
   in
   Symboltable.fold types perType []

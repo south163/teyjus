@@ -47,6 +47,8 @@ and id =
 | Var of (Symb.symbol * typ) 
 | LogicVar of (Symb.symbol * typ)
 
+(*
+    
 val string_of_typefam : typefam -> string
 val string_of_obj : obj -> string
 val string_of_kind : kind -> string
@@ -56,6 +58,8 @@ val string_of_id : id -> string
 val string_of_query : query -> string
 val string_of_query' : query -> string
 val string_of_solution : typefam Symboltable.table -> obj Symboltable.table-> solution -> string
+
+*)
 
 val get_id_symb : id -> Symb.symbol
   

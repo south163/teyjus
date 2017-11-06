@@ -88,7 +88,7 @@ and find_strict_vars_pos_rec tp g =
     let (ann_tpA, sA) = (NegNone, SymbSet.empty) in
     let (s, dep, ann_pairs, tc, tms, g') = find_strict_vars_pos_rec tpB (SymbSet.add x g)
     in (s, dep, (x, ann_tpA)::ann_pairs, tc, tms, (SymbSet.add x g'))
-  | Lfabsyn.AppType (c, tms) -> (*printf "Tycon and Terms: %s\n" (Lfabsyn.string_of_typ tp);*)
+  | Lfabsyn.AppType (c, tms) -> (*printf "Tycon and Terms: %s\n" (PrintLF.string_of_typ tp);*)
                                 ((union_fsvo_terms tms g), Hashtbl.create 16, [], c, tms, g)
   | Lfabsyn.IdType t -> (SymbSet.empty, Hashtbl.create 16, [], t, [], SymbSet.empty)
   | Lfabsyn.Unknown -> printf "Unknown type"; exit(1)
@@ -106,7 +106,7 @@ and find_strict_vars_neg_rec tp g =
     let (ann_tpA, sA) = (PosNone, SymbSet.empty) in
     let (s, dep, ann_pairs, tc, tms, g') = find_strict_vars_neg_rec tpB (SymbSet.add x g)
     in (s, dep, (x, ann_tpA)::ann_pairs, tc, tms, (SymbSet.add x g'))
-  | Lfabsyn.AppType (c, tms) -> (*printf "Tycon and Terms: %s\n" (Lfabsyn.string_of_typ tp);*)
+  | Lfabsyn.AppType (c, tms) -> (*printf "Tycon and Terms: %s\n" (PrintLF.string_of_typ tp);*)
                                ((union_fsvo_terms tms g), Hashtbl.create 16, [], c, tms, g)
   | Lfabsyn.IdType t -> (SymbSet.empty, Hashtbl.create 16, [], t, [], SymbSet.empty)
   | Lfabsyn.Unknown -> printf "Unknown type"; exit(1)

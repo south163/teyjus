@@ -53,6 +53,8 @@ let get_id_name id =
     | Var(s,_) 
     | LogicVar(s,_) -> Symb.name s
 
+(*
+      
 let rec string_of_typefam (TypeFam(s,k,_,_,_,_,implicit)) =
   (Symb.name s) ^ " : " ^ (string_of_kind (skip_kind implicit k)) ^ "."
 
@@ -123,13 +125,13 @@ and string_of_id id =
       Const(s)
     | Var(s,_) 
     | LogicVar(s,_) -> Symb.name s
-
+*)
 let get_id_symb id =
   match id with
       Const(s)
     | Var(s,_)
     | LogicVar(s,_) -> s
-      
+(*    
 let string_of_query (Query(_,s,ty)) =
   (Symb.name s) ^ " : " ^ (string_of_typ ty)
 
@@ -222,6 +224,8 @@ let string_of_solution types objs (subst, disprs) =
       "The remaining disagreement pairs list:\n" ^ (string_of_disprs_aux disprs)
   in 
   (string_of_subst subst) ^ "\n" ^ (string_of_disprs disprs)
+
+*)
 
 let get_typefam_implicit (TypeFam(_,_,_,_,_,_,p)) = p
 let get_obj_implicit (Object(_,_,_,_,_,p)) = p
