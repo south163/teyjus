@@ -83,8 +83,10 @@ let pr_query_explicit ppf (Lfabsyn.Query (fvars, s, ty)) =
   Format.fprintf ppf "@[<4>@[<2>%a@]@,%a :@ %a@]" pr_qvars fvars pr_symb s pr_typ ty
 
 let pr_subst ppf (s, tm) =
-  Format.fprintf ppf "@[<4>%a =@ %a@]" pr_symb s pr_term tm
-
+  if Symb.name s = ""
+  then ()
+  else Format.fprintf ppf "@[<4>%a =@ %a@]" pr_symb s pr_term tm
+                      
 let pr_dispr ppf (tml, tmr) =
   Format.fprintf ppf "@[<4><%a,@ %a>@]" pr_term tml pr_term tmr
 
@@ -446,9 +448,12 @@ let pr_query_exp_implicit types objs ppf (Lfabsyn.Query (fvars, s, ty)) =
     (pr_typ_implicit types objs) ty
 let pr_solution_implicit types objs ppf (subst, disprs) =
   let pr_subst ppf (s, tm) =
-    Format.fprintf ppf "@[<4>%a =@ %a@]"
-      pr_symb s
-      (pr_term_implicit types objs) tm
+    if Symb.name s = ""
+    then ()
+    else 
+      Format.fprintf ppf "@[<4>%a =@ %a@]"
+        pr_symb s
+        (pr_term_implicit types objs) tm
   in
   let pr_dispr ppf (tml, tmr) =
     Format.fprintf ppf "@[<4><%a,@ %a>@]"
