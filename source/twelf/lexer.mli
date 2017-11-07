@@ -67,7 +67,8 @@ sig
   (* lexer returns an infinite stream, terminated by EOF token *)
   val lexStream : in_channel -> (token * Paths.region) Stream'.stream
   val lexTerminal : string * string -> (token * Paths.region) Stream'.stream
-
+  val lexString : string -> (token * Paths.region) Stream'.stream
+                                                              
   val toString : token -> string
 
   (* Utilities *) 

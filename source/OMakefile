@@ -213,7 +213,7 @@ LF_ML[] =
     $(LF)/reconCondec
     $(LF)/reconQuery
     $(LF)/metadata
-    $(FNT)/loader
+    $(FNT)/lfSetup
     $(FNT)/lfquery
     $(FNT)/parseTwelf
     $(LF)/strictness
@@ -332,6 +332,15 @@ if $(not $(file-exists prebuilt))
   # The simulator and linker require linking with C code
 
   section
+    StaticCLibrary(libtwelf, \
+      $(SIM_C) $(SYS_C) $(TBL_C) $(FNT_C) $(LOD_C) $(LNK_C) $(INC_C))
+    OCAML_CLIBS += libtwelf
+    OCAML_OTHER_LIBS += str 
+    OCamlProgram(tjtwelf, \
+      $(LF_MAIN) $(LF_ML) $(LOD_ML) $(CMP_ML) $(FNT_ML) $(FNT_ML_TO_C))
+
+
+  section
     StaticCLibrary(libsim, \
       $(SIM_C) $(SYS_C) $(TBL_C) $(FNT_C) $(LOD_C) $(LNK_C) $(INC_C))
     OCAML_CLIBS += libsim
@@ -343,13 +352,6 @@ if $(not $(file-exists prebuilt))
     OCAML_CLIBS += liblink
     OCamlProgram(tjlink, $(LNK_MAIN) $(FNT_ML))
 
-  section
-    StaticCLibrary(libtwelf, \
-      $(SIM_C) $(SYS_C) $(TBL_C) $(FNT_C) $(LOD_C) $(LNK_C) $(INC_C))
-    OCAML_CLIBS += libtwelf
-    OCAML_OTHER_LIBS += str 
-    OCamlProgram(tjtwelf, \
-      $(LF_MAIN) $(LF_ML) $(LOD_ML) $(CMP_ML) $(FNT_ML) $(FNT_ML_TO_C))
 
 TJCC = $(CWD)/tjcc$(EXE)
 TJSIM = $(CWD)/tjsim$(EXE)

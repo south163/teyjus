@@ -4,4 +4,5 @@
 *)
 
 val parse_sig : string -> Lfsig.signature option
-val parse_query : unit -> Lfabsyn.query option
+val parse_queryT : unit -> Lfabsyn.query option
+val parse_queryStr : string -> Lfabsyn.query option

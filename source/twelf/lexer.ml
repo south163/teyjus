@@ -68,7 +68,8 @@ sig
   (* lexer returns an infinite stream, terminated by EOF token *)
   val lexStream : in_channel -> (token * Paths.region) Stream'.stream
   val lexTerminal : string * string -> (token * Paths.region) Stream'.stream
-
+  val lexString : string -> (token * Paths.region) Stream'.stream
+                                                              
   val toString : token -> string
 
   (* Utilities *) 
@@ -448,6 +449,12 @@ struct
 	         | i -> 
                      let _ = print_string (prompt1); flush stdout in
 		     inputLine97 (stdin))
+
+  let lexString str =
+    lex (fun n ->
+         match n with
+            0 -> str ^ "\n"
+          | i -> "%.")
 
   let toString' token =
     match token with

@@ -208,3 +208,5 @@
   let parseStream instream = parseTLStream instream
 
   let parseTerminalQ prompts =  parseQ (Tparsing.Parsing.Lexer'.lexTerminal prompts)
+
+  let parseStringQ str = parseQ (Tparsing.Parsing.Lexer'.lexString str)

@@ -335,15 +335,24 @@ let parse_sig filename =
     else None 
   with
     Failure(s) -> (print_endline ("Error: " ^ s ^ "."); None)
-                 
-(* parse the implicit LF (Twelf-style) query *)
-let parse_query () =
-  let parseStream = Parser.parseTerminalQ("["^"top"^"] ?- ", "    ") in
+
+let parse_query parseStream =
   match Tparsing.Parsing.Lexer'.Stream'.expose parseStream with
-      Tparsing.Parsing.Lexer'.Stream'.Cons(query, parseStream') ->
-       (try
-          let (ty, name_op, evars) = ReconQuery.queryToQuery(query, Paths.Loc ("stdIn", Paths.Reg(0,0))) in
-          let query = query_to_query (ty, name_op, evars) in
-          Some(query)
-        with _ -> None )
-    | Tparsing.Parsing.Lexer'.Stream'.Empty -> None
+    Tparsing.Parsing.Lexer'.Stream'.Cons(query, parseStream') ->
+     (try
+        let (ty, name_op, evars) = ReconQuery.queryToQuery(query, Paths.Loc ("stdIn", Paths.Reg(0,0))) in
+        let query = query_to_query (ty, name_op, evars) in
+        Some(query)
+      with _ -> None )
+  | Tparsing.Parsing.Lexer'.Stream'.Empty -> None
+
+                    
+(* parse the implicit LF (Twelf-style) query *)
+let parse_queryT () =
+  let parseStream = Parser.parseTerminalQ("["^"top"^"] ?- ", "    ") in
+  parse_query parseStream
+
+(* parse a query from a string *)
+let parse_queryStr s =
+  let parseStream = Parser.parseStringQ s in
+  parse_query parseStream

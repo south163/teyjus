@@ -9,4 +9,4 @@
 
   val parseStream: in_channel -> (fileParseResult * Paths.region) Tparsing.Parsing.Lexer'.Stream'.stream
   val parseTerminalQ : string * string -> ExtSyn.query Tparsing.Parsing.Lexer'.Stream'.stream (* reads from std input *)
-
+  val parseStringQ : string -> ExtSyn.query Tparsing.Parsing.Lexer'.Stream'.stream

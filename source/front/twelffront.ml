@@ -4,9 +4,18 @@
 let inputName = ref ""
 let outputName = ref "top"
                      
-(* we have different behavior in different OS *)
-let osSys = ref ""
+let minSolutions = ref 0
+let maxSolutions = ref max_int
+let batch = ref false
+let queryStrings = ref []
+let heapSize = ref 0
+let path = ref "./"
+                       
+let addQuery str = queryStrings := !queryStrings @ [str]
 
+let setPath p =
+  path := p
+                                                     
 let setInputName ?(filter=(fun x -> x)) name =
   if !inputName = "" 
   then
@@ -42,7 +51,15 @@ let specList = Parseargs.dualArgs
    ("-index", "--opt-index", Arg.Bool(Optimization.Swap.set),
       " Set whether the indexing optimization is run. Default is true.") ;
    ("-specialize", "--opt-specialize", Arg.Bool(Optimization.Specialize.set),
-      " Set whether the specialized predicates optimization is run. Default is true.") ]
+      " Set whether the specialized predicates optimization is run. Default is true.") ;
+   ("-b", "--batch", Arg.Set batch,
+    " Suppress system interaction; send all output without stopping") ;
+   ("-q", "--query", Arg.String addQuery,
+    " Solve the given query on startup. Several queries may be specified.") ;
+   ("-p", "--path", Arg.String setPath,
+    " Add PATH to the search path.") ;
+   ("-k", "--heap", Arg.Set_int heapSize,
+    " Allocate a heap of the given size (K)") ]
 
 let usageMsg = 
   "Usage: tjtwelf [options] <signature-name>\n" ^
@@ -51,55 +68,13 @@ let usageMsg =
 let parse_args () =
   Arg.parse specList setInputName usageMsg 
 
-(* Compile and link the module before loading *)
-let compile_and_link () =
-  let executable_dir = Filename.dirname Sys.executable_name in
-  (Sys.command ((Filename.concat executable_dir "tjcc.opt") ^ " " ^ !outputName );
-   print_endline "compiled!";
-   Sys.command ((Filename.concat executable_dir "tjlink.opt") ^ " " ^ !outputName);
-   print_endline "linked!")
 
 
-let string_of_sig kinds constants terms =
-  let per_kind kind =
-    let rec getKindType n =
-      match n with
-          0 -> "type"
-        | _ -> "type -> " ^ getKindType (n-1) 
-    in
-    "kind " ^ (Absyn.string_of_kind kind) ^ " " ^ (getKindType (Absyn.getKindArity kind)) ^"."
-  in
-  let per_const constant =
-    "type " ^ (Absyn.getConstantPrintName constant) ^ " " ^(Absyn.string_of_skeleton (Absyn.getConstantSkeletonValue constant)) ^ "."
-  in
-  let per_term term =
-    (Absyn.string_of_term term) ^ "."
-  in
-  let sigstr = Table.fold (fun s c b -> b ^ (per_const c) ^ "\n") 
-                          constants 
-                          ((Table.fold (fun s k b -> b ^ (per_kind k) ^ "\n") 
-                                       kinds 
-                                       ("sig "^ !outputName ^".\n%%%kind decls\n")) ^ "%%%const decls\n")
-  in
-  let modstr = List.fold_left (fun s t -> s ^ (per_term t) ^ "\n")
-                              ("module " ^ !outputName ^ ".\n")
-                              terms
-                              
-  in (sigstr, modstr)
+            
 
-(* Generate the sig and mod files, and the metadata file. *)
-let output_files metadata signature modul =
-  let (out_md, out_sig, out_mod) = (open_out (!outputName^".md"), open_out (!outputName^".sig"), open_out (!outputName^".mod")) in
-  Printf.fprintf out_md "%s\n" metadata; 
-  Printf.fprintf out_sig "%s\n" signature;
-  Printf.fprintf out_mod "%s\n" modul;
-  close_out out_md;
-  close_out out_sig;
-  close_out out_mod        
 
 (** main *)
 let _ =
-  let _ = osSys := Sys.os_type in
   let _ = print_string "tjtwelf started!\n" in
   let _ = parse_args () in
   let _ = checkInput () in
@@ -107,33 +82,37 @@ let _ =
   let res = ParseTwelf.parse_sig (!inputName) in
   let sign =
     (match res with
-         Some(s) -> (*print_string (Lfsig.string_of_sig s); *)
-                    s
+         Some(s) -> s
        | None -> prerr_endline "\nError: Failed to parse signature.\n";
                  exit 1) in
+  let (currmod, md) = LfSetup.setup_system path heapSize sign outputName in
 
-  (* translate LF sig and generate files. *)
-  (*
-  let _ = Translator.set_translation "optimized";
-          Optimization.Swap.set true;
-          Optimization.Specialize.set true in
-  *)
-  let (metadata, kinds, constants, terms) = 
-    match Translator.get_translation () with
-        "optimized" -> Translator.OptimizedTranslation.translate sign 
-      | "naive" -> Translator.NaiveTranslation.translate sign
+  (* Query solving in batch mode. interaction is suppressed *)
+  let solveQueryBatch () =
+    let rec solveQueryBatchAux numResults =
+      if Query.solveQuery () && numResults < !maxSolutions then
+        (Lfquery.show_answers currmod sign md;
+         solveQueryBatchAux (numResults + 1))
+      else
+         numResults
+    in
+    if Query.queryHasVars () then
+      let numResults = solveQueryBatchAux 0 in
+      if numResults < !minSolutions then
+        Parseargs.error "fewer answers than expected"
+      else ()
+    else (* query does not have free variables *)
+      if Query.solveQuery () then 
+        if !minSolutions > 1 then 
+          Parseargs.error "fewer answers than expected"
+        else ()
+      else 
+        if !minSolutions > 0 then
+          Parseargs.error "fewer answers than expected"
+        else ()
   in
-  let (sigstr, modstr) = string_of_sig kinds constants terms in
-  let metadatastr = Metadata.string_of_metadata metadata in
-  let _ = output_files metadatastr sigstr modstr in
-
-  (* compile and link LP module, load query state *)
-  let _ = compile_and_link () in
-  let (currmod, md) = Loader.load (!outputName) in
- 
   (* Query solving interaction loop
-     (based on funciton from simulatorfront)
-     finds a solution for query and prints out. *)
+   finds a solution for query and prints out. *)
   let rec solveQueryInteract () =
     let rec moreAnswers () =
       print_string "\nMore solutions (y/n)? ";
@@ -148,7 +127,6 @@ let _ =
     if (Query.solveQuery ()) then
       if (Query.queryHasVars ()) then
         (Lfquery.show_answers currmod sign md; 
-(*        (Query.showAnswers ();*)
          if (moreAnswers ()) then
            solveQueryInteract ()
          else
@@ -165,7 +143,9 @@ let _ =
        | Some(lfquery) -> 
 (*           print_endline ("LF query: " ^ PrintLF.string_of_query' lfquery); *)
            if Lfquery.submit_query lfquery md (Absyn.getModuleKindTable currmod) (Absyn.getModuleConstantTable currmod) then 
-             solveQueryInteract ()
+             (if !batch
+              then solveQueryBatch ()
+              else solveQueryInteract () )
            else
              prerr_endline ""
        | None -> prerr_endline "\nError: Failed to parse query.\n");
@@ -173,8 +153,17 @@ let _ =
     Front.simulatorReInit false ;
     Module.initModuleContext ()  
   in
-  (* enter interactive mode *)
-  while true do 
-(*    let _ = print_string ("[" ^ "top" ^"] ?- ") in *)
-    solveQuery (ParseTwelf.parse_query ()) 
-  done
+  (** solveQueries: solve the command line queries and
+    enter interactive mode *)
+  let solveQueries () =
+    if !batch then
+      List.iter (fun s -> solveQuery (ParseTwelf.parse_queryStr s)) !queryStrings
+    else
+      (List.iter (fun s -> solveQuery (ParseTwelf.parse_queryStr s)) !queryStrings;
+       (* enter interactive mode *)
+       while true do 
+    (*    let _ = print_string ("[" ^ "top" ^"] ?- ") in *)
+         solveQuery (ParseTwelf.parse_queryT ()) 
+       done )
+  in
+  solveQueries ()
