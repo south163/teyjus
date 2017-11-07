@@ -1,0 +1,11 @@
+nat : type.
+z : nat.
+s : nat -> nat.
+
+list : type.
+nil : list.
+cons : nat -> list -> list.
+
+append : list -> list -> list -> type.
+appNil : append nil L L.
+appCons : append L1 L2 L3 -> append (cons X L1) L2 (cons X L3).

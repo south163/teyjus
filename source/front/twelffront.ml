@@ -75,7 +75,6 @@ let parse_args () =
 
 (** main *)
 let _ =
-  let _ = print_string "tjtwelf started!\n" in
   let _ = parse_args () in
   let _ = checkInput () in
   (* parse LF signature *)

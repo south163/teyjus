@@ -41,9 +41,8 @@ let translate_sig sign =
 let compile_and_link name =
   let executable_dir = Filename.dirname Sys.executable_name in
   (Sys.command ((Filename.concat executable_dir "tjcc.opt") ^ " " ^ !name );
-   print_endline "compiled!";
    Sys.command ((Filename.concat executable_dir "tjlink.opt") ^ " " ^ !name);
-   print_endline "linked!")
+  )
     
 let output_files (metadata, kinds, constants, clauses) name =
   let per_kind kind =
