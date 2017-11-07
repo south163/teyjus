@@ -3,6 +3,7 @@
 *.cmi
 *.cmx
 *.a
+*~
 source/compiler/instr.ml
 source/compiler/instr.mli
 source/compiler/lplex.ml
@@ -63,3 +64,8 @@ source/tjtwelf.exe
 top.*
 .omakedb
 .omakedb.lock
+source/test/*/*/*.lp
+source/test/*/*/*.lpo
+source/test/*/*/actual
+source/test/*/*/*.dis-actual
+source/test/*/*/*.s-acc
