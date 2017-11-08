@@ -56,6 +56,12 @@ let specList = Parseargs.dualArgs
     " Suppress system interaction; send all output without stopping") ;
    ("-q", "--query", Arg.String addQuery,
     " Solve the given query on startup. Several queries may be specified.") ;
+   ("-e", "--expect", Arg.Set_int minSolutions,
+        " Expect at least this many solutions from each query;\n" ^
+      "\t\terror if fewer. Valid only in batch mode") ;
+   ("-m", "--maximum", Arg.Set_int maxSolutions,
+        " Halt after this many solutions to the query have been found.\n" ^
+      "\t\tValid only in batch mode") ;
    ("-p", "--path", Arg.String setPath,
     " Add PATH to the search path.") ;
    ("-k", "--heap", Arg.Set_int heapSize,
