@@ -557,9 +557,7 @@
 	     | (FVar (n1,_,_), FVar (n2,_,_)) ->
 	         if (n1 = n2) then unifySpine (g, (ss1, s1), (ss2, s2))
 	         else raise (Unify "Free variable clash")
-	     | _ ->
-                 raise (Unify ("Head mismatch: "^(IntSyn.exp_to_string (Root (h1,ss1)))^" and "^(IntSyn.exp_to_string (Root (h2, ss2)))))  )
-(*	     | (Def (d1), Def (d2)) ->
+	     | (Def (d1), Def (d2)) ->
 	         if (d1 = d2) then (* because of strict *) 
 	           unifySpine (g, (ss1, s1), (ss2, s2))
 	         else (*  unifyExpW (G, Whnf.expandDef (Us1), Whnf.expandDef (Us2)) *)
@@ -578,30 +576,33 @@
 		        if (c1 = c2) then unifyExpW (g, us1, Whnf.expandDef us2)
 		        else raise (Unify "Constant clash"))
              | (Def (d1), BVar (k2)) -> raise (Unify "Head mismatch") (* due to strictness! *)
-	     | (BVar (k1), Def (d2)) -> (raise Unify "Head mismatch") (* due to strictness! *)
+	     | (BVar (k1), Def (d2)) -> raise (Unify "Head mismatch") (* due to strictness! *)
            (* next two cases for def/fgn, fgn/def *)
 	     | (Def (d1), _) -> unifyExpW (g, Whnf.expandDef us1, us2)
 	     | (_, Def(d2)) -> unifyExpW (g, us1, Whnf.expandDef us2)
              | (FgnConst (cs1, ConDec (n1, _, _, _, _, _)), FgnConst (cs2, ConDec (n2, _, _, _, _, _))) ->
                (* we require unique string representation of external constants *)
-                 if (cs1 = cs2) andalso (n1 = n2) then ()
+                 if (cs1 = cs2) && (n1 = n2) then ()
                  else raise (Unify "Foreign Constant clash")
              | (FgnConst (cs1, ConDef (n1, _, _, w1, _, _, _)), FgnConst (cs2, ConDef (n2, _, _, v, w2, _, _))) ->
-                 if (cs1 = cs2) andalso (n1 = n2) then ()
+                 if (cs1 = cs2) && (n1 = n2) then ()
                  else unifyExp (g, (w1, s1), (w2, s2))
              | (FgnConst (_, ConDef (_, _, _, w1, _, _, _)), _) ->
                  unifyExp (g, (w1, s1), us2)
              | (_, FgnConst (_, ConDef (_, _, _, w2, _, _, _))) ->
-                 unifyExp (g, us1, (w2, s2))              *)
+               unifyExp (g, us1, (w2, s2))
+                 
+	     | _ ->
+                 raise (Unify ("Head mismatch: "^(IntSyn.exp_to_string (Root (h1,ss1)))^" and "^(IntSyn.exp_to_string (Root (h2, ss2)))))  )
       | (g, (Pi ((d1, _), u1), s1), (Pi ((d2, _), u2), s2)) ->         
 	  (unifyDec (g, (d1, s1), (d2, s2)) ; 
            unifyExp (Decl (g, decSub (d1, s1)), (u1, dot1 s1), (u2, dot1 s2)))
-(*
+
       | (g,(Pi (_, _), _), (Root (Def _, _), _)) ->
 	  unifyExpW (g, us1, Whnf.expandDef (us2))
       | (g, (Root (Def _, _), _), (Pi (_, _), _)) ->
 	  unifyExpW (g, Whnf.expandDef (us1), us2)
-*)
+
       | (g, (Lam (d1, u1), s1), (Lam (d2, u2), s2)) ->           
           (* D1[s1] = D2[s2]  by invariant *)
 	  unifyExp (Decl (g, decSub (d1, s1)), (u1, dot1 s1),(u2, dot1 s2))
@@ -688,7 +689,7 @@
     *)
   and unifyExp (g, (e1,s1), (e2,s2)) = 
           unifyExpW (g, Whnf.whnf (e1,s1), Whnf.whnf (e2,s2))
-(*
+
   and unifyDefDefW (g, (((Root (Def (d1), ss1)), s1) as us1), ((Root (Def (d2), ss2), s2) as us2)) =
         (*  unifyExpW (g, Whnf.expandDef (Us1), Whnf.expandDef (Us2)) *)
     let Anc (_, h1, c1Opt) = defAncestor d1 in
@@ -701,11 +702,11 @@
 	    else ()
          | _ -> () (* conservative *)
     in
-    match Int.compare (h1, h2) with
-	 EQUAL -> unifyExpW (g, Whnf.expandDef (us1), Whnf.expandDef (us2))
-       | LESS -> unifyExpW (g, us1, Whnf.expandDef (us2))
-       | GREATER -> unifyExpW (g, Whnf.expandDef (us1), us2)
-*)
+    match compare h1 h2 with
+	 0 -> unifyExpW (g, Whnf.expandDef (us1), Whnf.expandDef (us2))
+       | n when n < 0 -> unifyExpW (g, us1, Whnf.expandDef (us2))
+       | n when n > 0 -> unifyExpW (g, Whnf.expandDef (us1), us2)
+
     (* unifySpine (G, (S1, s1), (S2, s2)) = ()
      
        Invariant:

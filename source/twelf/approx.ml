@@ -227,7 +227,7 @@
         | _ (* Kind/Hyperkind *) ->
             let (u', _ (* v' *)) = expToApx (u) in
             (u', v', l')
-(*
+
   (* constDefApx (d) = v-
      if |- d = v : type *)
   let constDefApx d =
@@ -238,7 +238,7 @@
        | IntSyn.AbbrevDef (_, _, _, u, _, _) ->
            let (v', _ (* Uni Type *)) = expToApx u in
            v')
-*)
+
   (* converting approximate terms to exact terms *)
 
   (* apxToUni (L-) = L *)
@@ -393,7 +393,7 @@
                  (IntSyn.Const(c1), IntSyn.Const(c2)) ->
                    if c1 = c2 then ()
                    else raise (Unify "Type/kind constant clash")
-(*               | (IntSyn.Def(d1), IntSyn.Def(d2)) ->
+               | (IntSyn.Def(d1), IntSyn.Def(d2)) ->
                  if d1 = d2 then ()
                  else matchFun (constDefApx d1, constDefApx d2)
                | (IntSyn.Def(d1), _) -> matchFun (constDefApx d1, v2)
@@ -403,14 +403,13 @@
                  if d1 = d2 then ()
                  else matchFun (constDefApx d1, constDefApx d2)
                | (IntSyn.NSDef(d1), _) -> matchFun (constDefApx d1, v2)
-               | (_, IntSyn.NSDef(d2)) -> matchFun (v1, constDefApx d2))
+               | (_, IntSyn.NSDef(d2)) -> matchFun (v1, constDefApx d2) )
               (* others cannot occur by invariant *)
-*) )
         | (Arrow (v1, v2), Arrow (v3, v4)) ->
              (try matchFun (v1, v3)
               with e -> (matchFun (v2, v4); raise e));
              matchFun (v2, v4)
-(*        | (Arrow _, Const(IntSyn.Def(d2))) ->
+        | (Arrow _, Const(IntSyn.Def(d2))) ->
             matchFun (v1, constDefApx d2)
         | (Const(IntSyn.Def(d1)), Arrow _) ->
             matchFun (constDefApx d1, v2)
@@ -418,13 +417,12 @@
             matchFun (v1, constDefApx d2)
         | (Const(IntSyn.NSDef(d1)), Arrow _) ->
             matchFun (constDefApx d1, v2)
-*)
         | (CVar r1, ((CVar r2) as u2)) ->
             if r1 == r2
             then ()
             else r1 := Some u2
 (*
-            (match (!r1, !r2) with
+              (match (!r1, !r2) with
                  Some(e1), Some(e2) when exp_equal e1 e2 -> ()
                | _ -> r1 := Some u2)
 *)

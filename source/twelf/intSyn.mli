@@ -264,7 +264,7 @@
   (* Definition related functions *)
   val headOpt : exp -> head option
   val ancestor : exp -> ancestor
-  (*  val defAncestor : cid -> ancestor *)
+  val defAncestor : cid -> ancestor 
 
   (* Type related functions *)
 
