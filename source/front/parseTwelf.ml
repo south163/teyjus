@@ -320,7 +320,7 @@ let parse_config filename =
       let fn = Filename.concat path (input_line inchann) in
       if Sys.file_exists fn
       then get_files (fn :: filelist)
-      else (prerr_endline ("Error: Invalid file in config: `"^ fn ^"'.");  get_files filelist)
+      else (print_endline ("Warning: Skipping file in config: `"^ fn ^"'.");  get_files filelist)
     with End_of_file -> filelist
   in 
   let filelist = get_files [] in
