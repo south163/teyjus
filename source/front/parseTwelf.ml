@@ -33,7 +33,7 @@ let rec exp_to_kind bvars e =
           let b = exp_to_kind ((Symb.symbol name,t) :: bvars) body in
           Lfabsyn.PiKind(Symb.symbol name, t, b, false)
     | _ ->
-        Errormsg.error Errormsg.none ("exp_to_kind: This expression is not a valid kind.");
+        prerr_endline ("Error: exp_to_kind: This expression is not a valid kind.");
         (* trying to continue on errors *)
         Lfabsyn.Type
 
@@ -66,7 +66,7 @@ and exp_to_type bvars e =
     | IntSyn.Redex(exp, IntSyn.Nil) ->
         exp_to_type bvars exp
     | _ ->
-        Errormsg.error Errormsg.none ("exp_to_type: This expression type: `"^(IntSyn.exp_to_string e)^"' is not a valid type.");
+        prerr_endline ("Error: exp_to_type: This expression type: `"^(IntSyn.exp_to_string e)^"' is not a valid type.");
         (* try to continue with dummy type? *)
         Lfabsyn.IdType(Lfabsyn.Const(Symb.symbol "dummy"))
 
@@ -95,7 +95,7 @@ and exp_to_term bvars e =
                let (s, t) = List.nth bvars (i-1) in
                Lfabsyn.IdTerm(Lfabsyn.Var(s,t))
            | _ ->
-               Errormsg.error Errormsg.none ("exp_to_term: This head has an unexpected form.");
+               prerr_endline ("Error: exp_to_term: This head has an unexpected form.");
                (* try to continue with dummy term? *)
                Lfabsyn.IdTerm(Lfabsyn.Const(Symb.symbol "dummy")))
     | IntSyn.Root(h,spine) ->
@@ -108,7 +108,7 @@ and exp_to_term bvars e =
                let (s, t) = List.nth bvars (i-1) in
                Lfabsyn.AppTerm(Lfabsyn.Var(s,t), args)
            | _ ->
-               Errormsg.error Errormsg.none ("exp_to_term: This head has an unexpected form.");
+               prerr_endline ("Error: exp_to_term: This head has an unexpected form.");
                (* try to continue with dummy term? *)
                Lfabsyn.IdTerm(Lfabsyn.Const(Symb.symbol "dummy")))
     | IntSyn.EVar(r,IntSyn.Null,ty,c) when  !c = [] ->
@@ -138,7 +138,7 @@ and exp_to_term bvars e =
         let e' = Whnf.normalize (e, IntSyn.Shift 0) in
         exp_to_term bvars e'
     | _ ->
-        Errormsg.error Errormsg.none ("exp_to_term: This expression: `"^(IntSyn.exp_to_string e)^"' is not a valid term.");
+        prerr_endline ("Error: exp_to_term: This expression: `"^(IntSyn.exp_to_string e)^"' is not a valid term.");
         (* try to continue with dummy term? *)
         Lfabsyn.IdTerm(Lfabsyn.Const(Symb.symbol "dummy"))   
 and sub_to_args bvars sub =
@@ -255,7 +255,7 @@ let parse_file filename lfsig =
                           let (obj, target) = conDec_to_obj conDec in
                           let objs' = Symboltable.insert objs (Lfabsyn.get_obj_symb obj) obj in
                           match Symboltable.lookup types target with
-                             None -> Errormsg.error Errormsg.none ("Type constructor "^(Symb.name target)^" not found in signature.");
+                             None -> prerr_endline ("Error: Type constructor "^(Symb.name target)^" not found in signature.\nObject: " ^ PrintLF.string_of_obj obj);
                                      (* try to continue if error *)
                                      aux stream' types objs
                            | Some(Lfabsyn.TypeFam(a,b,c,d,e,objs,f)) ->       
@@ -291,7 +291,7 @@ let parse_file filename lfsig =
                        (Symboltable.insert types (Symb.symbol name) (update_fixity_t tyfam fixity),
                         objs)
                    | None ->
-                     Errormsg.error Errormsg.none ("Type constructor `"^name^"' not found in signature.");
+                     prerr_endline  ("Error: Type constructor `"^name^"' not found in signature.");
                      (types, objs) )
                  else (* IntSyn.conDecUni conDec = IntSyn.Type *)
                    (match Symboltable.lookup objs (Symb.symbol name) with
@@ -299,7 +299,7 @@ let parse_file filename lfsig =
                        (types,
                         Symboltable.insert objs (Symb.symbol name) (update_fixity_o obj fixity))
                    | None ->
-                     Errormsg.error Errormsg.none ("Type constructor `"^name^"' not found in signature.");
+                     prerr_endline ("Error: Type constructor `"^name^"' not found in signature.");
                      (types, objs) )
                in
                aux stream' types' objs'

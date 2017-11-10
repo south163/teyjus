@@ -45,11 +45,11 @@ let checkArgNumber args =
       (IntSyn.ConDec (name, _, i, _, v, l), n) ->
 	checkAtomic (name, v, i+n)
 (*    | (IntSyn.SkoDec (name, _, i, v, l), n) ->
-	checkAtomic (name, v, i+n)
+      checkAtomic (name, v, i+n) *)
     | (IntSyn.ConDef (name, _, i, _, v, l, _), n) ->
 	checkAtomic (name, v, i+n)
     | (IntSyn.AbbrevDef (name, _, i, _, v, l), n) ->
-	checkAtomic (name, v, i+n) *)
+	checkAtomic (name, v, i+n) 
 
   (* checkFixity (name, cidOpt, n) = ()
      if n = 0 (no requirement on arguments)
