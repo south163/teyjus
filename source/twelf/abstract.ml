@@ -68,7 +68,7 @@
     *)
   let  eqEVar v1 v2 =
     match v1, v2 with
-        (IntSyn.EVar (r1, _, _, _)), (EV (IntSyn.EVar (r2, _, _, _))) -> (r1 = r2)
+        (IntSyn.EVar (r1, _, _, _)), (EV (IntSyn.EVar (r2, _, _, _))) -> (r1 == r2)
       | _ -> false
 
     (* eqFVar F Y = B
@@ -84,7 +84,7 @@
     *)
   let  eqLVar v1 v2 =
     match v1, v2 with
-        (IntSyn.LVar ((r1, _, _))), (LV (IntSyn.LVar ((r2, _, _)))) -> (r1 = r2)
+        (IntSyn.LVar ((r1, _, _))), (LV (IntSyn.LVar ((r2, _, _)))) -> (r1 == r2)
       | _ -> false
 
 

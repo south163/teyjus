@@ -683,7 +683,7 @@ let topStructClear () = topNamespace := Symboltable.empty
     let name = base ^ (string_of_int (nextIndex (base))) in
     if varDefined name || conDefined name || ctxDefined (g,name)
     then tryNextName (g, base)
-    else name
+    else  name
 
   let rec findNameLocal (g, base, i) =
     let name = base ^ (if i = 0 then "" else (string_of_int i)) in
@@ -718,8 +718,7 @@ let topStructClear () = topNamespace := Symboltable.empty
       | (g, IntSyn.AVar(r)) ->
 	  (* use name preferences below *)
 	  let name = tryNextName (g, namePrefOf' (Exist, None)) in
-	  (evarInsert (x, name);
-	   name)
+	  (evarInsert (x, name);name)
 
     (* evarName (G, X) = name
        where `name' is the print name X.
@@ -860,12 +859,12 @@ let topStructClear () = topNamespace := Symboltable.empty
     match arg with
         (IntSyn.ConDec (name, parent, imp, status, v, l)) ->
           IntSyn.ConDec (name, parent, imp, status, pisEName (imp, v), l)
-(*      | (IntSyn.ConDef (name, parent, imp, u, v, l, Anc)) ->
+      | (IntSyn.ConDef (name, parent, imp, u, v, l, anc)) ->
 	  let (u', v') = defEName (imp, (u, v)) in
-	  IntSyn.ConDef (name, parent, imp, u', v', l, Anc)
+	  IntSyn.ConDef (name, parent, imp, u', v', l, anc)
       | (IntSyn.AbbrevDef (name, parent, imp, u, v, l)) ->
 	  let (u', v') = defEName (imp, (u, v)) in
-	  IntSyn.AbbrevDef (name, parent, imp, u', v', l) *)
+	  IntSyn.AbbrevDef (name, parent, imp, u', v', l) 
       | (skodec) -> skodec (* fix ??? *)
 
     (* Assigns names to variables in a constant declaration *)

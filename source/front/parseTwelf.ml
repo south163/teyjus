@@ -112,7 +112,6 @@ and exp_to_term bvars e =
                (* try to continue with dummy term? *)
                Lfabsyn.IdTerm(Lfabsyn.Const(Symb.symbol "dummy")))
     | IntSyn.EVar(r,IntSyn.Null,ty,c) when  !c = [] ->
-(*        let _ = print_endline ("See EVar: "^(IntSyn.exp_to_string e)) in *)
         if Option.isSome (!r)
         then
           exp_to_term bvars (Option.get (!r))
