@@ -7,10 +7,17 @@ empty : tm.
 app : tm -> tm -> tm.
 lam : tp -> (tm -> tm) -> tm.
 
-of : {X1: tm}{X2 : tp}type.
+of : tm -> tp -> type.
 of_empty : of empty unit.
-of_lam : {T : tp}{T2 : tp}{E : tm -> tm}
-               ({X : tm} of X T2 -> of (E X) T) -> 
+of_lam : ({X : tm} of X T2 -> of (E X) T) -> 
                of (lam T2 ([V : tm] E V)) (arrow T2 T).
-of_app : {E1 : tm}{E2 : tm}{T : tp}{T2 : tp}
-               of E1 (arrow T2 T) -> of E2 T2 -> of (app E1 E2) T.
+of_app : of E1 (arrow T2 T) -> of E2 T2 -> of (app E1 E2) T.
+
+value : tm -> type.
+val_empty : value empty.
+val_lam : value (lam T R).
+
+step : tm -> tm -> type.
+step_app1 : step E1 E1' -> step (app E1 E2) (app E1' E2).
+step_app2 : value E1 -> step E2 E2' -> step (app E1 E2) (app E1 E2').
+step_beta : value E2 -> step (app (lam T2 ([x:tm] E x)) E2) (E E2).
