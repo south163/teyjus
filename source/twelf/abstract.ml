@@ -369,7 +369,7 @@
   let rec abstractEVar args =
     match args with
         (IntSyn.Decl (k', EV (IntSyn.EVar(r',_,_,_))), depth, (IntSyn.EVar (r, _, _, _) as x)) -> 
-          if r = r' then IntSyn.BVar (depth+1)
+          if r == r' then IntSyn.BVar (depth+1)
 	  else abstractEVar (k', depth+1, x)
 (*      | abstractEVar (IntSyn.Decl (K', FV (n', _)), depth, x) -> 
 	  abstractEVar (K', depth+1, x) remove later --cs*)
@@ -407,7 +407,7 @@
   let rec abstractLVar args =
     match args with
         (IntSyn.Decl(k', LV (IntSyn.LVar (r', _, _))), depth, ( IntSyn.LVar (r, _, _) as l)) -> 
-	  if r = r' then IntSyn.Bidx (depth+1)
+	  if r == r' then IntSyn.Bidx (depth+1)
 	  else abstractLVar (k', depth+1, l)
       | (IntSyn.Decl(k', _), depth, l) ->
   	  abstractLVar (k', depth+1, l)
