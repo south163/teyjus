@@ -1,7 +1,6 @@
 (* the Twelf context for parsing & type reconstruction *)
 let context : Names.namespace option ref = ref None
 
-
 let constraintsMsg (cnstrL) =
   "Typing ambiguous -- unresolved constraints\n" (*^ Print.cnstrsToString cnstrL*)
   
@@ -29,9 +28,9 @@ let rec exp_to_kind bvars e =
           Lfabsyn.PiKind(Symb.symbol (Option.get name_op), t, b,true)
         else
           (* need to generate a name *)
-          let name = Names.skonstName "A" in
-          let b = exp_to_kind ((Symb.symbol name,t) :: bvars) body in
-          Lfabsyn.PiKind(Symb.symbol name, t, b, false)
+          let s = Symb.gen "A" in
+          let b = exp_to_kind ((s,t) :: bvars) body in
+          Lfabsyn.PiKind(s, t, b, false)
     | _ ->
         prerr_endline ("Error: exp_to_kind: This expression is not a valid kind.");
         (* trying to continue on errors *)
@@ -48,8 +47,7 @@ and exp_to_type bvars e =
           Lfabsyn.PiType(s, t, b, true)
         else
           (* need to generate a name *)
-          let name = Names.skonstName "A" in
-          let s = Symb.symbol name in
+          let s = Symb.gen "A" in
           let b = exp_to_type ((s,t)::bvars) body in
           Lfabsyn.PiType(s, t, b, false)
     | IntSyn.Root(IntSyn.Const(cid),IntSyn.Nil) ->
