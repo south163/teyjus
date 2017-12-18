@@ -227,6 +227,7 @@ let installConDec fromCS (conDec, ((fileName, ocOpt) as fileNameocOpt), r) =
   cid
     
 let parse_file filename lfsig =
+  let _ = print_endline ("Parsing file: " ^ filename) in
   let inchann = open_in filename in
   let parseStream = Parser.parseStream inchann in
   let _ = context := Some(Names.newNamespace ()) in
