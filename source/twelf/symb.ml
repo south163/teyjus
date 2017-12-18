@@ -25,7 +25,7 @@ let id (n,i) = i
 let currentId = ref 0
   
 let gen n =
-  let n' = n ^ (string_of_int (!currentId)) in
+  let n' = n ^ "_" ^ (string_of_int (!currentId)) in
   let _ = currentId := !currentId + 1 in
   symbol n'
 
