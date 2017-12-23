@@ -255,8 +255,13 @@
           (* cannot happen at present *)
 	  Tparsing.Parsing.error (r, "Illegal bound quoted identifier " ^ name)
       | (Tparsing.Parsing.Lexer'.Stream'.Cons ((Tparsing.Parsing.Lexer'.ID (idCase,name), r), s')) ->
-        (* MKS: no fixity declarations so always nofix case *)
-        parseDec1 (Some(name), Tparsing.Parsing.Lexer'.Stream'.expose s')
+         (match Names.fixityLookup (Names.Qid ([], name)) with
+          | Fixity.Nonfix -> parseDec1 (Some(name), Tparsing.Parsing.Lexer'.Stream'.expose s')
+          | Fixity.Infix _ -> Tparsing.Parsing.error (r, "Cannot bind infix identifier " ^ name)
+          | Fixity.Prefix _ -> Tparsing.Parsing.error (r, "Cannot bind prefix identifier " ^ name)
+          | Fixity.Postfix _ -> Tparsing.Parsing.error (r, "Cannot bind postfix identifier " ^ name)
+         )
+
       | (Tparsing.Parsing.Lexer'.Stream'.Cons ((Tparsing.Parsing.Lexer'.UNDERSCORE, r), s')) ->
           parseDec1 (None, Tparsing.Parsing.Lexer'.Stream'.expose s')
       | (Tparsing.Parsing.Lexer'.Stream'.Cons ((Tparsing.Parsing.Lexer'.EOF, r), s')) ->

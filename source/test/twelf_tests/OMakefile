@@ -6,7 +6,9 @@ twelf-test: $(TJTWELF)
 
 .SUBDIRS: $(SUBDIRS)
     # The default main file is the name of the test directory
-    MAIN = $(basename $(absname $(CWD)))
+    # MAIN = $(basename $(absname $(CWD)))
+
+    MAIN = sources.cfg
 
     # The default root file can be overriden if the test directory contains
     # a file named root.om with a line "MAIN = xxxx"
@@ -14,4 +16,4 @@ twelf-test: $(TJTWELF)
         include main.om
         export
 
-    twelf-test: $(MAIN).elf
+    twelf-test: $(MAIN)
