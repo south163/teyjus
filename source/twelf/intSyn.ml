@@ -737,7 +737,9 @@
              | FgnConst _ -> "fgnconst"
           )^(argStr s)^")"
       | Redex _ -> "redex"
-      | Lam _ -> "lam"
+      | Lam _ -> "lam" 
+      | EVar (r,_,e',c) when !r = None && !c = [] -> "evar(None, "^(exp_to_string e')^")"
+      | EVar (r,_,e',c) when Option.isSome !r && !c = [] -> "evar(Some("^(exp_to_string (Option.get !r))^"), "^(exp_to_string e')^")"
       | EVar(r,ctx,e',c) ->
           "evar("^
           (match !r with
@@ -747,10 +749,7 @@
           (match !c with
                [] -> "[]"
              | _ -> "cnstrs"
-          )^")"
-      | EVar (r,_,e',c) when !r = None && !c = [] -> "evar(None, "^(exp_to_string e')^")"
-      | EVar (r,_,e',c) when Option.isSome !r && !c = [] -> "evar(Some("^(exp_to_string (Option.get !r))^"), "^(exp_to_string e')^")" 
-      | EVar _ -> "evar"
+          )^")" 
       | EClo (e', sub) -> 
           "eclo("^(exp_to_string e')^", "^(sub_to_string sub)^")" 
       | AVar _ -> "avar"
@@ -765,6 +764,9 @@
             (match f with 
                  Idx(k) -> "idx("^(string_of_int k)^")"
                | Exp(e) -> "exp("^(exp_to_string e)^")"
+               | Axp(e) -> "axp("^(exp_to_string e)^")"
+               | Undef -> "undef"
+               | Block(_) -> "block"
             ) ^", "^(sub_to_string s')^")"
 
   and ctx_to_string c =

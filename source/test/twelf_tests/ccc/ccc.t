@@ -18,7 +18,7 @@ my $ans;
 # M = cur snd
 
 # ANS
-# same_answers( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"ccc1");
+# same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"ccc1");
 
 # ############################################
 # ############################################
@@ -31,7 +31,7 @@ my $ans;
 # M = cur (pair snd (snd @ fst))
 
 # ANS
-# same_answers( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"ccc2");
+# same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"ccc2");
 
 # ############################################
 # ############################################
@@ -44,7 +44,7 @@ my $ans;
 # M = cur (cur (app @ pair (snd @ fst) snd))
 
 # ANS
-# same_answers( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"ccc3");
+# same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"ccc3");
 
 # ############################################
 # ############################################
@@ -57,7 +57,7 @@ my $ans;
 # E = [_e:term (_A1 * _A2)] lsnd _e
 
 # ANS
-# same_answers( `$TJTWELF -b --query "$code" $MODULE\n`, $ans,"ccc4");
+# same_answers_twelf( `$TJTWELF -b --query "$code" $MODULE\n`, $ans,"ccc4");
 
 # ############################################
 # ############################################
@@ -69,7 +69,7 @@ my $ans;
 # The answer substitution:
 
 # ANS
-# same_answers( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"ccc5");
+# same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"ccc5");
 
 # ############################################
 # ############################################
@@ -81,7 +81,7 @@ my $ans;
 # The answer substitution:
 
 # ANS
-# same_answers( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"ccc6");
+# same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"ccc6");
 
 # ############################################
 # ############################################
@@ -93,7 +93,7 @@ my $ans;
 # The answer substitution:
 
 # ANS
-# same_answers( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"ccc7");
+# same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"ccc7");
 
 # ############################################
 # ############################################
@@ -109,4 +109,4 @@ my $ans;
 # The answer substitution:
 
 # ANS
-# same_answers( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"ccc8");
+# same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"ccc8");

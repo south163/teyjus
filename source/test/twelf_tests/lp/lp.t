@@ -16,7 +16,7 @@ my $ans;
 # The answer substitution:
 
 # ANS
-# same_answers( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"lp1");
+# same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"lp1");
 # ############################################
 # ############################################
 # $code = <<'CODE';
@@ -27,7 +27,7 @@ my $ans;
 # The answer substitution:
 
 # ANS
-# same_answers( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"lp2");
+# same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"lp2");
 # ############################################
 # ############################################
 # $code = <<'CODE';
@@ -41,7 +41,7 @@ my $ans;
 # The answer substitution:
 
 # ANS
-# same_answers( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"lp3");
+# same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"lp3");
 # ############################################
 # ############################################
 # $code = <<'CODE';
@@ -52,7 +52,7 @@ my $ans;
 # The answer substitution:
 
 # ANS
-# same_answers( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"lp4");
+# same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"lp4");
 # ############################################
 # ############################################
 # $code = <<'CODE';
@@ -70,7 +70,7 @@ my $ans;
 # The answer substitution:
 
 # ANS
-# same_answers( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"lp5");
+# same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"lp5");
 ############################################
 ############################################
 $code = <<'CODE';
@@ -82,7 +82,7 @@ $ans = <<'ANS';
 The answer substitution:
 
 ANS
-same_answers( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"lp6");
+same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"lp6");
 # MKS: removed becuase causes heap overflow...
 # ############################################
 # ############################################
@@ -107,7 +107,7 @@ same_answers( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"lp6");
 # The answer substitution:
 
 # ANS
-# same_answers( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"lp7");
+# same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"lp7");
 ############################################
 ############################################
 # MKS: fails to parse?
@@ -136,7 +136,7 @@ $ans = <<'ANS';
 The answer substitution:
 
 ANS
-same_answers( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"lp8");
+same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"lp8");
 ############################################
 ############################################
 $code = <<'CODE';
@@ -147,7 +147,7 @@ $ans = <<'ANS';
 The answer substitution:
 
 ANS
-same_answers( `$TJTWELF -e 0 -b --query "$code" $MODULE\n`, $ans,"lp9");
+same_answers_twelf( `$TJTWELF -e 0 -b --query "$code" $MODULE\n`, $ans,"lp9");
 ############################################
 ############################################
 $code = <<'CODE';
@@ -158,7 +158,7 @@ $ans = <<'ANS';
 The answer substitution:
 
 ANS
-same_answers( `$TJTWELF -m 15 -b --query "$code" $MODULE\n`, $ans,"lp10");
+same_answers_twelf( `$TJTWELF -m 15 -b --query "$code" $MODULE\n`, $ans,"lp10");
 ############################################
 ############################################
 $code = <<'CODE';
@@ -169,7 +169,7 @@ $ans = <<'ANS';
 The answer substitution:
 Z = s (s (s (s (s 0))))
 ANS
-same_answers( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"lp11");
+same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"lp11");
 ############################################
 ############################################
 $code = <<'CODE';
@@ -182,27 +182,27 @@ X = 0
 Y = s (s (s (s 0)))
 
 
-
+The answer substitution:
 X = s 0
 Y = s (s (s 0))
 
 
-
+The answer substitution:
 X = s (s 0)
 Y = s (s 0)
 
 
-
+The answer substitution:
 X = s (s (s 0))
 Y = s 0
 
 
-
+The answer substitution:
 X = s (s (s (s 0)))
 Y = 0
 
 ANS
-same_answers( `$TJTWELF -e 5 -b --query "$code" $MODULE\n`, $ans,"lp12");
+same_answers_twelf( `$TJTWELF -e 5 -b --query "$code" $MODULE\n`, $ans,"lp12");
 # ############################################
 # ############################################
 # $code = <<'CODE';
@@ -213,7 +213,7 @@ same_answers( `$TJTWELF -e 5 -b --query "$code" $MODULE\n`, $ans,"lp12");
 # The answer substitution:
 
 # ANS
-# same_answers( `$TJTWELF -e 0 -b --query "$code" $MODULE\n`, $ans,"lp13");
+# same_answers_twelf( `$TJTWELF -e 0 -b --query "$code" $MODULE\n`, $ans,"lp13");
 # ############################################
 # ############################################
 # $code = <<'CODE';
@@ -228,7 +228,7 @@ same_answers( `$TJTWELF -e 5 -b --query "$code" $MODULE\n`, $ans,"lp12");
 # The answer substitution:
 
 # ANS
-# same_answers( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"lp14");
+# same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"lp14");
 # ############################################
 # ############################################
 # $code = <<'CODE';
@@ -241,7 +241,7 @@ same_answers( `$TJTWELF -e 5 -b --query "$code" $MODULE\n`, $ans,"lp12");
 # The answer substitution:
 
 # ANS
-# same_answers( `$TJTWELF -e 0 -b --query "$code" $MODULE\n`, $ans,"lp15");
+# same_answers_twelf( `$TJTWELF -e 0 -b --query "$code" $MODULE\n`, $ans,"lp15");
 ############################################
 ############################################
 $code = <<'CODE';
@@ -256,7 +256,7 @@ The answer substitution:
 Y = 0
 
 ANS
-same_answers( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"lp16");
+same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"lp16");
 ############################################
 ############################################
 $code = <<'CODE';
@@ -271,7 +271,7 @@ The answer substitution:
 X = s 0
 
 ANS
-same_answers( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"lp17");
+same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"lp17");
 ############################################
 ############################################
 # MKS: infinite solutions?
@@ -285,23 +285,22 @@ CODE
 $ans = <<'ANS';
 
 The answer substitution:
-
 X = 0
 Y = s (s 0)
 
 
-
+The answer substitution:
 X = s 0
 Y = s 0
 
 
-
+The answer substitution:
 X = s 0
 Y = s 0
 
 
 ANS
-same_answers( `$TJTWELF -e 3 -m 3 -b --query "$code" $MODULE\n`, $ans,"lp18");
+same_answers_twelf( `$TJTWELF -e 3 -m 3 -b --query "$code" $MODULE\n`, $ans,"lp18");
 ############################################
 ############################################
 $code = <<'CODE';
@@ -312,4 +311,4 @@ $ans = <<'ANS';
 The answer substitution:
 
 ANS
-same_answers( `$TJTWELF -e 2 -b --query "$code" $MODULE\n`, $ans,"lp19");
+same_answers_twelf( `$TJTWELF -e 2 -b --query "$code" $MODULE\n`, $ans,"lp19");

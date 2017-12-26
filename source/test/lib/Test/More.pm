@@ -21,7 +21,8 @@ use vars qw($VERSION @ISA @EXPORT %EXPORT_TAGS $TODO);
 $VERSION = '0.41';
 @ISA    = qw(Exporter);
 @EXPORT = qw(ok use_ok require_ok
-             same_answers is isnt like unlike is_deeply
+             same_answers same_answers_twelf 
+             is isnt like unlike is_deeply
              cmp_ok
              skip todo todo_skip
              pass fail
@@ -330,6 +331,39 @@ sub same_answers($$;$) {
     my ($got, $exp, @rem) = @_;
     my %g;
     my %e;
+    $got =~ s/\r\n/\n/g;
+    $exp =~ s/\r\n/\n/g;
+    for (split "The answer substitution:", $got) {
+	s/^\s*//g;
+	s/\s*$//g;
+    	next if $_ eq "";
+    	$g{$_} = "true";
+    }
+    for (split "The answer substitution:", $exp) {
+	s/^\s*//g;
+	s/\s*$//g;
+    	next if $_ eq "";
+    	$e{$_} = "true";
+    }
+    $got = join "\nThe answer substitution:\n", sort keys %g;
+    $exp = join "\nThe answer substitution:\n", sort keys %e;
+    is($got,$exp,@rem);
+
+}
+
+sub same_answers_twelf($$;$) {
+    my ($got, $exp, @rem) = @_;
+    my %g;
+    my %e;
+
+    # when using tjtwelf want to strip all the extra output from before
+    # the first solution is displayed. Then check as if comparing answers
+    # for the teyjus tests.
+    my $headder;
+    my $rest = ' ';
+    ($headder, $rest) = split "The answer substitution:", $got, 2;
+    $got = join "\nThe answer substitution:\n", $rest;
+ 
     $got =~ s/\r\n/\n/g;
     $exp =~ s/\r\n/\n/g;
     for (split "The answer substitution:", $got) {

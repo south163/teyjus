@@ -18,7 +18,7 @@ The answer substitution:
 L = cons (s (s z)) (cons (s (s (s z))) nil)
 
 ANS
-same_answers( `$TJTWELF -b --query "$code" $MODULE\n`, $ans,"append");
+same_answers_twelf( `$TJTWELF -b --query "$code" $MODULE\n`, $ans,"append");
 ############################################
 ############################################
 $code = <<'CODE';
@@ -31,17 +31,17 @@ L1 = nil
 L2 = cons z (cons z nil)
 
 
-
+The answer substitution:
 L1 = cons z nil
 L2 = cons z nil
 
 
-
+The answer substitution:
 L1 = cons z (cons z nil)
 L2 = nil
 
 ANS
-same_answers( `$TJTWELF -b --query "$code" $MODULE\n`, $ans,"append");
+same_answers_twelf( `$TJTWELF -b --query "$code" $MODULE\n`, $ans,"append");
 ############################################
 ############################################
 $code = <<'CODE';
@@ -54,18 +54,18 @@ L2 = nil
 L3 = nil
 M = appNil nil
 
-
+The answer substitution:
 L2 = cons z nil
 L3 = cons z nil
 M = appNil (cons z nil)
 
-
+The answer substitution:
 L2 = cons (s z) nil
 L3 = cons (s z) nil
 M = appNil (cons (s z) nil)
 
 ANS
-same_answers( `$TJTWELF -t naive -m 3 -b --query "$code" $MODULE\n`, $ans, "append-naive");
+same_answers_twelf( `$TJTWELF -t naive -m 3 -b --query "$code" $MODULE\n`, $ans, "append-naive");
 ############################################
 ############################################
 $code = <<'CODE';
@@ -79,4 +79,4 @@ L3 = L3
 M = appNil L3
 
 ANS
-same_answers( `$TJTWELF -b --query "$code" $MODULE\n`, $ans, "append-optimized");
+same_answers_twelf( `$TJTWELF -b --query "$code" $MODULE\n`, $ans, "append-optimized");
