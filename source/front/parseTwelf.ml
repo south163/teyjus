@@ -123,11 +123,12 @@ and exp_to_term bvars e =
           exp_to_term bvars (Option.get (!r))
         else
           let name = Names.evarName (IntSyn.Null, e) in
-          let ty_head = exp_to_type bvars ty in
-          let ty = build_type_from_dctx bvars ty_head dctx in
+          let (bvars', tyfun) = build_type_from_dctx [] dctx in
+          let ty_head = exp_to_type bvars' ty in
+          let ty = tyfun ty_head in
           Lfabsyn.IdTerm(Lfabsyn.LogicVar(Symb.symbol name, ty))
     | IntSyn.EClo(e', IntSyn.Shift(_)) -> exp_to_term bvars e'
-    | IntSyn.EClo (e',sub) -> 
+    | IntSyn.EClo (e',sub) ->
         let (Lfabsyn.IdTerm(id)) = exp_to_term bvars e' in
         Lfabsyn.AppTerm(id, List.rev (sub_to_args bvars sub))
     | IntSyn.Redex(exp, IntSyn.Nil) ->
@@ -141,28 +142,31 @@ and exp_to_term bvars e =
         Lfabsyn.IdTerm(Lfabsyn.Const(Symb.symbol "dummy"))   
 and sub_to_args bvars sub =
   match sub with
-      IntSyn.Dot(IntSyn.Idx(k), sub') -> 
+      IntSyn.Dot(IntSyn.Idx(k), sub') ->
         let (s, ty) = List.nth bvars (k-1) in
         (Lfabsyn.IdTerm(Lfabsyn.Var(s, ty)) :: (sub_to_args bvars sub'))
     | IntSyn.Dot(IntSyn.Exp(e), sub') -> (exp_to_term bvars e) :: (sub_to_args bvars sub')
+    | IntSyn.Dot(IntSyn.Axp(e), sub') -> (exp_to_term bvars e) :: (sub_to_args bvars sub')
     | IntSyn.Shift(k) -> []
-and build_type_from_dctx bvars ty ctx =
+and build_type_from_dctx bvars ctx =
   match ctx with
-      IntSyn.Null -> ty
+      IntSyn.Null -> (bvars, (fun x -> x))
     | IntSyn.Decl(ctx', IntSyn.Dec(None,e)) ->
-        let t = exp_to_type bvars e in
         let name = Names.skonstName "A" in
-        build_type_from_dctx bvars (Lfabsyn.PiType(Symb.symbol name, t, ty, false)) ctx'
+        let (bvars',tyfun) = build_type_from_dctx bvars ctx' in
+        let t = exp_to_type bvars' e in
+        ((Symb.symbol name, t)::bvars, (fun ty -> (Lfabsyn.PiType(Symb.symbol name, t, tyfun ty, false))) )
     | IntSyn.Decl(ctx', IntSyn.Dec(Some(name),e)) ->
+        let (bvars',tyfun) = build_type_from_dctx bvars ctx' in
         let t = exp_to_type bvars e in
-        build_type_from_dctx bvars (Lfabsyn.PiType(Symb.symbol name, t, ty, true)) ctx'
-
+        ((Symb.symbol name, t)::bvars, (fun ty -> (Lfabsyn.PiType(Symb.symbol name, t, tyfun ty, true))) )
+  
 let conDec_to_typeFam (IntSyn.ConDec(name, id, implicit, _, kind, _)) =
-  let k = exp_to_kind [] kind in 
+  let k = exp_to_kind [] (Whnf.normalize (kind, IntSyn.id)) in 
   Lfabsyn.TypeFam(Symb.symbol name, k, Lfabsyn.NoFixity, Lfabsyn.None, 0, ref [], implicit)
 
 let conDec_to_obj (IntSyn.ConDec(name, id, implicit, _, ty, _)) =
-  let typ = exp_to_type [] ty in
+  let typ = exp_to_type [] (Whnf.normalize (ty,IntSyn.id)) in
   let Lfabsyn.Const(tyhead) = Lfabsyn.get_typ_head typ in
   (Lfabsyn.Object(Symb.symbol name, typ, Lfabsyn.NoFixity, Lfabsyn.None, 0, implicit), tyhead)
 
@@ -199,16 +203,18 @@ let update_fixity_o (Lfabsyn.Object(s,t,f,a,p,i)) fixity =
   
 let query_to_query (queryty, name_op, evars) =
   let ptName = match name_op with Some(n) -> n | None -> "" in
-  let f l (IntSyn.EVar(e,ctx,ty,c),name) = 
-    let ty_head = exp_to_type [] ty in
-    let t = 
+  let f l (IntSyn.EVar(e,ctx,ty,c),name) =
+    let _ = print_endline ("processing variable: "^name) in
+    let (bvars, tfun) = 
       match ctx with
-          IntSyn.Null -> ty_head
-        | _ -> build_type_from_dctx [] ty_head ctx
+          IntSyn.Null -> ([], fun x -> x)
+        | _ -> build_type_from_dctx [] (Whnf.normalizeCtx ctx)
     in
+    let ty_head = exp_to_type bvars (Whnf.normalize (ty,IntSyn.id)) in
+    let t = tfun ty_head in
     (Symb.symbol name, t) :: l
   in
-  let qty = exp_to_type [] queryty in
+  let qty = exp_to_type [] (Whnf.normalize (queryty, IntSyn.id)) in
   let fvars = List.fold_left f [] evars in
   Lfabsyn.Query(fvars, Symb.symbol ptName, qty)
 
@@ -337,7 +343,7 @@ let parse_sig filename =
 let parse_query parseStream =
   match Tparsing.Parsing.Lexer'.Stream'.expose parseStream with
     Tparsing.Parsing.Lexer'.Stream'.Cons(query, parseStream') ->
-     (try
+    (try 
         let (ty, name_op, evars) = ReconQuery.queryToQuery(query, Paths.Loc ("stdIn", Paths.Reg(0,0))) in
         let query = query_to_query (ty, name_op, evars) in
         Some(query)

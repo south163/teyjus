@@ -83,9 +83,9 @@ The answer substitution:
 
 ANS
 same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"lp6");
+############################################
+############################################
 # MKS: removed becuase causes heap overflow...
-# ############################################
-# ############################################
 # $code = <<'CODE';
 # s_sound
 #   (s_imp
@@ -110,33 +110,33 @@ same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"lp6");
 # same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"lp7");
 ############################################
 ############################################
-# MKS: fails to parse?
-$code = <<'CODE';
-ss_can
-  (ss_imp
-      ([d:assume (atom q0 imp atom r0 imp atom s0)]
-          [u:pf (atom q0 imp atom r0 imp atom s0)] [HS1:h_sound d u]
-          ss_imp
-             ([d1:assume (atom q0 imp atom r0)] [u1:pf (atom q0 imp atom r0)]
-                 [HS2:h_sound d1 u1]
-                 ss_imp
-                    ([d2:assume (atom q0)] [u2:pf (atom q0)] [HS3:h_sound d2 u2]
-                        ss_atom
-                           (is_imp (ss_atom is_atom HS3)
-                               (is_imp
-                                   (ss_atom
-                                       (is_imp (ss_atom is_atom HS3) is_atom)
-                                       HS2)
-                                   is_atom))
-                           HS1))))
-  CN.
-CODE
-$ans = <<'ANS';
+# MKS: another heap overflow
+# $code = <<'CODE';
+# ss_can
+#   (ss_imp
+#       ([d:assume (atom q0 imp atom r0 imp atom s0)]
+#           [u:pf (atom q0 imp atom r0 imp atom s0)] [HS1:h_sound d u]
+#           ss_imp
+#              ([d1:assume (atom q0 imp atom r0)] [u1:pf (atom q0 imp atom r0)]
+#                  [HS2:h_sound d1 u1]
+#                  ss_imp
+#                     ([d2:assume (atom q0)] [u2:pf (atom q0)] [HS3:h_sound d2 u2]
+#                         ss_atom
+#                            (is_imp (ss_atom is_atom HS3)
+#                                (is_imp
+#                                    (ss_atom
+#                                        (is_imp (ss_atom is_atom HS3) is_atom)
+#                                        HS2)
+#                                    is_atom))
+#                            HS1))))
+#   CN.
+# CODE
+# $ans = <<'ANS';
 
-The answer substitution:
+# The answer substitution:
 
-ANS
-same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"lp8");
+# ANS
+# same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"lp8");
 ############################################
 ############################################
 $code = <<'CODE';
@@ -274,7 +274,10 @@ ANS
 same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"lp17");
 ############################################
 ############################################
-# MKS: infinite solutions?
+# MKS: the solutions we find differ from those of twelf b/c we
+#      will be required to construct an explicit term for the argument
+#      `T1' of the constructor `cs_exists' unlike in twelf where it is
+#      left as a hole.
 $code = <<'CODE';
 top_solve ((forall^ [Y] atom^ (plus 0 Y Y))
 	     and^

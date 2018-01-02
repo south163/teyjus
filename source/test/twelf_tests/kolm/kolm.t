@@ -1,6 +1,6 @@
 use lib '../lib';
 use strict;
-use Test::More tests => 21;
+use Test::More tests => 9;
 
 my $TJTWELF = "../../tjtwelf";
 my $MODULE = "kolm/sources.cfg";
@@ -3881,7 +3881,6 @@ same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm10")
 # same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm12");
 ############################################
 ############################################
-# MKS: failed to parse
 # $code = <<'CODE';
 # D:({a:o} {ka:kolm a (not not a)} existskolm a (not not a) ka ->
 #                 sound 
@@ -3904,7 +3903,6 @@ same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm10")
 # same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm13");
 ############################################
 ############################################
-# MKS: failed to parse
 # $code = <<'CODE';
 # D:({a:o} {ka:kolm a (not not a)} 
 #    equiv ka ([u:nk a] (nk_dnotx u)) ([u:nk (not not a)] (nk_dnotr u)) ->
@@ -3940,7 +3938,6 @@ same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm10")
 # same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm14");
 ############################################
 ############################################
-# MKS: failed to parse
 # $code = <<'CODE';
 # D:({a:o} {ka:kolm a (not not a)} 
 #    equiv ka ([u:nk a] (nk_dnotx u)) ([u:nk (not not a)] (nk_dnotr u)) ->
@@ -3961,7 +3958,6 @@ same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm10")
 # same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm15");
 ############################################
 ############################################
-# MKS: failed to parse
 # $code = <<'CODE';
 # D:({a:o} {b:o} {ka:kolm a (n a)} {kb:kolm b (n b)}
 #    existskolm a (n a) ka ->
@@ -3989,7 +3985,6 @@ same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm10")
 # same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm16");
 ############################################
 ############################################
-# MKS: failed to parse
 # $code = <<'CODE';
 # D:({a:o} {b:o} {ka:kolm a (n a)} {kb:kolm b (n b)}
 #    equiv ka ([u:nk a] (nk_dnotx u)) ([u:nk (not not a)] (nk_dnotr u)) ->
@@ -4042,145 +4037,145 @@ same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm10")
 # same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm17");
 ############################################
 ############################################
-$code = <<'CODE';
-D:({R:i -> i -> o} {kr:{x} {y} kolm (R x y) (not not (R x y))} 
-    ({x} {y} existskolm (R x y) (not not (R x y)) (kr x y)) ->
-  sound
-   (nk_impi [u:nk (forall [x] (R x x))]
-       (nk_foralli [a]
-          (nk_existsi a
-             (nk_foralle u a))))
-   (kolm_imp (kolm_forall [x] (kolm_exists [y] (kr x y)))
-             (kolm_forall [x] (kr x x)))
-   (NJ R)).
-CODE
-$ans = <<'ANS';
+# $code = <<'CODE';
+# D:({R:i -> i -> o} {kr:{x} {y} kolm (R x y) (not not (R x y))} 
+#     ({x} {y} existskolm (R x y) (not not (R x y)) (kr x y)) ->
+#   sound
+#    (nk_impi [u:nk (forall [x] (R x x))]
+#        (nk_foralli [a]
+#           (nk_existsi a
+#              (nk_foralle u a))))
+#    (kolm_imp (kolm_forall [x] (kolm_exists [y] (kr x y)))
+#              (kolm_forall [x] (kr x x)))
+#    (NJ R)).
+# CODE
+# $ans = <<'ANS';
 
-The answer substitution:
+# The answer substitution:
 
-ANS
-same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm18");
+# ANS
+# same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm18");
 ############################################
 ############################################
-$code = <<'CODE';
-D:({R:i -> i -> o} {kr:{x} {y} kolm (R x y) (not not (R x y))} 
-   ({x} {y} equiv (kr x y) ([u:nk (R x y)] (nk_dnotx u)) 
-                           ([u:nk (not not (R x y))] (nk_dnotr u))) ->
-   complete (kolm_imp (kolm_forall [x] (kolm_exists [y] (kr x y)))
-             (kolm_forall [x] (kr x x)))
-   (nj_noti
-         ([p:o]
-             [u:nj
-                   (not
-                       (not not forall ([x:i] not not R x x)
-                           imp not not
-                                  forall
-                                     ([x:i]
-                                         not not exists ([y:i] not not R x y))))]
-             nj_note u p
-                (nj_impi
-                    ([X2:nj (not not forall ([x:i] not not R x x))]
-                        nj_noti
-                           ([p1:o]
-                               [u1:nj
-                                      (not
-                                          forall
-                                             ([T1:i]
-                                                 not not
-                                                    exists
-                                                       ([y:i] not not R T1 y)))]
-                               nj_note u1 p1
-                                  (nj_foralli
-                                      ([a:i]
+# $code = <<'CODE';
+# D:({R:i -> i -> o} {kr:{x} {y} kolm (R x y) (not not (R x y))} 
+#    ({x} {y} equiv (kr x y) ([u:nk (R x y)] (nk_dnotx u)) 
+#                            ([u:nk (not not (R x y))] (nk_dnotr u))) ->
+#    complete (kolm_imp (kolm_forall [x] (kolm_exists [y] (kr x y)))
+#              (kolm_forall [x] (kr x x)))
+#    (nj_noti
+#          ([p:o]
+#              [u:nj
+#                    (not
+#                        (not not forall ([x:i] not not R x x)
+#                            imp not not
+#                                   forall
+#                                      ([x:i]
+#                                          not not exists ([y:i] not not R x y))))]
+#              nj_note u p
+#                 (nj_impi
+#                     ([X2:nj (not not forall ([x:i] not not R x x))]
+#                         nj_noti
+#                            ([p1:o]
+#                                [u1:nj
+#                                       (not
+#                                           forall
+#                                              ([T1:i]
+#                                                  not not
+#                                                     exists
+#                                                        ([y:i] not not R T1 y)))]
+#                                nj_note u1 p1
+#                                   (nj_foralli
+#                                       ([a:i]
                                           
-nj_noti
-   ([p2:o] [u2:nj (not exists ([T2:i] not not R a T2))]
-       nj_note u2 p2
-          (nj_existsi a
-              (nj_noti
-                  ([q:o] [v:nj (not R a a)]
-                      nj_note X2 q
-                         (nj_noti
-                             ([p3:o] [u3:nj (forall ([x:i] not not R x x))]
-                                 nj_note (nj_foralle u3 a) p3 v)))))))))))))
-    (NK R)).
-CODE
-$ans = <<'ANS';
+# nj_noti
+#    ([p2:o] [u2:nj (not exists ([T2:i] not not R a T2))]
+#        nj_note u2 p2
+#           (nj_existsi a
+#               (nj_noti
+#                   ([q:o] [v:nj (not R a a)]
+#                       nj_note X2 q
+#                          (nj_noti
+#                              ([p3:o] [u3:nj (forall ([x:i] not not R x x))]
+#                                  nj_note (nj_foralle u3 a) p3 v)))))))))))))
+#     (NK R)).
+# CODE
+# $ans = <<'ANS';
 
-The answer substitution:
+# The answer substitution:
 
-ANS
-same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm19");
+# ANS
+# same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm19");
 ############################################
 ############################################
-$code = <<'CODE';
-D:({A:i -> o} {kA:{x:i} kolm (A x) (n (A x))}
-   ({x:i} existskolm (A x) (n (A x)) (kA x)) ->
-   sound (nk_impi [u:nk (not (forall A))]
-          (nk_dnotr
-           (nk_noti ([p] [v:nk (not (exists [x] (not (A x))))]
-             nk_note u p
-             (nk_foralli ([a:i]
-               nk_dnotr 
-               (nk_noti ([q] [w:nk (not (A a))]
-                 nk_note v q 
-                 (nk_existsi a w)))))))))
-         (kolm_imp (kolm_exists [x] (kolm_not (kA x)))
-                   (kolm_not (kolm_forall kA)))
-         (NJ A)).
-CODE
-$ans = <<'ANS';
+# $code = <<'CODE';
+# D:({A:i -> o} {kA:{x:i} kolm (A x) (n (A x))}
+#    ({x:i} existskolm (A x) (n (A x)) (kA x)) ->
+#    sound (nk_impi [u:nk (not (forall A))]
+#           (nk_dnotr
+#            (nk_noti ([p] [v:nk (not (exists [x] (not (A x))))]
+#              nk_note u p
+#              (nk_foralli ([a:i]
+#                nk_dnotr 
+#                (nk_noti ([q] [w:nk (not (A a))]
+#                  nk_note v q 
+#                  (nk_existsi a w)))))))))
+#          (kolm_imp (kolm_exists [x] (kolm_not (kA x)))
+#                    (kolm_not (kolm_forall kA)))
+#          (NJ A)).
+# CODE
+# $ans = <<'ANS';
 
-The answer substitution:
+# The answer substitution:
 
-ANS
-same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm20");
+# ANS
+# same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm20");
 ############################################
 ############################################
-$code = <<'CODE';
-D:({A:i -> o} {kA:{x:i} kolm (A x) (n (A x))}
-   ({x} equiv (kA x) ([u:nk (A x)] (nk_dnotx u)) ([u:nk (not not (A x))] (nk_dnotr u))) ->
-   complete
-      (kolm_imp (kolm_exists [x] (kolm_not (kA x)))
-                   (kolm_not (kolm_forall kA)))
-      (nj_dnotx
-         (nj_impi
-             ([X2:nj (n (not n (forall ([T1:i] n (A T1)))))]
-                 nj_triple_neg_red
-                    (nj_triple_neg_red
-                        (nj_triple_neg_red
-                            (nj_dnotx
-                                (nj_noti
-                                    ([q:o]
-                                        [v:nj
-                                              (n
-                                                  (not not not
-                                                      exists
-                                                         ([T2:i]
-                                                             n (not n (A T2)))))]
+# $code = <<'CODE';
+# D:({A:i -> o} {kA:{x:i} kolm (A x) (n (A x))}
+#    ({x} equiv (kA x) ([u:nk (A x)] (nk_dnotx u)) ([u:nk (not not (A x))] (nk_dnotr u))) ->
+#    complete
+#       (kolm_imp (kolm_exists [x] (kolm_not (kA x)))
+#                    (kolm_not (kolm_forall kA)))
+#       (nj_dnotx
+#          (nj_impi
+#              ([X2:nj (n (not n (forall ([T1:i] n (A T1)))))]
+#                  nj_triple_neg_red
+#                     (nj_triple_neg_red
+#                         (nj_triple_neg_red
+#                             (nj_dnotx
+#                                 (nj_noti
+#                                     ([q:o]
+#                                         [v:nj
+#                                               (n
+#                                                   (not not not
+#                                                       exists
+#                                                          ([T2:i]
+#                                                              n (not n (A T2)))))]
                                         
-nj_dneg_falser
-   (nj_note (nj_triple_neg_red X2) (n false)
-       (nj_dnotx
-           (nj_foralli
-               ([T3:i]
-                   nj_triple_neg_red
-                      (nj_triple_neg_red
-                          (nj_triple_neg_red
-                              (nj_dnotx
-                                  (nj_noti
-                                      ([q1:o] [v1:nj (n (not not not A T3))]
-                                          nj_dneg_falser
-                                             (nj_note (nj_triple_neg_red v)
-                                                 (n false)
-                                                 (nj_dnotx (nj_existsi T3 v1)))
-                                             q1)))))))))
-   q))))))))
-   (NK A)).
-CODE
-$ans = <<'ANS';
+# nj_dneg_falser
+#    (nj_note (nj_triple_neg_red X2) (n false)
+#        (nj_dnotx
+#            (nj_foralli
+#                ([T3:i]
+#                    nj_triple_neg_red
+#                       (nj_triple_neg_red
+#                           (nj_triple_neg_red
+#                               (nj_dnotx
+#                                   (nj_noti
+#                                       ([q1:o] [v1:nj (n (not not not A T3))]
+#                                           nj_dneg_falser
+#                                              (nj_note (nj_triple_neg_red v)
+#                                                  (n false)
+#                                                  (nj_dnotx (nj_existsi T3 v1)))
+#                                              q1)))))))))
+#    q))))))))
+#    (NK A)).
+# CODE
+# $ans = <<'ANS';
 
-The answer substitution:
+# The answer substitution:
 
-ANS
-same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm21"); 
+# ANS
+# same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm21"); 
