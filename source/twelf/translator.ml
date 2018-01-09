@@ -24,13 +24,6 @@ let set_translation s =
 
 let get_translation () = !currentTranslation
 
-(* Generate unique names for variables generated during
-   translation. *)
-let newVarCount = ref 0
-let newVar () =
-  let vname = "X_" ^ (string_of_int !newVarCount) in
-  let _ = newVarCount := !newVarCount + 1 in
-  vname
 
 (* Construct the two kinds lftype and lfobj *)
 let lftypeStr = "lf_type"
@@ -163,7 +156,7 @@ let rec encode_term constants metadata vars names sub tm =
                        Some(tysymb) -> Absyn.makeFreeVarTerm tysymb Errormsg.none
                      | None ->
                          Errormsg.error Errormsg.none
-                                        ("No variable named `"^(Symb.name s)^"' found in scope.");
+                                        ("No logic variable named `"^(Symb.name s)^"' found in scope.");
                          Absyn.ErrorTerm)
 
 (** Encode an LF kind as a term.
@@ -179,7 +172,8 @@ let rec encode_kind opt metadata consttbl vars names sub k =
             let s'' = try snd (List.find (fun (x,y) -> x = s') sub)
                       with Not_found -> s' in
             if List.exists (fun x -> x = s'') names
-            then let s''' = gen_name metadata names s'' in (s''', (s'', s''')::sub)
+            then let s''' = gen_name metadata names s'' in
+                 (s''', (s'', s''')::sub)
             else (s'', sub)
           in
           let names' = s' :: names in
@@ -224,7 +218,8 @@ and encode_type_negative opt metadata consttbl vars names sub ty neg_tp =
                     with Not_found -> s' 
           in
           if List.exists (fun x -> x = s'') names
-          then let s''' = gen_name metadata names s'' in (s''', (s'',s''')::sub)
+          then let s''' = gen_name metadata names s'' in
+               (s''', (s'',s''')::sub)
           else (s'', sub)
         in
         let names' = s' :: names in
@@ -322,7 +317,8 @@ and encode_type_positive opt metadata consttbl vars names sub ty pos_tp =
                     with Not_found -> s' 
           in
           if List.exists (fun x -> x = s'') names
-          then let s''' = gen_name metadata names s'' in (s''', (s'',s''')::sub)
+          then let s''' = gen_name metadata names s'' in
+               (s''', (s'',s''')::sub)
           else (s'', sub)
         in
         let names' = s' :: names in

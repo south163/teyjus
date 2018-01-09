@@ -16,6 +16,16 @@ let spine_map f s =
   in
   aux s 
 
+
+let get_fresh_symb name bvars =
+  let rec try_next i =
+    let n = name ^ (string_of_int i) in
+    if (List.exists (fun (x,y) -> (Symb.name x) = n) bvars)
+    then try_next (i+1)
+    else Symb.symbol n
+  in
+  try_next 0
+                     
     (* moving from Twelf structures to my structures *)
 let rec exp_to_kind bvars e =
   match e with
@@ -81,7 +91,11 @@ and exp_to_term bvars e =
                (* get a new name *)
                Names.skonstName "x")
         in
-        let s = Symb.symbol name in
+        let s =
+          if List.exists (fun (x,y) -> (Symb.name x) = name) bvars
+          then get_fresh_symb name bvars
+          else Symb.symbol name
+        in
         let b = exp_to_term ((s,t) :: bvars) body in
         Lfabsyn.AbsTerm(s, t, b)
     | IntSyn.Root(h,IntSyn.Nil) ->
@@ -204,7 +218,6 @@ let update_fixity_o (Lfabsyn.Object(s,t,f,a,p,i)) fixity =
 let query_to_query (queryty, name_op, evars) =
   let ptName = match name_op with Some(n) -> n | None -> "" in
   let f l (IntSyn.EVar(e,ctx,ty,c),name) =
-    let _ = print_endline ("processing variable: "^name) in
     let (bvars, tfun) = 
       match ctx with
           IntSyn.Null -> ([], fun x -> x)

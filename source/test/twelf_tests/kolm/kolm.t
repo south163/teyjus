@@ -879,17 +879,186 @@ ANS
 same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm8");
 ############################################
 ############################################
-# MKS: No solution found, but expecting one
-# $code = <<'CODE';
-# D:sound 
-#               (nk_dnotr (nk_noti ([p:o] [u:nk (not true)] nk_note u p nk_truei))) kolm_true NJ.
-# CODE
-# $ans = <<'ANS';
+$code = <<'CODE';
+D:sound (nk_dnotr (nk_noti ([p:o] [u:nk (not true)] nk_note u p nk_truei))) kolm_true NJ.
+CODE
+$ans = <<'ANS';
 
-# The answer substitution:
-
-# ANS
-# same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm9");
+The answer substitution:
+NJ =
+    nj_noti ((not true))
+      ([p:o]
+         ([A_59:nj ((not true))]
+            nj_note ((not (not (not true))))
+              (nj_noti ((not (not (not true))))
+                 ([p:o]
+                    ([A_59:nj ((not (not (not true))))]
+                       nj_note ((not (not (not (not (not true))))))
+                         (nj_noti ((not (not (not (not (not true))))))
+                            ([p:o]
+                               ([A_59:nj ((not (not (not (not (not true))))))
+                                  ]
+                                  nj_note ((not (not (not (not (not (not (not
+                                    true))))))))
+                                    (nj_noti ((not (not (not (not (not (not
+                                       (not true))))))))
+                                       ([p:o]
+                                          ([A_59:
+                                             nj ((not (not (not (not (not
+                                               (not (not true))))))))
+                                             ]
+                                             nj_note ((not (not (not (not
+                                               (not (not true))))))) A_59 p
+                                               (nj_noti ((not (not (not (not
+                                                  (not true))))))
+                                                  ([p:o]
+                                                     ([A_59:
+                                                        nj ((not (not (not
+                                                          (not (not
+                                                          true))))))
+                                                        ]
+                                                        nj_note ((not false))
+                                                          (nj_note ((not (not
+                                                             true)))
+                                                             (nj_noti ((not
+                                                                (not true)))
+                                                                ([p:o]
+                                                                   ([A_59:
+                                                                    nj ((not
+                                                                    (not
+                                                                    true)))]
+                                                                    nj_note
+                                                                    ((not
+                                                                    (not (not
+                                                                    (not
+                                                                    true)))))
+                                                                    A_59 p
+                                                                    (nj_noti
+                                                                    ((not
+                                                                    (not (not
+                                                                    true))))
+                                                                    ([p:o]
+                                                                    ([A_59:
+                                                                    nj ((not
+                                                                    (not (not
+                                                                    true))))]
+                                                                    nj_note
+                                                                    ((not
+                                                                    (not
+                                                                    true)))
+                                                                    A_59 p
+                                                                    A_59))))))
+                                                             ((not (not
+                                                             false)))
+                                                             (nj_noti ((not
+                                                                true))
+                                                                ([p:o]
+                                                                   ([A_59:
+                                                                    nj ((not
+                                                                    true))]
+                                                                    nj_note
+                                                                    true A_59
+                                                                    p
+                                                                    nj_truei))))
+                                                          p
+                                                          (nj_noti false
+                                                             ([p:o]
+                                                                ([A_59:
+                                                                   nj false]
+                                                                   nj_falsee
+                                                                    p A_59)))))))))
+                                    p
+                                    (nj_noti ((not (not (not (not (not (not
+                                       true)))))))
+                                       ([p:o]
+                                          ([A_59:
+                                             nj ((not (not (not (not (not
+                                               (not true)))))))
+                                             ]
+                                             nj_note ((not (not (not (not
+                                               (not true)))))) A_59 p A_59))))))
+                         p
+                         (nj_noti ((not (not (not (not true)))))
+                            ([p:o]
+                               ([A_59:nj ((not (not (not (not true)))))]
+                                  nj_note ((not (not (not true)))) A_59 p
+                                    A_59)))))) p
+              (nj_noti ((not (not true)))
+                 ([p:o]
+                    ([A_59:nj ((not (not true)))]
+                       nj_note ((not true)) A_59 p A_59)))))
+D =
+    sound_dnotr true ((not true))
+      (nk_noti ((not true))
+         ([p:o] ([A_27:nk ((not true))] nk_note true A_27 p nk_truei)))
+      kolm_true
+      (nj_noti ((not (not (not (not (not (not (not true))))))))
+         ([p:o]
+            ([A_59:nj ((not (not (not (not (not (not (not true))))))))]
+               nj_note ((not (not (not (not (not (not true))))))) A_59 p
+                 (nj_noti ((not (not (not (not (not true))))))
+                    ([p:o]
+                       ([A_59:nj ((not (not (not (not (not true))))))]
+                          nj_note ((not false))
+                            (nj_note ((not (not true)))
+                               (nj_noti ((not (not true)))
+                                  ([p:o]
+                                     ([A_59:nj ((not (not true)))]
+                                        nj_note ((not (not (not (not
+                                          true))))) A_59 p
+                                          (nj_noti ((not (not (not true))))
+                                             ([p:o]
+                                                ([A_59:
+                                                   nj ((not (not (not
+                                                     true))))
+                                                   ]
+                                                   nj_note ((not (not true)))
+                                                     A_59 p A_59)))))) ((not
+                               (not false)))
+                               (nj_noti ((not true))
+                                  ([p:o]
+                                     ([A_59:nj ((not true))]
+                                        nj_note true A_59 p nj_truei)))) p
+                            (nj_noti false
+                               ([p:o] ([A_59:nj false] nj_falsee p A_59)))))))))
+      (sound_noti ((not true)) ((not (not (not (not (not true))))))
+         (kolm_not true ((not (not true))) kolm_true)
+         ([A_142:o]
+            ([A_143:nk ((not true))] nk_note true A_143 A_142 nk_truei))
+         ([A_144:o]
+            ([A_145:nj ((not (not (not (not (not true))))))]
+               nj_note ((not (not true)))
+                 (nj_noti ((not (not true)))
+                    ([p:o]
+                       ([A_59:nj ((not (not true)))]
+                          nj_note ((not (not (not (not true))))) A_145 p
+                            (nj_noti ((not (not (not true))))
+                               ([p:o]
+                                  ([A_59:nj ((not (not (not true))))]
+                                     nj_note ((not (not true))) A_59 p A_59))))))
+                 ((not (not A_144)))
+                 (nj_noti ((not true))
+                    ([p:o]
+                       ([A_59:nj ((not true))] nj_note true A_59 p nj_truei)))))
+         ([p:o]
+            ([u:nk ((not true))]
+               ([v:nj ((not (not (not (not (not true))))))]
+                  ([kp:kolm p ((not (not p)))]
+                     ([A_146:existskolm p ((not (not p))) kp]
+                        ([A_147:
+                           sound ((not true)) ((not (not (not (not (not
+                             true)))))) u
+                             (kolm_not true ((not (not true))) kolm_true) v
+                           ]
+                           sound_note true ((not (not true))) nk_truei
+                             kolm_true
+                             (nj_noti ((not true))
+                                ([p:o]
+                                   ([A_59:nj ((not true))]
+                                      nj_note true A_59 p nj_truei))) u v p p
+                             kp sound_truei A_147 existskolm_true)))))))
+ANS
+same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm9");
 ############################################
 ############################################
 $code = <<'CODE';
@@ -3681,27 +3850,1774 @@ ANS
 same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm10");
 ############################################
 ############################################
-# MKS: No solution but expect one
-# $code = <<'CODE';
-# D:sound
-#   (nk_andi 
-#     (nk_ore 
-#       (nk_impe (nk_impi [v2:nk true] (nk_orir (nk_andi nk_truei v2)))
-#                (nk_dnotr (nk_noti [p] [u2:nk (not true)]
-#                            (nk_note u2 p nk_truei))))
-#       ([u:nk ((true or false) and false)]
-#              (nk_andel u))
-#       ([v:nk (true and true)] (nk_oril (nk_ander v))))
-#     (nk_noti [p] [w:nk false] (nk_falsee w)))
-#   (kolm_and (kolm_not kolm_false) (kolm_or kolm_false kolm_true))
-#   NJ.
-# CODE
-# $ans = <<'ANS';
+$code = <<'CODE';
+D:sound
+  (nk_andi 
+    (nk_ore 
+      (nk_impe (nk_impi [v2:nk true] (nk_orir (nk_andi nk_truei v2)))
+               (nk_dnotr (nk_noti [p] [u2:nk (not true)]
+                           (nk_note u2 p nk_truei))))
+      ([u:nk ((true or false) and false)]
+             (nk_andel u))
+      ([v:nk (true and true)] (nk_oril (nk_ander v))))
+    (nk_noti [p] [w:nk false] (nk_falsee w)))
+  (kolm_and (kolm_not kolm_false) (kolm_or kolm_false kolm_true))
+  NJ.
+CODE
+$ans = <<'ANS';
 
-# The answer substitution:
+The answer substitution:
+NJ =
+    nj_noti ((not (not (not (not (not true) or not (not false))) and not (not
+      (not (not (not false)))))))
+      ([p:o]
+         ([A_59:
+            nj ((not (not (not (not (not true) or not (not false))) and not
+              (not (not (not (not false)))))))
+            ]
+            nj_note ((not (not (not (not true) or not (not false))) and not
+              (not (not (not (not false)))))) A_59 p
+              (nj_andi ((not (not (not (not true) or not (not false)))))
+                 ((not (not (not (not (not false))))))
+                 (nj_noti ((not (not (not true) or not (not false))))
+                    ([p:o]
+                       ([A_59:nj ((not (not (not true) or not (not false))))]
+                          nj_note ((not (not (not (not (not (not (not true)
+                            or not (not false))) and not (not false))) or not
+                            (not (not (not true) and not (not true))))))
+                            (nj_noti ((not (not (not (not (not (not (not
+                               true) or not (not false))) and not (not
+                               false))) or not (not (not (not true) and not
+                               (not true))))))
+                               ([p:o]
+                                  ([A_59:
+                                     nj ((not (not (not (not (not (not (not
+                                       true) or not (not false))) and not
+                                       (not false))) or not (not (not (not
+                                       true) and not (not true))))))
+                                     ]
+                                     nj_note ((not (not (not true) imp not
+                                       (not (not (not (not (not (not (not
+                                       true) or not (not false))) and not
+                                       (not false))) or not (not (not (not
+                                       true) and not (not true))))))))
+                                       (nj_noti ((not (not (not true) imp not
+                                          (not (not (not (not (not (not (not
+                                          true) or not (not false))) and not
+                                          (not false))) or not (not (not (not
+                                          true) and not (not true))))))))
+                                          ([p:o]
+                                             ([A_59:
+                                                nj ((not (not (not true) imp
+                                                  not (not (not (not (not
+                                                  (not (not (not true) or not
+                                                  (not false))) and not (not
+                                                  false))) or not (not (not
+                                                  (not true) and not (not
+                                                  true))))))))
+                                                ]
+                                                nj_note ((not (not true) imp
+                                                  not (not (not (not (not
+                                                  (not (not (not true) or not
+                                                  (not false))) and not (not
+                                                  false))) or not (not (not
+                                                  (not true) and not (not
+                                                  true))))))) A_59 p
+                                                  (nj_impi ((not (not true)))
+                                                     ((not (not (not (not
+                                                     (not (not (not (not
+                                                     true) or not (not
+                                                     false))) and not (not
+                                                     false))) or not (not
+                                                     (not (not true) and not
+                                                     (not true)))))))
+                                                     ([A_48:
+                                                        nj ((not (not true)))
+                                                        ]
+                                                        nj_noti ((not (not
+                                                          (not (not (not (not
+                                                          (not true) or not
+                                                          (not false))) and
+                                                          not (not false)))
+                                                          or not (not (not
+                                                          (not true) and not
+                                                          (not true))))))
+                                                          ([p:o]
+                                                             ([A_59:
+                                                                nj ((not (not
+                                                                  (not (not
+                                                                  (not (not
+                                                                  (not true)
+                                                                  or not (not
+                                                                  false)))
+                                                                  and not
+                                                                  (not
+                                                                  false))) or
+                                                                  not (not
+                                                                  (not (not
+                                                                  true) and
+                                                                  not (not
+                                                                  true))))))
+                                                                ]
+                                                                nj_note ((not
+                                                                  (not (not
+                                                                  (not (not
+                                                                  (not true)
+                                                                  or not (not
+                                                                  false)))
+                                                                  and not
+                                                                  (not
+                                                                  false))) or
+                                                                  not (not
+                                                                  (not (not
+                                                                  true) and
+                                                                  not (not
+                                                                  true)))))
+                                                                  A_59 p
+                                                                  (nj_orir
+                                                                    ((not
+                                                                    (not (not
+                                                                    (not
+                                                                    true) and
+                                                                    not (not
+                                                                    true)))))
+                                                                    ((not
+                                                                    (not (not
+                                                                    (not (not
+                                                                    (not
+                                                                    true) or
+                                                                    not (not
+                                                                    false)))
+                                                                    and not
+                                                                    (not
+                                                                    false)))))
+                                                                    (nj_noti
+                                                                    ((not
+                                                                    (not (not
+                                                                    true) and
+                                                                    not (not
+                                                                    true))))
+                                                                    ([p:o]
+                                                                    ([A_59:
+                                                                    nj ((not
+                                                                    (not (not
+                                                                    true) and
+                                                                    not (not
+                                                                    true))))]
+                                                                    nj_note
+                                                                    ((not
+                                                                    (not
+                                                                    true) and
+                                                                    not (not
+                                                                    true)))
+                                                                    A_59 p
+                                                                    (nj_andi
+                                                                    ((not
+                                                                    (not
+                                                                    true)))
+                                                                    ((not
+                                                                    (not
+                                                                    true)))
+                                                                    (nj_noti
+                                                                    ((not
+                                                                    true))
+                                                                    ([p:o]
+                                                                    ([A_59:
+                                                                    nj ((not
+                                                                    true))]
+                                                                    nj_note
+                                                                    true A_59
+                                                                    p
+                                                                    nj_truei)))
+                                                                    A_48))))))))))))
+                                       p
+                                       (nj_noti ((not (not true) imp not (not
+                                          (not (not (not (not (not (not true)
+                                          or not (not false))) and not (not
+                                          false))) or not (not (not (not
+                                          true) and not (not true)))))))
+                                          ([p:o]
+                                             ([A_59:
+                                                nj ((not (not true) imp not
+                                                  (not (not (not (not (not
+                                                  (not (not true) or not (not
+                                                  false))) and not (not
+                                                  false))) or not (not (not
+                                                  (not true) and not (not
+                                                  true)))))))
+                                                ]
+                                                nj_note ((not (not (not (not
+                                                  (not (not (not true) or not
+                                                  (not false))) and not (not
+                                                  false))) or not (not (not
+                                                  (not true) and not (not
+                                                  true))))))
+                                                  (nj_impe ((not (not true)))
+                                                     ((not (not (not (not
+                                                     (not (not (not (not
+                                                     true) or not (not
+                                                     false))) and not (not
+                                                     false))) or not (not
+                                                     (not (not true) and not
+                                                     (not true))))))) A_59
+                                                     (nj_noti ((not true))
+                                                        ([p:o]
+                                                           ([A_59:
+                                                              nj ((not true))
+                                                              ]
+                                                              nj_note ((not
+                                                                (not (not
+                                                                true))))
+                                                                (nj_noti
+                                                                   ((not (not
+                                                                   (not
+                                                                   true))))
+                                                                   ([p:o]
+                                                                    ([A_59:
+                                                                    nj ((not
+                                                                    (not (not
+                                                                    true))))]
+                                                                    nj_note
+                                                                    ((not
+                                                                    (not (not
+                                                                    (not (not
+                                                                    true))))))
+                                                                    (nj_noti
+                                                                    ((not
+                                                                    (not (not
+                                                                    (not (not
+                                                                    true))))))
+                                                                    ([p:o]
+                                                                    ([A_59:
+                                                                    nj ((not
+                                                                    (not (not
+                                                                    (not (not
+                                                                    true))))))
+                                                                    ]
+                                                                    nj_note
+                                                                    ((not
+                                                                    (not (not
+                                                                    (not (not
+                                                                    (not (not
+                                                                    true))))))))
+                                                                    (nj_noti
+                                                                    ((not
+                                                                    (not (not
+                                                                    (not (not
+                                                                    (not (not
+                                                                    true))))))))
+                                                                    ([p:o]
+                                                                    ([A_59:
+                                                                    nj ((not
+                                                                    (not (not
+                                                                    (not (not
+                                                                    (not (not
+                                                                    true))))))))
+                                                                    ]
+                                                                    nj_note
+                                                                    ((not
+                                                                    (not (not
+                                                                    (not (not
+                                                                    (not
+                                                                    true)))))))
+                                                                    A_59 p
+                                                                    (nj_noti
+                                                                    ((not
+                                                                    (not (not
+                                                                    (not (not
+                                                                    true))))))
+                                                                    ([p:o]
+                                                                    ([A_59:
+                                                                    nj ((not
+                                                                    (not (not
+                                                                    (not (not
+                                                                    true))))))
+                                                                    ]
+                                                                    nj_note
+                                                                    ((not
+                                                                    false))
+                                                                    (nj_note
+                                                                    ((not
+                                                                    (not
+                                                                    true)))
+                                                                    (nj_noti
+                                                                    ((not
+                                                                    (not
+                                                                    true)))
+                                                                    ([p:o]
+                                                                    ([A_59:
+                                                                    nj ((not
+                                                                    (not
+                                                                    true)))]
+                                                                    nj_note
+                                                                    ((not
+                                                                    (not (not
+                                                                    (not
+                                                                    true)))))
+                                                                    A_59 p
+                                                                    (nj_noti
+                                                                    ((not
+                                                                    (not (not
+                                                                    true))))
+                                                                    ([p:o]
+                                                                    ([A_59:
+                                                                    nj ((not
+                                                                    (not (not
+                                                                    true))))]
+                                                                    nj_note
+                                                                    ((not
+                                                                    (not
+                                                                    true)))
+                                                                    A_59 p
+                                                                    A_59))))))
+                                                                    ((not
+                                                                    (not
+                                                                    false)))
+                                                                    (nj_noti
+                                                                    ((not
+                                                                    true))
+                                                                    ([p:o]
+                                                                    ([A_59:
+                                                                    nj ((not
+                                                                    true))]
+                                                                    nj_note
+                                                                    true A_59
+                                                                    p
+                                                                    nj_truei))))
+                                                                    p
+                                                                    (nj_noti
+                                                                    false
+                                                                    ([p:o]
+                                                                    ([A_59:
+                                                                    nj false]
+                                                                    nj_falsee
+                                                                    p A_59)))))))))
+                                                                    p
+                                                                    (nj_noti
+                                                                    ((not
+                                                                    (not (not
+                                                                    (not (not
+                                                                    (not
+                                                                    true)))))))
+                                                                    ([p:o]
+                                                                    ([A_59:
+                                                                    nj ((not
+                                                                    (not (not
+                                                                    (not (not
+                                                                    (not
+                                                                    true)))))))
+                                                                    ]
+                                                                    nj_note
+                                                                    ((not
+                                                                    (not (not
+                                                                    (not (not
+                                                                    true))))))
+                                                                    A_59 p
+                                                                    A_59))))))
+                                                                    p
+                                                                    (nj_noti
+                                                                    ((not
+                                                                    (not (not
+                                                                    (not
+                                                                    true)))))
+                                                                    ([p:o]
+                                                                    ([A_59:
+                                                                    nj ((not
+                                                                    (not (not
+                                                                    (not
+                                                                    true)))))
+                                                                    ]
+                                                                    nj_note
+                                                                    ((not
+                                                                    (not (not
+                                                                    true))))
+                                                                    A_59 p
+                                                                    A_59))))))
+                                                                p
+                                                                (nj_noti
+                                                                   ((not (not
+                                                                   true)))
+                                                                   ([p:o]
+                                                                    ([A_59:
+                                                                    nj ((not
+                                                                    (not
+                                                                    true)))]
+                                                                    nj_note
+                                                                    ((not
+                                                                    true))
+                                                                    A_59 p
+                                                                    A_59)))))))
+                                                  p A_59)))))) p
+                            (nj_noti ((not (not (not (not (not (not true) or
+                               not (not false))) and not (not false))) or not
+                               (not (not (not true) and not (not true)))))
+                               ([p:o]
+                                  ([A_59:
+                                     nj ((not (not (not (not (not (not true)
+                                       or not (not false))) and not (not
+                                       false))) or not (not (not (not true)
+                                       and not (not true)))))
+                                     ]
+                                     nj_note ((not (not (not true) or not
+                                       (not false))))
+                                       (nj_ore ((not (not (not (not (not (not
+                                          true) or not (not false))) and not
+                                          (not false))))) ((not (not (not
+                                          (not true) and not (not true)))))
+                                          ((not (not (not (not true) or not
+                                          (not false))))) A_59
+                                          ([A_55:
+                                             nj ((not (not (not (not (not
+                                               (not true) or not (not
+                                               false))) and not (not
+                                               false)))))
+                                             ]
+                                             nj_noti ((not (not (not true) or
+                                               not (not false))))
+                                               ([p:o]
+                                                  ([A_59:
+                                                     nj ((not (not (not true)
+                                                       or not (not false))))
+                                                     ]
+                                                     nj_note ((not (not (not
+                                                       (not (not true) or not
+                                                       (not false))) and not
+                                                       (not false)))) A_55 p
+                                                       (nj_noti ((not (not
+                                                          (not (not true) or
+                                                          not (not false)))
+                                                          and not (not
+                                                          false)))
+                                                          ([p:o]
+                                                             ([A_59:
+                                                                nj ((not (not
+                                                                  (not (not
+                                                                  true) or
+                                                                  not (not
+                                                                  false)))
+                                                                  and not
+                                                                  (not
+                                                                  false)))
+                                                                ]
+                                                                nj_note ((not
+                                                                  (not (not
+                                                                  true) or
+                                                                  not (not
+                                                                  false))))
+                                                                  (nj_andel
+                                                                    ((not
+                                                                    (not (not
+                                                                    (not
+                                                                    true) or
+                                                                    not (not
+                                                                    false)))))
+                                                                    ((not
+                                                                    (not
+                                                                    false)))
+                                                                    A_59) p
+                                                                  A_59))))))
+                                          ([A_57:
+                                             nj ((not (not (not (not true)
+                                               and not (not true)))))
+                                             ]
+                                             nj_noti ((not (not (not true) or
+                                               not (not false))))
+                                               ([p:o]
+                                                  ([A_59:
+                                                     nj ((not (not (not true)
+                                                       or not (not false))))
+                                                     ]
+                                                     nj_note ((not (not true)
+                                                       or not (not false)))
+                                                       A_59 p
+                                                       (nj_oril ((not (not
+                                                          true))) ((not (not
+                                                          false)))
+                                                          (nj_noti ((not
+                                                             true))
+                                                             ([p:o]
+                                                                ([A_59:
+                                                                   nj ((not
+                                                                    true))
+                                                                   ]
+                                                                   nj_note
+                                                                    ((not
+                                                                    (not (not
+                                                                    true) and
+                                                                    not (not
+                                                                    true))))
+                                                                    A_57 p
+                                                                    (nj_noti
+                                                                    ((not
+                                                                    (not
+                                                                    true) and
+                                                                    not (not
+                                                                    true)))
+                                                                    ([p:o]
+                                                                    ([A_59:
+                                                                    nj ((not
+                                                                    (not
+                                                                    true) and
+                                                                    not (not
+                                                                    true)))]
+                                                                    nj_note
+                                                                    ((not
+                                                                    true))
+                                                                    (nj_ander
+                                                                    ((not
+                                                                    (not
+                                                                    true)))
+                                                                    ((not
+                                                                    (not
+                                                                    true)))
+                                                                    A_59) p
+                                                                    A_59)))))))))))
+                                       p A_59))))))
+                 (nj_noti ((not (not (not (not false)))))
+                    ([p:o]
+                       ([A_59:nj ((not (not (not (not false)))))]
+                          nj_note ((not (not (not false)))) A_59 p
+                            (nj_noti ((not (not false)))
+                               ([p:o]
+                                  ([A_59:nj ((not (not false)))]
+                                     nj_note ((not false))
+                                       (nj_note ((not false)) A_59 ((not (not
+                                          false)))
+                                          (nj_noti false
+                                             ([p:o]
+                                                ([A_59:nj false]
+                                                   nj_falsee p A_59)))) p
+                                       (nj_noti false
+                                          ([p:o]
+                                             ([A_59:nj false]
+                                                nj_falsee p A_59))))))))))))
+D =
+    sound_andi ((not false)) ((not (not (not (not (not false))))))
+      (nk_noti false ([p:o] ([A_27:nk false] nk_falsee p A_27)))
+      (kolm_not false ((not (not false))) kolm_false)
+      (nj_noti ((not (not (not (not false)))))
+         ([p:o]
+            ([A_59:nj ((not (not (not (not false)))))]
+               nj_note ((not (not (not false)))) A_59 p
+                 (nj_noti ((not (not false)))
+                    ([p:o]
+                       ([A_59:nj ((not (not false)))]
+                          nj_note ((not false))
+                            (nj_note ((not false)) A_59 ((not (not false)))
+                               (nj_noti false
+                                  ([p:o] ([A_59:nj false] nj_falsee p A_59))))
+                            p
+                            (nj_noti false
+                               ([p:o] ([A_59:nj false] nj_falsee p A_59)))))))))
+      ((true or false)) ((not (not (not (not true) or not (not false)))))
+      (nk_ore (((true or false) and false)) ((true and true)) ((true or
+         false))
+         (nk_impe true ((((true or false) and false) or true and true))
+            (nk_impi true ((((true or false) and false) or true and true))
+               ([A_16:nk true]
+                  nk_orir ((true and true)) (((true or false) and false))
+                    (nk_andi true true nk_truei A_16)))
+            (nk_dnotr true
+               (nk_noti ((not true))
+                  ([p:o]
+                     ([A_27:nk ((not true))] nk_note true A_27 p nk_truei)))))
+         ([A_23:nk (((true or false) and false))]
+            nk_andel ((true or false)) false A_23)
+         ([A_25:nk ((true and true))]
+            nk_oril true false (nk_ander true true A_25)))
+      (kolm_or false ((not (not false))) true ((not (not true))) kolm_false
+         kolm_true)
+      (nj_noti ((not (not (not true) or not (not false))))
+         ([p:o]
+            ([A_59:nj ((not (not (not true) or not (not false))))]
+               nj_note ((not (not (not (not (not (not (not true) or not (not
+                 false))) and not (not false))) or not (not (not (not true)
+                 and not (not true))))))
+                 (nj_noti ((not (not (not (not (not (not (not true) or not
+                    (not false))) and not (not false))) or not (not (not (not
+                    true) and not (not true))))))
+                    ([p:o]
+                       ([A_59:
+                          nj ((not (not (not (not (not (not (not true) or not
+                            (not false))) and not (not false))) or not (not
+                            (not (not true) and not (not true))))))
+                          ]
+                          nj_note ((not (not (not true) imp not (not (not
+                            (not (not (not (not (not true) or not (not
+                            false))) and not (not false))) or not (not (not
+                            (not true) and not (not true))))))))
+                            (nj_noti ((not (not (not true) imp not (not (not
+                               (not (not (not (not (not true) or not (not
+                               false))) and not (not false))) or not (not
+                               (not (not true) and not (not true))))))))
+                               ([p:o]
+                                  ([A_59:
+                                     nj ((not (not (not true) imp not (not
+                                       (not (not (not (not (not (not true) or
+                                       not (not false))) and not (not
+                                       false))) or not (not (not (not true)
+                                       and not (not true))))))))
+                                     ]
+                                     nj_note ((not (not true) imp not (not
+                                       (not (not (not (not (not (not true) or
+                                       not (not false))) and not (not
+                                       false))) or not (not (not (not true)
+                                       and not (not true))))))) A_59 p
+                                       (nj_impi ((not (not true))) ((not (not
+                                          (not (not (not (not (not (not true)
+                                          or not (not false))) and not (not
+                                          false))) or not (not (not (not
+                                          true) and not (not true)))))))
+                                          ([A_48:nj ((not (not true)))]
+                                             nj_noti ((not (not (not (not
+                                               (not (not (not true) or not
+                                               (not false))) and not (not
+                                               false))) or not (not (not (not
+                                               true) and not (not true))))))
+                                               ([p:o]
+                                                  ([A_59:
+                                                     nj ((not (not (not (not
+                                                       (not (not (not true)
+                                                       or not (not false)))
+                                                       and not (not false)))
+                                                       or not (not (not (not
+                                                       true) and not (not
+                                                       true))))))
+                                                     ]
+                                                     nj_note ((not (not (not
+                                                       (not (not (not true)
+                                                       or not (not false)))
+                                                       and not (not false)))
+                                                       or not (not (not (not
+                                                       true) and not (not
+                                                       true))))) A_59 p
+                                                       (nj_orir ((not (not
+                                                          (not (not true) and
+                                                          not (not true)))))
+                                                          ((not (not (not
+                                                          (not (not (not
+                                                          true) or not (not
+                                                          false))) and not
+                                                          (not false)))))
+                                                          (nj_noti ((not (not
+                                                             (not true) and
+                                                             not (not
+                                                             true))))
+                                                             ([p:o]
+                                                                ([A_59:
+                                                                   nj ((not
+                                                                    (not (not
+                                                                    true) and
+                                                                    not (not
+                                                                    true))))
+                                                                   ]
+                                                                   nj_note
+                                                                    ((not
+                                                                    (not
+                                                                    true) and
+                                                                    not (not
+                                                                    true)))
+                                                                    A_59 p
+                                                                    (nj_andi
+                                                                    ((not
+                                                                    (not
+                                                                    true)))
+                                                                    ((not
+                                                                    (not
+                                                                    true)))
+                                                                    (nj_noti
+                                                                    ((not
+                                                                    true))
+                                                                    ([p:o]
+                                                                    ([A_59:
+                                                                    nj ((not
+                                                                    true))]
+                                                                    nj_note
+                                                                    true A_59
+                                                                    p
+                                                                    nj_truei)))
+                                                                    A_48))))))))))))
+                            p
+                            (nj_noti ((not (not true) imp not (not (not (not
+                               (not (not (not (not true) or not (not false)))
+                               and not (not false))) or not (not (not (not
+                               true) and not (not true)))))))
+                               ([p:o]
+                                  ([A_59:
+                                     nj ((not (not true) imp not (not (not
+                                       (not (not (not (not (not true) or not
+                                       (not false))) and not (not false))) or
+                                       not (not (not (not true) and not (not
+                                       true)))))))
+                                     ]
+                                     nj_note ((not (not (not (not (not (not
+                                       (not true) or not (not false))) and
+                                       not (not false))) or not (not (not
+                                       (not true) and not (not true))))))
+                                       (nj_impe ((not (not true))) ((not (not
+                                          (not (not (not (not (not (not true)
+                                          or not (not false))) and not (not
+                                          false))) or not (not (not (not
+                                          true) and not (not true))))))) A_59
+                                          (nj_noti ((not true))
+                                             ([p:o]
+                                                ([A_59:nj ((not true))]
+                                                   nj_note ((not (not (not
+                                                     true))))
+                                                     (nj_noti ((not (not (not
+                                                        true))))
+                                                        ([p:o]
+                                                           ([A_59:
+                                                              nj ((not (not
+                                                                (not true))))
+                                                              ]
+                                                              nj_note ((not
+                                                                (not (not
+                                                                (not (not
+                                                                true))))))
+                                                                (nj_noti
+                                                                   ((not (not
+                                                                   (not (not
+                                                                   (not
+                                                                   true))))))
+                                                                   ([p:o]
+                                                                    ([A_59:
+                                                                    nj ((not
+                                                                    (not (not
+                                                                    (not (not
+                                                                    true))))))
+                                                                    ]
+                                                                    nj_note
+                                                                    ((not
+                                                                    (not (not
+                                                                    (not (not
+                                                                    (not (not
+                                                                    true))))))))
+                                                                    (nj_noti
+                                                                    ((not
+                                                                    (not (not
+                                                                    (not (not
+                                                                    (not (not
+                                                                    true))))))))
+                                                                    ([p:o]
+                                                                    ([A_59:
+                                                                    nj ((not
+                                                                    (not (not
+                                                                    (not (not
+                                                                    (not (not
+                                                                    true))))))))
+                                                                    ]
+                                                                    nj_note
+                                                                    ((not
+                                                                    (not (not
+                                                                    (not (not
+                                                                    (not
+                                                                    true)))))))
+                                                                    A_59 p
+                                                                    (nj_noti
+                                                                    ((not
+                                                                    (not (not
+                                                                    (not (not
+                                                                    true))))))
+                                                                    ([p:o]
+                                                                    ([A_59:
+                                                                    nj ((not
+                                                                    (not (not
+                                                                    (not (not
+                                                                    true))))))
+                                                                    ]
+                                                                    nj_note
+                                                                    ((not
+                                                                    false))
+                                                                    (nj_note
+                                                                    ((not
+                                                                    (not
+                                                                    true)))
+                                                                    (nj_noti
+                                                                    ((not
+                                                                    (not
+                                                                    true)))
+                                                                    ([p:o]
+                                                                    ([A_59:
+                                                                    nj ((not
+                                                                    (not
+                                                                    true)))]
+                                                                    nj_note
+                                                                    ((not
+                                                                    (not (not
+                                                                    (not
+                                                                    true)))))
+                                                                    A_59 p
+                                                                    (nj_noti
+                                                                    ((not
+                                                                    (not (not
+                                                                    true))))
+                                                                    ([p:o]
+                                                                    ([A_59:
+                                                                    nj ((not
+                                                                    (not (not
+                                                                    true))))]
+                                                                    nj_note
+                                                                    ((not
+                                                                    (not
+                                                                    true)))
+                                                                    A_59 p
+                                                                    A_59))))))
+                                                                    ((not
+                                                                    (not
+                                                                    false)))
+                                                                    (nj_noti
+                                                                    ((not
+                                                                    true))
+                                                                    ([p:o]
+                                                                    ([A_59:
+                                                                    nj ((not
+                                                                    true))]
+                                                                    nj_note
+                                                                    true A_59
+                                                                    p
+                                                                    nj_truei))))
+                                                                    p
+                                                                    (nj_noti
+                                                                    false
+                                                                    ([p:o]
+                                                                    ([A_59:
+                                                                    nj false]
+                                                                    nj_falsee
+                                                                    p A_59)))))))))
+                                                                    p
+                                                                    (nj_noti
+                                                                    ((not
+                                                                    (not (not
+                                                                    (not (not
+                                                                    (not
+                                                                    true)))))))
+                                                                    ([p:o]
+                                                                    ([A_59:
+                                                                    nj ((not
+                                                                    (not (not
+                                                                    (not (not
+                                                                    (not
+                                                                    true)))))))
+                                                                    ]
+                                                                    nj_note
+                                                                    ((not
+                                                                    (not (not
+                                                                    (not (not
+                                                                    true))))))
+                                                                    A_59 p
+                                                                    A_59))))))
+                                                                p
+                                                                (nj_noti
+                                                                   ((not (not
+                                                                   (not (not
+                                                                   true)))))
+                                                                   ([p:o]
+                                                                    ([A_59:
+                                                                    nj ((not
+                                                                    (not (not
+                                                                    (not
+                                                                    true)))))
+                                                                    ]
+                                                                    nj_note
+                                                                    ((not
+                                                                    (not (not
+                                                                    true))))
+                                                                    A_59 p
+                                                                    A_59))))))
+                                                     p
+                                                     (nj_noti ((not (not
+                                                        true)))
+                                                        ([p:o]
+                                                           ([A_59:
+                                                              nj ((not (not
+                                                                true)))
+                                                              ]
+                                                              nj_note ((not
+                                                                true)) A_59 p
+                                                                A_59))))))) p
+                                       A_59)))))) p
+                 (nj_noti ((not (not (not (not (not (not true) or not (not
+                    false))) and not (not false))) or not (not (not (not
+                    true) and not (not true)))))
+                    ([p:o]
+                       ([A_59:
+                          nj ((not (not (not (not (not (not true) or not (not
+                            false))) and not (not false))) or not (not (not
+                            (not true) and not (not true)))))
+                          ]
+                          nj_note ((not (not (not true) or not (not false))))
+                            (nj_ore ((not (not (not (not (not (not true) or
+                               not (not false))) and not (not false)))))
+                               ((not (not (not (not true) and not (not
+                               true))))) ((not (not (not (not true) or not
+                               (not false))))) A_59
+                               ([A_55:
+                                  nj ((not (not (not (not (not (not true) or
+                                    not (not false))) and not (not false)))))
+                                  ]
+                                  nj_noti ((not (not (not true) or not (not
+                                    false))))
+                                    ([p:o]
+                                       ([A_59:
+                                          nj ((not (not (not true) or not
+                                            (not false))))
+                                          ]
+                                          nj_note ((not (not (not (not (not
+                                            true) or not (not false))) and
+                                            not (not false)))) A_55 p
+                                            (nj_noti ((not (not (not (not
+                                               true) or not (not false))) and
+                                               not (not false)))
+                                               ([p:o]
+                                                  ([A_59:
+                                                     nj ((not (not (not (not
+                                                       true) or not (not
+                                                       false))) and not (not
+                                                       false)))
+                                                     ]
+                                                     nj_note ((not (not (not
+                                                       true) or not (not
+                                                       false))))
+                                                       (nj_andel ((not (not
+                                                          (not (not true) or
+                                                          not (not false)))))
+                                                          ((not (not false)))
+                                                          A_59) p A_59))))))
+                               ([A_57:
+                                  nj ((not (not (not (not true) and not (not
+                                    true)))))
+                                  ]
+                                  nj_noti ((not (not (not true) or not (not
+                                    false))))
+                                    ([p:o]
+                                       ([A_59:
+                                          nj ((not (not (not true) or not
+                                            (not false))))
+                                          ]
+                                          nj_note ((not (not true) or not
+                                            (not false))) A_59 p
+                                            (nj_oril ((not (not true))) ((not
+                                               (not false)))
+                                               (nj_noti ((not true))
+                                                  ([p:o]
+                                                     ([A_59:nj ((not true))]
+                                                        nj_note ((not (not
+                                                          (not true) and not
+                                                          (not true)))) A_57
+                                                          p
+                                                          (nj_noti ((not (not
+                                                             true) and not
+                                                             (not true)))
+                                                             ([p:o]
+                                                                ([A_59:
+                                                                   nj ((not
+                                                                    (not
+                                                                    true) and
+                                                                    not (not
+                                                                    true)))
+                                                                   ]
+                                                                   nj_note
+                                                                    ((not
+                                                                    true))
+                                                                    (nj_ander
+                                                                    ((not
+                                                                    (not
+                                                                    true)))
+                                                                    ((not
+                                                                    (not
+                                                                    true)))
+                                                                    A_59) p
+                                                                    A_59)))))))))))
+                            p A_59))))))
+      (sound_noti false ((not (not false))) kolm_false
+         ([A_142:o] ([A_143:nk false] nk_falsee A_142 A_143))
+         ([A_144:o]
+            ([A_145:nj ((not (not false)))]
+               nj_note ((not false)) A_145 ((not (not A_144)))
+                 (nj_noti false ([p:o] ([A_59:nj false] nj_falsee p A_59)))))
+         ([p:o]
+            ([u:nk false]
+               ([v:nj ((not (not false)))]
+                  ([kp:kolm p ((not (not p)))]
+                     ([A_146:existskolm p ((not (not p))) kp]
+                        ([A_147:
+                           sound false ((not (not false))) u kolm_false v]
+                           sound_falsee u v p ((not (not p))) kp A_147)))))))
+      (sound_ore ((true and true)) ((not (not (not (not true) and not (not
+         true)))))
+         (kolm_and true ((not (not true))) true ((not (not true))) kolm_true
+            kolm_true) ((true or false)) ((not (not true) or not (not
+         false)))
+         ([A_131:nk ((true and true))]
+            nk_oril true false (nk_ander true true A_131))
+         (kolm_or false ((not (not false))) true ((not (not true)))
+            kolm_false kolm_true)
+         ([A_132:nj ((not (not (not (not true) and not (not true)))))]
+            nj_noti ((not (not (not true) or not (not false))))
+              ([p:o]
+                 ([A_59:nj ((not (not (not true) or not (not false))))]
+                    nj_note ((not (not true) or not (not false))) A_59 p
+                      (nj_oril ((not (not true))) ((not (not false)))
+                         (nj_noti ((not true))
+                            ([p:o]
+                               ([A_59:nj ((not true))]
+                                  nj_note ((not (not (not true) and not (not
+                                    true)))) A_132 p
+                                    (nj_noti ((not (not true) and not (not
+                                       true)))
+                                       ([p:o]
+                                          ([A_59:
+                                             nj ((not (not true) and not (not
+                                               true)))
+                                             ]
+                                             nj_note ((not true))
+                                               (nj_ander ((not (not true)))
+                                                  ((not (not true))) A_59) p
+                                               A_59)))))))))) (((true or
+         false) and false)) ((not (not (not (not (not (not true) or not (not
+         false))) and not (not false)))))
+         (kolm_and false ((not (not false))) ((true or false)) ((not (not
+            (not (not true) or not (not false))))) kolm_false
+            (kolm_or false ((not (not false))) true ((not (not true)))
+               kolm_false kolm_true))
+         ([A_133:nk (((true or false) and false))]
+            nk_andel ((true or false)) false A_133)
+         ([A_134:
+            nj ((not (not (not (not (not (not true) or not (not false))) and
+              not (not false)))))
+            ]
+            nj_noti ((not (not (not true) or not (not false))))
+              ([p:o]
+                 ([A_59:nj ((not (not (not true) or not (not false))))]
+                    nj_note ((not (not (not (not (not true) or not (not
+                      false))) and not (not false)))) A_134 p
+                      (nj_noti ((not (not (not (not true) or not (not
+                         false))) and not (not false)))
+                         ([p:o]
+                            ([A_59:
+                               nj ((not (not (not (not true) or not (not
+                                 false))) and not (not false)))
+                               ]
+                               nj_note ((not (not (not true) or not (not
+                                 false))))
+                                 (nj_andel ((not (not (not (not true) or not
+                                    (not false))))) ((not (not false))) A_59)
+                                 p A_59))))))
+         (nk_impe true ((((true or false) and false) or true and true))
+            (nk_impi true ((((true or false) and false) or true and true))
+               ([A_16:nk true]
+                  nk_orir ((true and true)) (((true or false) and false))
+                    (nk_andi true true nk_truei A_16)))
+            (nk_dnotr true
+               (nk_noti ((not true))
+                  ([p:o]
+                     ([A_27:nk ((not true))] nk_note true A_27 p nk_truei)))))
+         (nj_noti ((not (not (not (not (not (not (not true) or not (not
+            false))) and not (not false))) or not (not (not (not true) and
+            not (not true))))))
+            ([p:o]
+               ([A_59:
+                  nj ((not (not (not (not (not (not (not true) or not (not
+                    false))) and not (not false))) or not (not (not (not
+                    true) and not (not true))))))
+                  ]
+                  nj_note ((not (not (not true) imp not (not (not (not (not
+                    (not (not (not true) or not (not false))) and not (not
+                    false))) or not (not (not (not true) and not (not
+                    true))))))))
+                    (nj_noti ((not (not (not true) imp not (not (not (not
+                       (not (not (not (not true) or not (not false))) and not
+                       (not false))) or not (not (not (not true) and not (not
+                       true))))))))
+                       ([p:o]
+                          ([A_59:
+                             nj ((not (not (not true) imp not (not (not (not
+                               (not (not (not (not true) or not (not false)))
+                               and not (not false))) or not (not (not (not
+                               true) and not (not true))))))))
+                             ]
+                             nj_note ((not (not true) imp not (not (not (not
+                               (not (not (not (not true) or not (not false)))
+                               and not (not false))) or not (not (not (not
+                               true) and not (not true))))))) A_59 p
+                               (nj_impi ((not (not true))) ((not (not (not
+                                  (not (not (not (not (not true) or not (not
+                                  false))) and not (not false))) or not (not
+                                  (not (not true) and not (not true)))))))
+                                  ([A_48:nj ((not (not true)))]
+                                     nj_noti ((not (not (not (not (not (not
+                                       (not true) or not (not false))) and
+                                       not (not false))) or not (not (not
+                                       (not true) and not (not true))))))
+                                       ([p:o]
+                                          ([A_59:
+                                             nj ((not (not (not (not (not
+                                               (not (not true) or not (not
+                                               false))) and not (not false)))
+                                               or not (not (not (not true)
+                                               and not (not true))))))
+                                             ]
+                                             nj_note ((not (not (not (not
+                                               (not (not true) or not (not
+                                               false))) and not (not false)))
+                                               or not (not (not (not true)
+                                               and not (not true))))) A_59 p
+                                               (nj_orir ((not (not (not (not
+                                                  true) and not (not
+                                                  true))))) ((not (not (not
+                                                  (not (not (not true) or not
+                                                  (not false))) and not (not
+                                                  false)))))
+                                                  (nj_noti ((not (not (not
+                                                     true) and not (not
+                                                     true))))
+                                                     ([p:o]
+                                                        ([A_59:
+                                                           nj ((not (not (not
+                                                             true) and not
+                                                             (not true))))
+                                                           ]
+                                                           nj_note ((not (not
+                                                             true) and not
+                                                             (not true)))
+                                                             A_59 p
+                                                             (nj_andi ((not
+                                                                (not true)))
+                                                                ((not (not
+                                                                true)))
+                                                                (nj_noti
+                                                                   ((not
+                                                                   true))
+                                                                   ([p:o]
+                                                                    ([A_59:
+                                                                    nj ((not
+                                                                    true))]
+                                                                    nj_note
+                                                                    true A_59
+                                                                    p
+                                                                    nj_truei)))
+                                                                A_48))))))))))))
+                    p
+                    (nj_noti ((not (not true) imp not (not (not (not (not
+                       (not (not (not true) or not (not false))) and not (not
+                       false))) or not (not (not (not true) and not (not
+                       true)))))))
+                       ([p:o]
+                          ([A_59:
+                             nj ((not (not true) imp not (not (not (not (not
+                               (not (not (not true) or not (not false))) and
+                               not (not false))) or not (not (not (not true)
+                               and not (not true)))))))
+                             ]
+                             nj_note ((not (not (not (not (not (not (not
+                               true) or not (not false))) and not (not
+                               false))) or not (not (not (not true) and not
+                               (not true))))))
+                               (nj_impe ((not (not true))) ((not (not (not
+                                  (not (not (not (not (not true) or not (not
+                                  false))) and not (not false))) or not (not
+                                  (not (not true) and not (not true)))))))
+                                  A_59
+                                  (nj_noti ((not true))
+                                     ([p:o]
+                                        ([A_59:nj ((not true))]
+                                           nj_note ((not (not (not true))))
+                                             (nj_noti ((not (not (not
+                                                true))))
+                                                ([p:o]
+                                                   ([A_59:
+                                                      nj ((not (not (not
+                                                        true))))
+                                                      ]
+                                                      nj_note ((not (not (not
+                                                        (not (not true))))))
+                                                        (nj_noti ((not (not
+                                                           (not (not (not
+                                                           true))))))
+                                                           ([p:o]
+                                                              ([A_59:
+                                                                 nj ((not
+                                                                   (not (not
+                                                                   (not (not
+                                                                   true))))))
+                                                                 ]
+                                                                 nj_note
+                                                                   ((not (not
+                                                                   (not (not
+                                                                   (not (not
+                                                                   (not
+                                                                   true))))))))
+                                                                   (nj_noti
+                                                                    ((not
+                                                                    (not (not
+                                                                    (not (not
+                                                                    (not (not
+                                                                    true))))))))
+                                                                    ([p:o]
+                                                                    ([A_59:
+                                                                    nj ((not
+                                                                    (not (not
+                                                                    (not (not
+                                                                    (not (not
+                                                                    true))))))))
+                                                                    ]
+                                                                    nj_note
+                                                                    ((not
+                                                                    (not (not
+                                                                    (not (not
+                                                                    (not
+                                                                    true)))))))
+                                                                    A_59 p
+                                                                    (nj_noti
+                                                                    ((not
+                                                                    (not (not
+                                                                    (not (not
+                                                                    true))))))
+                                                                    ([p:o]
+                                                                    ([A_59:
+                                                                    nj ((not
+                                                                    (not (not
+                                                                    (not (not
+                                                                    true))))))
+                                                                    ]
+                                                                    nj_note
+                                                                    ((not
+                                                                    false))
+                                                                    (nj_note
+                                                                    ((not
+                                                                    (not
+                                                                    true)))
+                                                                    (nj_noti
+                                                                    ((not
+                                                                    (not
+                                                                    true)))
+                                                                    ([p:o]
+                                                                    ([A_59:
+                                                                    nj ((not
+                                                                    (not
+                                                                    true)))]
+                                                                    nj_note
+                                                                    ((not
+                                                                    (not (not
+                                                                    (not
+                                                                    true)))))
+                                                                    A_59 p
+                                                                    (nj_noti
+                                                                    ((not
+                                                                    (not (not
+                                                                    true))))
+                                                                    ([p:o]
+                                                                    ([A_59:
+                                                                    nj ((not
+                                                                    (not (not
+                                                                    true))))]
+                                                                    nj_note
+                                                                    ((not
+                                                                    (not
+                                                                    true)))
+                                                                    A_59 p
+                                                                    A_59))))))
+                                                                    ((not
+                                                                    (not
+                                                                    false)))
+                                                                    (nj_noti
+                                                                    ((not
+                                                                    true))
+                                                                    ([p:o]
+                                                                    ([A_59:
+                                                                    nj ((not
+                                                                    true))]
+                                                                    nj_note
+                                                                    true A_59
+                                                                    p
+                                                                    nj_truei))))
+                                                                    p
+                                                                    (nj_noti
+                                                                    false
+                                                                    ([p:o]
+                                                                    ([A_59:
+                                                                    nj false]
+                                                                    nj_falsee
+                                                                    p A_59)))))))))
+                                                                   p
+                                                                   (nj_noti
+                                                                    ((not
+                                                                    (not (not
+                                                                    (not (not
+                                                                    (not
+                                                                    true)))))))
+                                                                    ([p:o]
+                                                                    ([A_59:
+                                                                    nj ((not
+                                                                    (not (not
+                                                                    (not (not
+                                                                    (not
+                                                                    true)))))))
+                                                                    ]
+                                                                    nj_note
+                                                                    ((not
+                                                                    (not (not
+                                                                    (not (not
+                                                                    true))))))
+                                                                    A_59 p
+                                                                    A_59))))))
+                                                        p
+                                                        (nj_noti ((not (not
+                                                           (not (not
+                                                           true)))))
+                                                           ([p:o]
+                                                              ([A_59:
+                                                                 nj ((not
+                                                                   (not (not
+                                                                   (not
+                                                                   true)))))
+                                                                 ]
+                                                                 nj_note
+                                                                   ((not (not
+                                                                   (not
+                                                                   true))))
+                                                                   A_59 p
+                                                                   A_59))))))
+                                             p
+                                             (nj_noti ((not (not true)))
+                                                ([p:o]
+                                                   ([A_59:
+                                                      nj ((not (not true)))]
+                                                      nj_note ((not true))
+                                                        A_59 p A_59))))))) p
+                               A_59))))))
+         ([u:nk ((true and true))]
+            ([v:nj ((not (not (not (not true) and not (not true)))))]
+               ([A_135:
+                  sound ((true and true)) ((not (not (not (not true) and not
+                    (not true))))) u
+                    (kolm_and true ((not (not true))) true ((not (not true)))
+                       kolm_true kolm_true) v
+                  ]
+                  sound_oril true ((not (not true))) (nk_ander true true u)
+                    kolm_true
+                    (nj_noti ((not true))
+                       ([p:o]
+                          ([A_59:nj ((not true))]
+                             nj_note ((not (not (not true) and not (not
+                               true)))) v p
+                               (nj_noti ((not (not true) and not (not true)))
+                                  ([p:o]
+                                     ([A_59:
+                                        nj ((not (not true) and not (not
+                                          true)))
+                                        ]
+                                        nj_note ((not true))
+                                          (nj_ander ((not (not true))) ((not
+                                             (not true))) A_59) p A_59))))))
+                    false ((not (not false))) kolm_false
+                    (sound_ander true true ((not (not true))) true u
+                       kolm_true kolm_true v A_135 existskolm_true))))
+         ([u:nk (((true or false) and false))]
+            ([v:
+               nj ((not (not (not (not (not (not true) or not (not false)))
+                 and not (not false)))))
+               ]
+               ([A_137:
+                  sound (((true or false) and false)) ((not (not (not (not
+                    (not (not true) or not (not false))) and not (not
+                    false))))) u
+                    (kolm_and false ((not (not false))) ((true or false))
+                       ((not (not (not (not true) or not (not false)))))
+                       kolm_false
+                       (kolm_or false ((not (not false))) true ((not (not
+                          true))) kolm_false kolm_true)) v
+                  ]
+                  sound_andel ((true or false)) false ((not (not true) or not
+                    (not false))) ((not (not false))) u kolm_false
+                    (kolm_or false ((not (not false))) true ((not (not
+                       true))) kolm_false kolm_true) v A_137 existskolm_false)))
+         (sound_impe true ((((true or false) and false) or true and true))
+            ((not (not true))) ((not (not (not (not (not (not true) or not
+            (not false))) and not (not false))) or not (not (not (not true)
+            and not (not true)))))
+            (nk_impi true ((((true or false) and false) or true and true))
+               ([A_16:nk true]
+                  nk_orir ((true and true)) (((true or false) and false))
+                    (nk_andi true true nk_truei A_16)))
+            (kolm_or ((true and true)) ((not (not (not (not true) and not
+               (not true))))) (((true or false) and false)) ((not (not (not
+               (not (not (not true) or not (not false))) and not (not
+               false)))))
+               (kolm_and true ((not (not true))) true ((not (not true)))
+                  kolm_true kolm_true)
+               (kolm_and false ((not (not false))) ((true or false)) ((not
+                  (not (not (not true) or not (not false))))) kolm_false
+                  (kolm_or false ((not (not false))) true ((not (not true)))
+                     kolm_false kolm_true))) kolm_true
+            (nj_noti ((not (not (not true) imp not (not (not (not (not (not
+               (not (not true) or not (not false))) and not (not false))) or
+               not (not (not (not true) and not (not true))))))))
+               ([p:o]
+                  ([A_59:
+                     nj ((not (not (not true) imp not (not (not (not (not
+                       (not (not (not true) or not (not false))) and not (not
+                       false))) or not (not (not (not true) and not (not
+                       true))))))))
+                     ]
+                     nj_note ((not (not true) imp not (not (not (not (not
+                       (not (not (not true) or not (not false))) and not (not
+                       false))) or not (not (not (not true) and not (not
+                       true))))))) A_59 p
+                       (nj_impi ((not (not true))) ((not (not (not (not (not
+                          (not (not (not true) or not (not false))) and not
+                          (not false))) or not (not (not (not true) and not
+                          (not true)))))))
+                          ([A_48:nj ((not (not true)))]
+                             nj_noti ((not (not (not (not (not (not (not
+                               true) or not (not false))) and not (not
+                               false))) or not (not (not (not true) and not
+                               (not true))))))
+                               ([p:o]
+                                  ([A_59:
+                                     nj ((not (not (not (not (not (not (not
+                                       true) or not (not false))) and not
+                                       (not false))) or not (not (not (not
+                                       true) and not (not true))))))
+                                     ]
+                                     nj_note ((not (not (not (not (not (not
+                                       true) or not (not false))) and not
+                                       (not false))) or not (not (not (not
+                                       true) and not (not true))))) A_59 p
+                                       (nj_orir ((not (not (not (not true)
+                                          and not (not true))))) ((not (not
+                                          (not (not (not (not true) or not
+                                          (not false))) and not (not
+                                          false)))))
+                                          (nj_noti ((not (not (not true) and
+                                             not (not true))))
+                                             ([p:o]
+                                                ([A_59:
+                                                   nj ((not (not (not true)
+                                                     and not (not true))))
+                                                   ]
+                                                   nj_note ((not (not true)
+                                                     and not (not true)))
+                                                     A_59 p
+                                                     (nj_andi ((not (not
+                                                        true))) ((not (not
+                                                        true)))
+                                                        (nj_noti ((not true))
+                                                           ([p:o]
+                                                              ([A_59:
+                                                                 nj ((not
+                                                                   true))
+                                                                 ]
+                                                                 nj_note true
+                                                                   A_59 p
+                                                                   nj_truei)))
+                                                        A_48))))))))))))
+            (nk_dnotr true
+               (nk_noti ((not true))
+                  ([p:o]
+                     ([A_27:nk ((not true))] nk_note true A_27 p nk_truei))))
+            (nj_noti ((not true))
+               ([p:o]
+                  ([A_59:nj ((not true))]
+                     nj_note ((not (not (not true))))
+                       (nj_noti ((not (not (not true))))
+                          ([p:o]
+                             ([A_59:nj ((not (not (not true))))]
+                                nj_note ((not (not (not (not (not true))))))
+                                  (nj_noti ((not (not (not (not (not
+                                     true))))))
+                                     ([p:o]
+                                        ([A_59:
+                                           nj ((not (not (not (not (not
+                                             true))))))
+                                           ]
+                                           nj_note ((not (not (not (not (not
+                                             (not (not true))))))))
+                                             (nj_noti ((not (not (not (not
+                                                (not (not (not true))))))))
+                                                ([p:o]
+                                                   ([A_59:
+                                                      nj ((not (not (not (not
+                                                        (not (not (not
+                                                        true))))))))
+                                                      ]
+                                                      nj_note ((not (not (not
+                                                        (not (not (not
+                                                        true))))))) A_59 p
+                                                        (nj_noti ((not (not
+                                                           (not (not (not
+                                                           true))))))
+                                                           ([p:o]
+                                                              ([A_59:
+                                                                 nj ((not
+                                                                   (not (not
+                                                                   (not (not
+                                                                   true))))))
+                                                                 ]
+                                                                 nj_note
+                                                                   ((not
+                                                                   false))
+                                                                   (nj_note
+                                                                    ((not
+                                                                    (not
+                                                                    true)))
+                                                                    (nj_noti
+                                                                    ((not
+                                                                    (not
+                                                                    true)))
+                                                                    ([p:o]
+                                                                    ([A_59:
+                                                                    nj ((not
+                                                                    (not
+                                                                    true)))]
+                                                                    nj_note
+                                                                    ((not
+                                                                    (not (not
+                                                                    (not
+                                                                    true)))))
+                                                                    A_59 p
+                                                                    (nj_noti
+                                                                    ((not
+                                                                    (not (not
+                                                                    true))))
+                                                                    ([p:o]
+                                                                    ([A_59:
+                                                                    nj ((not
+                                                                    (not (not
+                                                                    true))))]
+                                                                    nj_note
+                                                                    ((not
+                                                                    (not
+                                                                    true)))
+                                                                    A_59 p
+                                                                    A_59))))))
+                                                                    ((not
+                                                                    (not
+                                                                    false)))
+                                                                    (nj_noti
+                                                                    ((not
+                                                                    true))
+                                                                    ([p:o]
+                                                                    ([A_59:
+                                                                    nj ((not
+                                                                    true))]
+                                                                    nj_note
+                                                                    true A_59
+                                                                    p
+                                                                    nj_truei))))
+                                                                   p
+                                                                   (nj_noti
+                                                                    false
+                                                                    ([p:o]
+                                                                    ([A_59:
+                                                                    nj false]
+                                                                    nj_falsee
+                                                                    p A_59)))))))))
+                                             p
+                                             (nj_noti ((not (not (not (not
+                                                (not (not true)))))))
+                                                ([p:o]
+                                                   ([A_59:
+                                                      nj ((not (not (not (not
+                                                        (not (not true)))))))
+                                                      ]
+                                                      nj_note ((not (not (not
+                                                        (not (not true))))))
+                                                        A_59 p A_59)))))) p
+                                  (nj_noti ((not (not (not (not true)))))
+                                     ([p:o]
+                                        ([A_59:
+                                           nj ((not (not (not (not true)))))]
+                                           nj_note ((not (not (not true))))
+                                             A_59 p A_59)))))) p
+                       (nj_noti ((not (not true)))
+                          ([p:o]
+                             ([A_59:nj ((not (not true)))]
+                                nj_note ((not true)) A_59 p A_59))))))
+            (sound_impi true ((not (not true))) kolm_true ((((true or false)
+               and false) or true and true)) ((not (not (not (not (not (not
+               (not (not true) or not (not false))) and not (not false))) or
+               not (not (not (not true) and not (not true)))))))
+               ([A_122:nk true]
+                  nk_orir ((true and true)) (((true or false) and false))
+                    (nk_andi true true nk_truei A_122))
+               (kolm_or ((true and true)) ((not (not (not (not true) and not
+                  (not true))))) (((true or false) and false)) ((not (not
+                  (not (not (not (not true) or not (not false))) and not (not
+                  false)))))
+                  (kolm_and true ((not (not true))) true ((not (not true)))
+                     kolm_true kolm_true)
+                  (kolm_and false ((not (not false))) ((true or false)) ((not
+                     (not (not (not true) or not (not false))))) kolm_false
+                     (kolm_or false ((not (not false))) true ((not (not
+                        true))) kolm_false kolm_true)))
+               ([A_123:nj ((not (not true)))]
+                  nj_noti ((not (not (not (not (not (not (not true) or not
+                    (not false))) and not (not false))) or not (not (not (not
+                    true) and not (not true))))))
+                    ([p:o]
+                       ([A_59:
+                          nj ((not (not (not (not (not (not (not true) or not
+                            (not false))) and not (not false))) or not (not
+                            (not (not true) and not (not true))))))
+                          ]
+                          nj_note ((not (not (not (not (not (not true) or not
+                            (not false))) and not (not false))) or not (not
+                            (not (not true) and not (not true))))) A_59 p
+                            (nj_orir ((not (not (not (not true) and not (not
+                               true))))) ((not (not (not (not (not (not true)
+                               or not (not false))) and not (not false)))))
+                               (nj_noti ((not (not (not true) and not (not
+                                  true))))
+                                  ([p:o]
+                                     ([A_59:
+                                        nj ((not (not (not true) and not (not
+                                          true))))
+                                        ]
+                                        nj_note ((not (not true) and not (not
+                                          true))) A_59 p
+                                          (nj_andi ((not (not true))) ((not
+                                             (not true)))
+                                             (nj_noti ((not true))
+                                                ([p:o]
+                                                   ([A_59:nj ((not true))]
+                                                      nj_note true A_59 p
+                                                        nj_truei))) A_123))))))))
+               ([u:nk true]
+                  ([v:nj ((not (not true)))]
+                     ([A_124:sound true ((not (not true))) u kolm_true v]
+                        sound_orir ((true and true)) ((not (not (not (not
+                          true) and not (not true)))))
+                          (nk_andi true true nk_truei u)
+                          (kolm_and true ((not (not true))) true ((not (not
+                             true))) kolm_true kolm_true)
+                          (nj_noti ((not (not (not true) and not (not
+                             true))))
+                             ([p:o]
+                                ([A_59:
+                                   nj ((not (not (not true) and not (not
+                                     true))))
+                                   ]
+                                   nj_note ((not (not true) and not (not
+                                     true))) A_59 p
+                                     (nj_andi ((not (not true))) ((not (not
+                                        true)))
+                                        (nj_noti ((not true))
+                                           ([p:o]
+                                              ([A_59:nj ((not true))]
+                                                 nj_note true A_59 p nj_truei)))
+                                        v)))) (((true or false) and false))
+                          ((not (not (not (not (not (not true) or not (not
+                          false))) and not (not false)))))
+                          (kolm_and false ((not (not false))) ((true or
+                             false)) ((not (not (not (not true) or not (not
+                             false))))) kolm_false
+                             (kolm_or false ((not (not false))) true ((not
+                                (not true))) kolm_false kolm_true))
+                          (sound_andi true ((not (not true))) u kolm_true v
+                             true ((not (not true))) nk_truei kolm_true
+                             (nj_noti ((not true))
+                                ([p:o]
+                                   ([A_59:nj ((not true))]
+                                      nj_note true A_59 p nj_truei))) A_124
+                             sound_truei)))))
+            (sound_dnotr true ((not true))
+               (nk_noti ((not true))
+                  ([p:o]
+                     ([A_27:nk ((not true))] nk_note true A_27 p nk_truei)))
+               kolm_true
+               (nj_noti ((not (not (not (not (not (not (not true))))))))
+                  ([p:o]
+                     ([A_59:
+                        nj ((not (not (not (not (not (not (not true))))))))]
+                        nj_note ((not (not (not (not (not (not true)))))))
+                          A_59 p
+                          (nj_noti ((not (not (not (not (not true))))))
+                             ([p:o]
+                                ([A_59:
+                                   nj ((not (not (not (not (not true))))))]
+                                   nj_note ((not false))
+                                     (nj_note ((not (not true)))
+                                        (nj_noti ((not (not true)))
+                                           ([p:o]
+                                              ([A_59:nj ((not (not true)))]
+                                                 nj_note ((not (not (not (not
+                                                   true))))) A_59 p
+                                                   (nj_noti ((not (not (not
+                                                      true))))
+                                                      ([p:o]
+                                                         ([A_59:
+                                                            nj ((not (not
+                                                              (not true))))
+                                                            ]
+                                                            nj_note ((not
+                                                              (not true)))
+                                                              A_59 p A_59))))))
+                                        ((not (not false)))
+                                        (nj_noti ((not true))
+                                           ([p:o]
+                                              ([A_59:nj ((not true))]
+                                                 nj_note true A_59 p nj_truei))))
+                                     p
+                                     (nj_noti false
+                                        ([p:o]
+                                           ([A_59:nj false] nj_falsee p A_59)))))))))
+               (sound_noti ((not true)) ((not (not (not (not (not true))))))
+                  (kolm_not true ((not (not true))) kolm_true)
+                  ([A_142:o]
+                     ([A_143:nk ((not true))]
+                        nk_note true A_143 A_142 nk_truei))
+                  ([A_144:o]
+                     ([A_145:nj ((not (not (not (not (not true))))))]
+                        nj_note ((not (not true)))
+                          (nj_noti ((not (not true)))
+                             ([p:o]
+                                ([A_59:nj ((not (not true)))]
+                                   nj_note ((not (not (not (not true)))))
+                                     A_145 p
+                                     (nj_noti ((not (not (not true))))
+                                        ([p:o]
+                                           ([A_59:nj ((not (not (not true))))
+                                              ]
+                                              nj_note ((not (not true))) A_59
+                                                p A_59)))))) ((not (not
+                          A_144)))
+                          (nj_noti ((not true))
+                             ([p:o]
+                                ([A_59:nj ((not true))]
+                                   nj_note true A_59 p nj_truei)))))
+                  ([p:o]
+                     ([u:nk ((not true))]
+                        ([v:nj ((not (not (not (not (not true))))))]
+                           ([kp:kolm p ((not (not p)))]
+                              ([A_146:existskolm p ((not (not p))) kp]
+                                 ([A_147:
+                                    sound ((not true)) ((not (not (not (not
+                                      (not true)))))) u
+                                      (kolm_not true ((not (not true)))
+                                         kolm_true) v
+                                    ]
+                                    sound_note true ((not (not true)))
+                                      nk_truei kolm_true
+                                      (nj_noti ((not true))
+                                         ([p:o]
+                                            ([A_59:nj ((not true))]
+                                               nj_note true A_59 p nj_truei)))
+                                      u v p p kp sound_truei A_147
+                                      existskolm_true)))))))) existskolm_true)
+         (existskolm_and true ((not (not true))) kolm_true true ((not (not
+            true))) kolm_true existskolm_true existskolm_true)
+         (existskolm_and false ((not (not false))) kolm_false ((true or
+            false)) ((not (not (not (not true) or not (not false)))))
+            (kolm_or false ((not (not false))) true ((not (not true)))
+               kolm_false kolm_true) existskolm_false
+            (existskolm_or false ((not (not false))) kolm_false true ((not
+               (not true))) kolm_true existskolm_false existskolm_true)))
 
-# ANS
-# same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm11");
+
+ANS
+same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm11");
 ############################################
 ############################################
 # MKS: Should have one solution but has none
@@ -3872,13 +5788,13 @@ same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm10")
 #                                        (nj_noti
 #                                            ([p21:o] [u19:nj false] nj_falsee u19)))))))))
 #    NK.
-# CODE
-# $ans = <<'ANS';
+CODE
+$ans = <<'ANS';
 
-# The answer substitution:
+The answer substitution:
 
-# ANS
-# same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm12");
+ANS
+same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm12");
 ############################################
 ############################################
 # $code = <<'CODE';
