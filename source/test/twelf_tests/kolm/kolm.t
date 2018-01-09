@@ -1,6 +1,6 @@
 use lib '../lib';
 use strict;
-use Test::More tests => 9;
+use Test::More tests => 11;
 
 my $TJTWELF = "../../tjtwelf";
 my $MODULE = "kolm/sources.cfg";

@@ -32,15 +32,18 @@ let rec exp_to_kind bvars e =
       IntSyn.Uni (IntSyn.Type) -> Lfabsyn.Type
     | IntSyn.Pi ((IntSyn.Dec(name_op,ty),_), body) ->
         let t = exp_to_type bvars ty in
-        if Option.isSome name_op
-        then
-          let b = exp_to_kind ((Symb.symbol (Option.get name_op),t) :: bvars) body in
-          Lfabsyn.PiKind(Symb.symbol (Option.get name_op), t, b,true)
-        else
-          (* need to generate a name *)
-          let s = Symb.gen "A" in
-          let b = exp_to_kind ((s,t) :: bvars) body in
-          Lfabsyn.PiKind(s, t, b, false)
+        let name =
+          if Option.isSome name_op
+          then Option.get name_op
+          else "A"
+        in
+        let s =
+          if List.exists (fun (x,y) -> Symb.name x = name) bvars
+          then get_fresh_symb name bvars
+          else Symb.symbol name
+        in
+        let b = exp_to_kind ((s,t) :: bvars) body in
+        Lfabsyn.PiKind(s, t, b, Option.isSome name_op)
     | _ ->
         prerr_endline ("Error: exp_to_kind: This expression is not a valid kind.");
         (* trying to continue on errors *)
@@ -50,17 +53,19 @@ and exp_to_type bvars e =
   match e with
       IntSyn.Pi ((IntSyn.Dec(name_op,ty),_), body) ->
         let t = exp_to_type bvars ty in
-        if Option.isSome name_op
-        then
-          let s = Symb.symbol (Option.get name_op) in
-          let b = exp_to_type ((s,t)::bvars) body in
-          Lfabsyn.PiType(s, t, b, true)
-        else
-          (* need to generate a name *)
-          let s = Symb.gen "A" in
-          let b = exp_to_type ((s,t)::bvars) body in
-          Lfabsyn.PiType(s, t, b, false)
-    | IntSyn.Root(IntSyn.Const(cid),IntSyn.Nil) ->
+        let name =
+          if Option.isSome name_op
+          then Option.get name_op
+          else "A"
+        in
+        let s =
+          if List.exists (fun (x,y) -> Symb.name x = name) bvars
+          then get_fresh_symb name bvars
+          else Symb.symbol name
+        in
+        let b = exp_to_type ((s,t)::bvars) body in
+        Lfabsyn.PiType(s, t, b, Option.isSome name_op)
+     | IntSyn.Root(IntSyn.Const(cid),IntSyn.Nil) ->
         let Names.Qid(_,name) = Names.constQid(cid) in
         Lfabsyn.IdType(Lfabsyn.Const(Symb.symbol name))
     | IntSyn.Root(IntSyn.Const(cid), spine) ->
