@@ -173,8 +173,13 @@ and build_type_from_dctx bvars ctx =
     | IntSyn.Decl(ctx', IntSyn.Dec(None,e)) ->
         let name = Names.skonstName "A" in
         let (bvars',tyfun) = build_type_from_dctx bvars ctx' in
+        let s =
+          if List.exists (fun (x,y) -> (Symb.name x) = name) bvars'
+          then get_fresh_symb name bvars'
+          else Symb.symbol name
+        in
         let t = exp_to_type bvars' e in
-        ((Symb.symbol name, t)::bvars, (fun ty -> (Lfabsyn.PiType(Symb.symbol name, t, tyfun ty, false))) )
+        ((s, t)::bvars, (fun ty -> (Lfabsyn.PiType(s, t, tyfun ty, false))) )
     | IntSyn.Decl(ctx', IntSyn.Dec(Some(name),e)) ->
         let (bvars',tyfun) = build_type_from_dctx bvars ctx' in
         let t = exp_to_type bvars e in

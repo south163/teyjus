@@ -1,6 +1,6 @@
 use lib '../lib';
 use strict;
-use Test::More tests => 10; # 19;
+use Test::More tests => 9; # 19;
 
 my $TJTWELF = "../../tjtwelf";
 my $MODULE = "lp/sources.cfg";
