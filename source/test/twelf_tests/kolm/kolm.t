@@ -659,17 +659,7 @@ D:complete (kolm_imp kolm_true kolm_false)
 CODE
 $ans = <<'ANS';
 The answer substitution:
-                                                   
-ANS
-same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm8");
-############################################
-############################################
-$code = <<'CODE';
-D:sound (nk_dnotr (nk_noti ([p:o] [u:nk (not true)] nk_note u p nk_truei))) kolm_true NJ.
-CODE
-$ans = <<'ANS';
 
-The answer substitution:
 NK =
     nk_impi false true
       ([A0:nk false]
@@ -794,6 +784,182 @@ D =
                                                  nj_nk_note true nj_truei
                                                    nk_truei u v p nj_nk_truei
                                                    A)))))))) A)))))
+
+ANS
+same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm8");
+############################################
+############################################
+$code = <<'CODE';
+D:sound (nk_dnotr (nk_noti ([p:o] [u:nk (not true)] nk_note u p nk_truei))) kolm_true NJ.
+CODE
+$ans = <<'ANS';
+
+The answer substitution:
+NJ =
+    nj_noti ((not true))
+      ([p:o]
+         ([A0:nj ((not true))]
+            nj_note ((not (not (not true))))
+              (nj_noti ((not (not (not true))))
+                 ([p:o]
+                    ([A0:nj ((not (not (not true))))]
+                       nj_note ((not (not (not (not (not true))))))
+                         (nj_noti ((not (not (not (not (not true))))))
+                            ([p:o]
+                               ([A0:nj ((not (not (not (not (not true))))))]
+                                  nj_note ((not (not (not (not (not (not (not
+                                    true))))))))
+                                    (nj_noti ((not (not (not (not (not (not
+                                       (not true))))))))
+                                       ([p:o]
+                                          ([A0:
+                                             nj ((not (not (not (not (not
+                                               (not (not true))))))))
+                                             ]
+                                             nj_note ((not (not (not (not
+                                               (not (not true))))))) A0 p
+                                               (nj_noti ((not (not (not (not
+                                                  (not true))))))
+                                                  ([p:o]
+                                                     ([A0:
+                                                        nj ((not (not (not
+                                                          (not (not
+                                                          true))))))
+                                                        ]
+                                                        nj_note ((not false))
+                                                          (nj_note ((not (not
+                                                             true)))
+                                                             (nj_noti ((not
+                                                                (not true)))
+                                                                ([p:o]
+                                                                   ([A0:
+                                                                    nj ((not
+                                                                    (not
+                                                                    true)))]
+                                                                    nj_note
+                                                                    ((not
+                                                                    (not (not
+                                                                    (not
+                                                                    true)))))
+                                                                    A0 p
+                                                                    (nj_noti
+                                                                    ((not
+                                                                    (not (not
+                                                                    true))))
+                                                                    ([p:o]
+                                                                    ([A0:
+                                                                    nj ((not
+                                                                    (not (not
+                                                                    true))))]
+                                                                    nj_note
+                                                                    ((not
+                                                                    (not
+                                                                    true)))
+                                                                    A0 p A0))))))
+                                                             ((not (not
+                                                             false)))
+                                                             (nj_noti ((not
+                                                                true))
+                                                                ([p:o]
+                                                                   ([A0:
+                                                                    nj ((not
+                                                                    true))]
+                                                                    nj_note
+                                                                    true A0 p
+                                                                    nj_truei))))
+                                                          p
+                                                          (nj_noti false
+                                                             ([p:o]
+                                                                ([A0:
+                                                                   nj false]
+                                                                   nj_falsee
+                                                                    p A0)))))))))
+                                    p
+                                    (nj_noti ((not (not (not (not (not (not
+                                       true)))))))
+                                       ([p:o]
+                                          ([A0:
+                                             nj ((not (not (not (not (not
+                                               (not true)))))))
+                                             ]
+                                             nj_note ((not (not (not (not
+                                               (not true)))))) A0 p A0))))))
+                         p
+                         (nj_noti ((not (not (not (not true)))))
+                            ([p:o]
+                               ([A0:nj ((not (not (not (not true)))))]
+                                  nj_note ((not (not (not true)))) A0 p A0))))))
+              p
+              (nj_noti ((not (not true)))
+                 ([p:o]
+                    ([A0:nj ((not (not true)))] nj_note ((not true)) A0 p A0)))))
+D =
+    sound_dnotr true ((not true))
+      (nk_noti ((not true))
+         ([p:o] ([A0:nk ((not true))] nk_note true A0 p nk_truei))) kolm_true
+      (nj_noti ((not (not (not (not (not (not (not true))))))))
+         ([p:o]
+            ([A0:nj ((not (not (not (not (not (not (not true))))))))]
+               nj_note ((not (not (not (not (not (not true))))))) A0 p
+                 (nj_noti ((not (not (not (not (not true))))))
+                    ([p:o]
+                       ([A0:nj ((not (not (not (not (not true))))))]
+                          nj_note ((not false))
+                            (nj_note ((not (not true)))
+                               (nj_noti ((not (not true)))
+                                  ([p:o]
+                                     ([A0:nj ((not (not true)))]
+                                        nj_note ((not (not (not (not
+                                          true))))) A0 p
+                                          (nj_noti ((not (not (not true))))
+                                             ([p:o]
+                                                ([A0:
+                                                   nj ((not (not (not
+                                                     true))))
+                                                   ]
+                                                   nj_note ((not (not true)))
+                                                     A0 p A0)))))) ((not (not
+                               false)))
+                               (nj_noti ((not true))
+                                  ([p:o]
+                                     ([A0:nj ((not true))]
+                                        nj_note true A0 p nj_truei)))) p
+                            (nj_noti false
+                               ([p:o] ([A0:nj false] nj_falsee p A0)))))))))
+      (sound_noti ((not true)) ((not (not (not (not (not true))))))
+         (kolm_not true ((not (not true))) kolm_true)
+         ([A0:o] ([A1:nk ((not true))] nk_note true A1 A0 nk_truei))
+         ([A0:o]
+            ([A1:nj ((not (not (not (not (not true))))))]
+               nj_note ((not (not true)))
+                 (nj_noti ((not (not true)))
+                    ([p:o]
+                       ([A0:nj ((not (not true)))]
+                          nj_note ((not (not (not (not true))))) A1 p
+                            (nj_noti ((not (not (not true))))
+                               ([p:o]
+                                  ([A0:nj ((not (not (not true))))]
+                                     nj_note ((not (not true))) A0 p A0))))))
+                 ((not (not A0)))
+                 (nj_noti ((not true))
+                    ([p:o] ([A0:nj ((not true))] nj_note true A0 p nj_truei)))))
+         ([p:o]
+            ([u:nk ((not true))]
+               ([v:nj ((not (not (not (not (not true))))))]
+                  ([kp:kolm p ((not (not p)))]
+                     ([A0:existskolm p ((not (not p))) kp]
+                        ([A1:
+                           sound ((not true)) ((not (not (not (not (not
+                             true)))))) u
+                             (kolm_not true ((not (not true))) kolm_true) v
+                           ]
+                           sound_note true ((not (not true))) nk_truei
+                             kolm_true
+                             (nj_noti ((not true))
+                                ([p:o]
+                                   ([A0:nj ((not true))]
+                                      nj_note true A0 p nj_truei))) u v p p
+                             kp sound_truei A1 existskolm_true)))))))
 
 ANS
 same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm9");
