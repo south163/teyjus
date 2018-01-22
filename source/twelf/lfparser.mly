@@ -52,20 +52,10 @@ let reset () =
 %token END
 
 %type <Lfsig.signature> parse
-%type <Lfabsyn.query> parseQuery
 
-%start parse parseQuery
+%start parse 
 
 %%
-parseQuery
-  : querybndrs DOT VARID COLON type_tm DOT    {Lfabsyn.Query($1,Lfabsyn.LogicVar($3, $5),$5)}
-  | VARID COLON type_tm DOT                   {Lfabsyn.Query([],Lfabsyn.LogicVar($1, $3),$3)}
-  ;
-
-querybndrs
-  : LANGLE VARID COLON type_tm RANGLE querybndrs  {((Lfabsyn.LogicVar($2, $4), $4) :: $6)}
-  |                                       {[]}
-  ;
 
 parse
   : program     {$1}
