@@ -80,14 +80,10 @@ and find_strict_vars_neg tp g =
         given a positive type tp and context g *)
 and find_strict_vars_pos_rec tp g =
   match tp with
-  | Lfabsyn.PiType (x, tpA, tpB, true) ->
+  | Lfabsyn.PiType (x, tpA, tpB, _) ->
     let (ann_tpA, sA) = find_strict_vars_neg tpA g in
     let (s, dep, ann_pairs, tc, tms, g') = find_strict_vars_pos_rec tpB (SymbSet.add x g)
     in (s, (add_dep dep x (SymbSet.inter sA g)), (x, ann_tpA)::ann_pairs, tc, tms, (SymbSet.add x g'))
-  | Lfabsyn.PiType (x, tpA, tpB, false) ->
-    let (ann_tpA, sA) = (NegNone, SymbSet.empty) in
-    let (s, dep, ann_pairs, tc, tms, g') = find_strict_vars_pos_rec tpB (SymbSet.add x g)
-    in (s, dep, (x, ann_tpA)::ann_pairs, tc, tms, (SymbSet.add x g'))
   | Lfabsyn.AppType (c, tms) -> (*printf "Tycon and Terms: %s\n" (PrintLF.string_of_typ tp);*)
                                 ((union_fsvo_terms tms g), Hashtbl.create 16, [], c, tms, g)
   | Lfabsyn.IdType t -> (SymbSet.empty, Hashtbl.create 16, [], t, [], SymbSet.empty)
@@ -98,14 +94,10 @@ and find_strict_vars_pos_rec tp g =
         given a negative type and context g *)
 and find_strict_vars_neg_rec tp g =
   match tp with
-  | Lfabsyn.PiType (x, tpA, tpB, true) ->
+  | Lfabsyn.PiType (x, tpA, tpB, _) ->
     let (ann_tpA, sA) = find_strict_vars_pos tpA g in
     let (s, dep, ann_pairs, tc, tms, g') = find_strict_vars_neg_rec tpB  (SymbSet.add x g)
     in (s, (add_dep dep x (SymbSet.inter sA g)), (x, ann_tpA)::ann_pairs, tc, tms, (SymbSet.add x g'))
-  | Lfabsyn.PiType (x, tpA, tpB, false) ->
-    let (ann_tpA, sA) = (PosNone, SymbSet.empty) in
-    let (s, dep, ann_pairs, tc, tms, g') = find_strict_vars_neg_rec tpB (SymbSet.add x g)
-    in (s, dep, (x, ann_tpA)::ann_pairs, tc, tms, (SymbSet.add x g'))
   | Lfabsyn.AppType (c, tms) -> (*printf "Tycon and Terms: %s\n" (PrintLF.string_of_typ tp);*)
                                ((union_fsvo_terms tms g), Hashtbl.create 16, [], c, tms, g)
   | Lfabsyn.IdType t -> (SymbSet.empty, Hashtbl.create 16, [], t, [], SymbSet.empty)
