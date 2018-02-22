@@ -93,8 +93,7 @@ and exp_to_term bvars e =
              Some(name) ->
                name
            | None ->
-               (* get a new name *)
-               Names.skonstName "x")
+              "x")
         in
         let s =
           if List.exists (fun (x,y) -> (Symb.name x) = name) bvars
@@ -134,14 +133,28 @@ and exp_to_term bvars e =
           exp_to_term bvars (Option.get (!r))
         else
           let t = exp_to_type bvars ty in
-          let name = Names.evarName (IntSyn.Null, e) in 
+          let name = (* Names.evarName (IntSyn.Null, e) in *)
+            (match Names.evarLookup e with
+             | Some(n) -> n
+             | None ->
+                (* If anonymous variable add a new evar with name `_'. *)
+                Names.addEVar (e, "_");
+                "_" )
+          in
           Lfabsyn.IdTerm(Lfabsyn.LogicVar(Symb.symbol name, t))
     | IntSyn.EVar(r,dctx,ty,c) when !c = [] ->
         if Option.isSome(!r)
         then
           exp_to_term bvars (Option.get (!r))
         else
-          let name = Names.evarName (IntSyn.Null, e) in
+          let name = (* Names.evarName (dctx, e) in *)
+            (match Names.evarLookup e with
+             | Some(n) -> n
+             | None ->
+                (* If anonymous variable add a new evar with name `_'. *)
+                Names.addEVar (e, "_");
+                "_" )
+          in
           let (bvars', tyfun) = build_type_from_dctx [] dctx in
           let ty_head = exp_to_type bvars' ty in
           let ty = tyfun ty_head in
@@ -226,7 +239,9 @@ let update_fixity_o (Lfabsyn.Object(s,t,f,a,p,i)) fixity =
 
   
 let query_to_query (queryty, name_op, evars) =
-  let ptName = match name_op with Some(n) -> n | None -> "" in
+  (** Note that `_' would not be a valid name in LF so this choice
+      cannot conflict with anything. **)
+  let ptName = match name_op with Some(n) -> n | None -> "_" in
   let f l (IntSyn.EVar(e,ctx,ty,c),name) =
     let (bvars, tfun) = 
       match ctx with
@@ -238,7 +253,7 @@ let query_to_query (queryty, name_op, evars) =
     (Symb.symbol name, t) :: l
   in
   let qty = exp_to_type [] (Whnf.normalize (queryty, IntSyn.id)) in
-  let fvars = List.fold_left f [] evars in
+  let fvars = List.fold_left f [] (Names.namedEVars ()) (*evars*) in
   Lfabsyn.Query(fvars, Symb.symbol ptName, qty)
 
 let installConDec fromCS (conDec, ((fileName, ocOpt) as fileNameocOpt), r) =

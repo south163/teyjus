@@ -80,5 +80,6 @@
 
   (* Named EVars, used for queries *)
   val namedEVars : unit -> (IntSyn.exp * string) list
+  val evarLookup : IntSyn.exp -> string option
   (* Uninstantiated named EVars with constraints *)
   val evarCnstr : unit -> (IntSyn.exp * string) list

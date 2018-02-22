@@ -147,12 +147,18 @@ let rec encode_term constants metadata vars sub tm =
                    Errormsg.error Errormsg.none ("No variable named `"^(Symb.name s)^"' found in scope.");
                          Absyn.ErrorTerm)
             | Lfabsyn.LogicVar(s,t) ->
-                  (match (Table.find (Symbol.symbol (Symb.name s)) vars) with
-                       Some(tysymb) -> Absyn.makeFreeVarTerm tysymb Errormsg.none
-                     | None ->
-                         Errormsg.error Errormsg.none
-                                        ("No logic variable named `"^(Symb.name s)^"' found in scope.");
-                         Absyn.ErrorTerm)
+               if Symb.name s = "_"
+               then
+                 Absyn.makeFreeVarTerm (Absyn.AnonymousImplicitVar(Symbol.symbol "_", ref None,
+                                                                   ref false, ref (Some(flatten_type t))))
+                                       Errormsg.none
+               else
+                 (match (Table.find (Symbol.symbol (Symb.name s)) vars) with
+                    Some(tysymb) -> Absyn.makeFreeVarTerm tysymb Errormsg.none
+                  | None ->
+                     Errormsg.error Errormsg.none
+                                    ("No logic variable named `"^(Symb.name s)^"' found in scope.");
+                     Absyn.ErrorTerm)
 
 
 

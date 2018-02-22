@@ -152,7 +152,9 @@ let invert_subst (Lfsig.Signature(types, objs)) metadata fvars subst =
      the inverting the LP substitution. *)
   let rec aux lpsubst lfsubst =
     match lpsubst with
-      ((tysymb, tm) :: lpsubst') ->
+    | ((tysymb, _) :: lpsubst') when Absyn.getTypeSymbolName tysymb = "_" ->
+       aux lpsubst' lfsubst
+    | ((tysymb, tm) :: lpsubst') ->
         let Some(t) = Table.find (Absyn.getTypeSymbolSymbol tysymb) fvars in
         let ty = apply_subst lfsubst t [] in
         aux lpsubst'

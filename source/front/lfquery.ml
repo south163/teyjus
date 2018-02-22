@@ -25,17 +25,19 @@ let freeVarTab_init fvars =
   freeVarTab := init_aux fvars 0 Intmap.empty;
   true
 
+(* Follows the translateTermTopLevel from parse.ml *)
 let submit_query query metadata kinds constants =
   let (term, fvars) = 
     match Translator.get_translation () with
         "naive" -> Translator.NaiveTranslation.translate_query query metadata kinds constants
       | "optimized" -> Translator.OptimizedTranslation.translate_query query metadata kinds constants in
-  let (term',_,_) = Parse.fixTerm (Parse.removeNestedAbstractions term) in
-(*  let _ = print_endline ("translated query: "^(Absyn.string_of_term term')) in  *)
+  let (fixedterm,fvars',ftyvars) = Parse.fixTerm (Parse.removeNestedAbstractions term) in
+  (*  let _ = print_endline ("translated query: "^(Absyn.string_of_term term')) in  *)
+  
   Ccode_stubs.setTypeAndTermLocation (); 
-  Readterm.readTermAndType term' (Types.Molecule(Absyn.ApplicationType(Pervasive.kbool,[]),[])) fvars [];
+  Readterm.readTermAndType fixedterm (Types.Molecule(Absyn.ApplicationType(Pervasive.kbool,[]),[])) fvars' ftyvars;
   fvartypes_init query;
-  freeVarTab_init fvars
+  freeVarTab_init fvars'
 (*
 let string_of_lpsol (subst, dsprs) =
   let string_of_sub (tysymb, term) = (Absyn.getTypeSymbolName tysymb) ^ " = " ^ (Absyn.string_of_term term) ^ "\n" in

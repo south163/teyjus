@@ -230,32 +230,32 @@ let rec pr_iterm types objs context fix assoc prec ppf tm =
   (* print an application term *)
   and pr_app context fix assoc prec ppf = function
     | Lfabsyn.AppTerm(Lfabsyn.Const(s), args) ->
-      let o = Option.get (Symboltable.lookup objs s) in
+       let o = Option.get (Symboltable.lookup objs s) in
       let printargs = skip (Lfabsyn.get_obj_implicit o) args in
       (match o with
         Lfabsyn.Object(_,_,Lfabsyn.NoFixity,opAssoc,opPrec,implicit) ->
-          Format.fprintf ppf "@[<hov 2>%a%a@]" pr_symb s pr_args args
+          Format.fprintf ppf "@[<hov 2>%a%a@]" pr_symb s pr_args printargs
       | Lfabsyn.Object(_,_,Lfabsyn.Prefix,opAssoc,opPrec,implicit) ->
-        if List.length args = 1
-        then pr_prefix opAssoc opPrec context fix assoc prec ppf (s, List.hd args)
+        if List.length printargs = 1
+        then pr_prefix opAssoc opPrec context fix assoc prec ppf (s, List.hd printargs)
         else
           Format.fprintf ppf "@[%a%a@]"
-            (pr_prefix opAssoc opPrec LeftTermContext appFixity appAssoc appPrec) (s, List.hd args)
-            pr_args (List.tl args)
+            (pr_prefix opAssoc opPrec LeftTermContext appFixity appAssoc appPrec) (s, List.hd printargs)
+            pr_args (List.tl printargs)
       | Lfabsyn.Object(_,_,Lfabsyn.Infix,opAssoc,opPrec,implicit) ->
-        if List.length args = 2
-        then pr_infix opAssoc opPrec context fix assoc prec ppf (s, args)
+        if List.length printargs = 2
+        then pr_infix opAssoc opPrec context fix assoc prec ppf (s, printargs)
         else
           Format.fprintf ppf "@[%a%a@]"
-            (pr_infix opAssoc opPrec LeftTermContext appFixity appAssoc appPrec) (s, args)
-            pr_args (List.tl (List.tl args))
+            (pr_infix opAssoc opPrec LeftTermContext appFixity appAssoc appPrec) (s, printargs)
+            pr_args (List.tl (List.tl printargs))
       | Lfabsyn.Object(_,_,Lfabsyn.Postfix,opAssoc,opPrec,implicit) ->
-        if List.length args = 1
-        then pr_postfix opAssoc opPrec context fix assoc prec ppf (s, List.hd args)
+        if List.length printargs = 1
+        then pr_postfix opAssoc opPrec context fix assoc prec ppf (s, List.hd printargs)
         else
           Format.fprintf ppf "@[%a%a@]"
-            (pr_postfix opAssoc opPrec LeftTermContext appFixity appAssoc appPrec) (s, List.hd args)
-            pr_args (List.tl args)     )
+            (pr_postfix opAssoc opPrec LeftTermContext appFixity appAssoc appPrec) (s, List.hd printargs)
+            pr_args (List.tl printargs)     )
     | Lfabsyn.AppTerm(id, []) ->
       pr_id ppf id 
     | Lfabsyn.AppTerm(id, args) ->
@@ -326,28 +326,28 @@ and pr_ityp types objs context fix assoc prec ppf ty=
       let printargs = skip (Lfabsyn.get_typefam_implicit t) args in
       (match t with
         Lfabsyn.TypeFam(_,_,Lfabsyn.NoFixity,opAssoc,opPrec,_,implicit) ->
-          Format.fprintf ppf "@[<hov 2>%a%a@]" pr_symb s pr_args args
+          Format.fprintf ppf "@[<hov 2>%a%a@]" pr_symb s pr_args printargs
       | Lfabsyn.TypeFam(_,_,Lfabsyn.Prefix,opAssoc,opPrec,_,implicit) ->
-        if List.length args = 1
-        then pr_prefix opAssoc opPrec context fix assoc prec ppf (s, List.hd args)
+        if List.length printargs = 1
+        then pr_prefix opAssoc opPrec context fix assoc prec ppf (s, List.hd printargs)
         else
           Format.fprintf ppf "@[%a%a@]"
-            (pr_prefix opAssoc opPrec LeftTermContext appFixity appAssoc appPrec) (s, List.hd args)
-            pr_args (List.tl args)
+            (pr_prefix opAssoc opPrec LeftTermContext appFixity appAssoc appPrec) (s, List.hd printargs)
+            pr_args (List.tl printargs)
       | Lfabsyn.TypeFam(_,_,Lfabsyn.Infix,opAssoc,opPrec,_,implicit) ->
-        if List.length args = 2
-        then pr_infix opAssoc opPrec context fix assoc prec ppf (s, args)
+        if List.length printargs = 2
+        then pr_infix opAssoc opPrec context fix assoc prec ppf (s, printargs)
         else
           Format.fprintf ppf "@[%a%a@]"
-            (pr_infix opAssoc opPrec LeftTermContext appFixity appAssoc appPrec) (s, args)
-            pr_args (List.tl (List.tl args))
+            (pr_infix opAssoc opPrec LeftTermContext appFixity appAssoc appPrec) (s, printargs)
+            pr_args (List.tl (List.tl printargs))
       | Lfabsyn.TypeFam(_,_,Lfabsyn.Postfix,opAssoc,opPrec,_,implicit) ->
-        if List.length args = 1
-        then pr_postfix opAssoc opPrec context fix assoc prec ppf (s, List.hd args)
+        if List.length printargs = 1
+        then pr_postfix opAssoc opPrec context fix assoc prec ppf (s, List.hd printargs)
         else
           Format.fprintf ppf "@[%a%a@]"
-            (pr_postfix opAssoc opPrec LeftTermContext appFixity appAssoc appPrec) (s, List.hd args)
-            pr_args (List.tl args)     )
+            (pr_postfix opAssoc opPrec LeftTermContext appFixity appAssoc appPrec) (s, List.hd printargs)
+            pr_args (List.tl printargs)     )
     | Lfabsyn.AppType(id, []) ->
       pr_id ppf id 
     | Lfabsyn.AppType(id, args) ->
@@ -468,6 +468,9 @@ let pr_solution_implicit types objs ppf (subst, disprs) =
     | (d :: dd) -> Format.fprintf ppf "@.%a%a" pr_dispr d pr_disprs dd
     | _ -> ()
   in
+  if subst = []
+  then Format.fprintf ppf "Empty Substitution."
+  else 
   Format.fprintf ppf "@[<v 0>%a@.%a@]" pr_substs subst pr_disprs disprs
     
 
