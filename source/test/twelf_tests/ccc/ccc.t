@@ -15,23 +15,24 @@ CODE
 $ans = <<'ANS';
 
 The answer substitution:
-M = cur snd
+M = cur (snd)
 
 ANS
 same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"ccc1");
 
 ############################################
 ############################################
-$code = <<'CODE';
-{x}abse (addv empty x) (llam [y] lpair y x) M.
-CODE
-$ans = <<'ANS';
+## removed because query not a base type
+# $code = <<'CODE';
+# {x}abse (addv empty x) (llam [y] lpair y x) M.
+# CODE
+# $ans = <<'ANS';
 
-The answer substitution:
-M = cur (pair snd (snd @ fst))
+# The answer substitution:
+# M = cur (pair snd (snd @ fst))
 
-ANS
-same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"ccc2");
+# ANS
+# same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"ccc2");
 
 ############################################
 ############################################
@@ -41,7 +42,7 @@ CODE
 $ans = <<'ANS';
 
 The answer substitution:
-M = cur (cur (app @ pair (snd @ fst) snd))
+M = cur (cur ((app @ pair ((snd @ fst)) (snd))))
 
 ANS
 same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"ccc3");
@@ -54,7 +55,7 @@ CODE
 $ans = <<'ANS';
 
 The answer substitution:
-E = [_e:term (_A1 * _A2)] lsnd _e
+E = [A2:term (_ * _)] lsnd A2
 
 ANS
 same_answers_twelf( `$TJTWELF -b --query "$code" $MODULE\n`, $ans,"ccc4");
@@ -67,6 +68,10 @@ CODE
 $ans = <<'ANS';
 
 The answer substitution:
+E =
+    [A2:term ((_ * (_ => _)))]
+      lapp (lfst (lpair (lsnd A2) (lfst A2)))
+        (lsnd (lpair (lsnd A2) (lfst A2)))
 
 ANS
 same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"ccc5");

@@ -50,19 +50,19 @@ CODE
 $ans = <<'ANS';
 
 The answer substitution:
+M = appNil
 L2 = nil
 L3 = nil
-M = appNil nil
 
 The answer substitution:
+M = appNil
 L2 = cons z nil
 L3 = cons z nil
-M = appNil (cons z nil)
 
 The answer substitution:
+M = appNil
 L2 = cons (s z) nil
 L3 = cons (s z) nil
-M = appNil (cons (s z) nil)
 
 ANS
 same_answers_twelf( `$TJTWELF -t naive -m 3 -b --query "$code" $MODULE\n`, $ans, "append-naive");
@@ -76,7 +76,7 @@ $ans = <<'ANS';
 The answer substitution:
 L2 = L3
 L3 = L3
-M = appNil L3
+M = appNil
 
 ANS
 same_answers_twelf( `$TJTWELF -b --query "$code" $MODULE\n`, $ans, "append-optimized");

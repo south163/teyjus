@@ -80,6 +80,7 @@ CODE
 $ans = <<'ANS';
 
 The answer substitution:
+yes
 
 ANS
 same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"lp6");
@@ -156,6 +157,7 @@ CODE
 $ans = <<'ANS';
 
 The answer substitution:
+yes
 
 ANS
 same_answers_twelf( `$TJTWELF -m 15 -b --query "$code" $MODULE\n`, $ans,"lp10");
@@ -312,6 +314,7 @@ CODE
 $ans = <<'ANS';
 
 The answer substitution:
+yes
 
 ANS
 same_answers_twelf( `$TJTWELF -e 2 -b --query "$code" $MODULE\n`, $ans,"lp19");

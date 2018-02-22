@@ -16,33 +16,25 @@ $ans = <<'ANS';
 
 The answer substitution:
 NJ =
-    nj_noti ((not (not (not (not false)))))
+    nj_noti
       ([p:o]
          ([A0:nj ((not (not (not (not false)))))]
-            nj_note ((not (not (not false)))) A0 p
-              (nj_noti ((not (not false)))
+            nj_note A0 p
+              (nj_noti
                  ([p:o]
                     ([A0:nj ((not (not false)))]
-                       nj_note ((not false))
-                         (nj_note ((not false)) A0 ((not (not false)))
-                            (nj_noti false
-                               ([p:o] ([A0:nj false] nj_falsee p A0)))) p
-                         (nj_noti false
-                            ([p:o] ([A0:nj false] nj_falsee p A0))))))))
+                       nj_note
+                         (nj_note A0 ((not (not false)))
+                            (nj_noti ([p:o] ([A0:nj false] nj_falsee A0)))) p
+                         (nj_noti ([p:o] ([A0:nj false] nj_falsee A0))))))))
 D =
-    sound_noti false ((not (not false))) kolm_false
-      ([A0:o] ([A1:nk false] nk_falsee A0 A1))
-      ([A0:o]
-         ([A1:nj ((not (not false)))]
-            nj_note ((not false)) A1 ((not (not A0)))
-              (nj_noti false ([p:o] ([A0:nj false] nj_falsee p A0)))))
+    sound_noti
       ([p:o]
          ([u:nk false]
             ([v:nj ((not (not false)))]
                ([kp:kolm p ((not (not p)))]
                   ([A0:existskolm p ((not (not p))) kp]
-                     ([A1:sound false ((not (not false))) u kolm_false v]
-                        sound_falsee u v p ((not (not p))) kp A1))))))
+                     ([A1:sound u kolm_false v] sound_falsee A1))))))
 
 ANS
 same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm1");
@@ -65,203 +57,56 @@ $ans = <<'ANS';
 
 The answer substitution:
 NK =
-    nk_noti false
+    nk_noti
       ([p:o]
          ([A0:nk false]
-            nk_note ((not (not false)))
-              (nk_dnotr ((not (not (not false))))
-                 (nk_noti ((not (not (not (not false)))))
+            nk_note
+              (nk_dnotr
+                 (nk_noti
                     ([p:o]
                        ([A0:nk ((not (not (not (not false)))))]
-                          nk_note ((not (not (not false)))) A0 p
-                            (nk_noti ((not (not false)))
+                          nk_note A0 p
+                            (nk_noti
                                ([p:o]
                                   ([A0:nk ((not (not false)))]
-                                     nk_note ((not false))
-                                       (nk_note ((not false)) A0 ((not (not
-                                          false)))
-                                          (nk_noti false
+                                     nk_note
+                                       (nk_note A0 ((not (not false)))
+                                          (nk_noti
                                              ([p:o]
-                                                ([A0:nk false] nk_falsee p A0))))
+                                                ([A0:nk false] nk_falsee A0))))
                                        p
-                                       (nk_noti false
-                                          ([p:o]
-                                             ([A0:nk false] nk_falsee p A0))))))))))
-              p
-              (nk_noti ((not false))
-                 ([p:o] ([A0:nk ((not false))] nk_note false A0 p A0)))))
+                                       (nk_noti
+                                          ([p:o] ([A0:nk false] nk_falsee A0))))))))))
+              p (nk_noti ([p:o] ([A0:nk ((not false))] nk_note A0 p A0)))))
 D =
-    complete1 ((not false)) ((not (not (not (not (not false))))))
-      (kolm_not false ((not (not false))) kolm_false)
-      ([A:nk ((not false))]
-         nk_noti ((not (not (not (not false)))))
-           ([p:o]
-              ([A0:nk A]
-                 nk_note false A p
-                   (nk_dnotr false (nk_dnotr ((not (not false))) A0)))))
-      ([A:nk ((not (not (not (not (not false))))))]
-         nk_noti false
-           ([p:o]
-              ([A0:nk A]
-                 nk_note ((not (not false)))
-                   (nk_dnotr ((not (not (not false)))) A) p
-                   (nk_noti ((not false))
-                      ([p:o] ([A0:nk A] nk_note false A0 p A0))))))
-      (nj_noti ((not (not (not (not false)))))
-         ([p:o]
-            ([A0:nj ((not (not (not (not false)))))]
-               nj_note ((not (not (not false)))) A0 p
-                 (nj_noti ((not (not false)))
-                    ([p:o]
-                       ([A0:nj ((not (not false)))]
-                          nj_note ((not false))
-                            (nj_note ((not false)) A0 ((not (not false)))
-                               (nj_noti false
-                                  ([p:o] ([A0:nj false] nj_falsee p A0)))) p
-                            (nj_noti false
-                               ([p:o] ([A0:nj false] nj_falsee p A0)))))))))
-      (nk_noti ((not (not (not (not false)))))
-         ([p:o]
-            ([A0:nk ((not (not (not (not false)))))]
-               nk_note ((not (not (not false)))) A0 p
-                 (nk_noti ((not (not false)))
-                    ([p:o]
-                       ([A0:nk ((not (not false)))]
-                          nk_note ((not false))
-                            (nk_note ((not false)) A0 ((not (not false)))
-                               (nk_noti false
-                                  ([p:o] ([A0:nk false] nk_falsee p A0)))) p
-                            (nk_noti false
-                               ([p:o] ([A0:nk false] nk_falsee p A0)))))))))
-      (equiv_not false ((not (not false))) kolm_false
-         ([A0:nk false]
-            nk_noti ((not false))
-              ([p:o] ([A0:nk ((not false))] nk_note false A0 p A0)))
-         ([A0:nk ((not (not false)))] nk_dnotr false A0) equiv_false)
-      (nj_nk_noti ((not (not (not (not false)))))
-         ([A:o]
-            ([A0:nj ((not (not (not (not false)))))]
-               nj_note ((not (not (not false)))) A0 A
-                 (nj_noti ((not (not false)))
-                    ([p:o]
-                       ([A0:nj A]
-                          nj_note ((not false))
-                            (nj_note ((not false)) A0 ((not (not false)))
-                               (nj_noti false
-                                  ([p:o] ([A0:nj A] nj_falsee p A0)))) p
-                            (nj_noti false ([p:o] ([A0:nj A] nj_falsee p A0))))))))
-         ([A:o]
-            ([A0:nk ((not (not (not (not false)))))]
-               nk_note ((not (not (not false)))) A0 A
-                 (nk_noti ((not (not false)))
-                    ([p:o]
-                       ([A0:nk A]
-                          nk_note ((not false))
-                            (nk_note ((not false)) A0 ((not (not false)))
-                               (nk_noti false
-                                  ([p:o] ([A0:nk A] nk_falsee p A0)))) p
-                            (nk_noti false ([p:o] ([A0:nk A] nk_falsee p A0))))))))
+    complete1 (equiv_not equiv_false)
+      (nj_nk_noti
          ([p:o]
             ([u:nj ((not (not (not (not false)))))]
                ([v:nk ((not (not (not (not false)))))]
-                  ([A:nj_nk ((not (not (not (not false))))) u v]
-                     nj_nk_note ((not (not (not false))))
-                       (nj_noti ((not (not false)))
-                          ([p:o]
-                             ([A0:nj A]
-                                nj_note ((not false))
-                                  (nj_note ((not false)) A0 ((not (not
-                                     false)))
-                                     (nj_noti false
-                                        ([p:o] ([A0:nj A] nj_falsee p A0))))
-                                  p
-                                  (nj_noti false
-                                     ([p:o] ([A0:nj A] nj_falsee p A0))))))
-                       (nk_noti ((not (not false)))
-                          ([p:o]
-                             ([A0:nk A]
-                                nk_note ((not false))
-                                  (nk_note ((not false)) A0 ((not (not
-                                     false)))
-                                     (nk_noti false
-                                        ([p:o] ([A0:nk A] nk_falsee p A0))))
-                                  p
-                                  (nk_noti false
-                                     ([p:o] ([A0:nk A] nk_falsee p A0)))))) u
-                       v p
-                       (nj_nk_noti ((not (not false)))
-                          ([A:o]
-                             ([A0:nj ((not (not false)))]
-                                nj_note ((not false))
-                                  (nj_note ((not false)) A0 ((not (not
-                                     false)))
-                                     (nj_noti false
-                                        ([p:o] ([A0:nj A] nj_falsee p A0))))
-                                  A
-                                  (nj_noti false
-                                     ([p:o] ([A0:nj A] nj_falsee p A0)))))
-                          ([A:o]
-                             ([A0:nk ((not (not false)))]
-                                nk_note ((not false))
-                                  (nk_note ((not false)) A0 ((not (not
-                                     false)))
-                                     (nk_noti false
-                                        ([p:o] ([A0:nk A] nk_falsee p A0))))
-                                  A
-                                  (nk_noti false
-                                     ([p:o] ([A0:nk A] nk_falsee p A0)))))
+                  ([A:nj_nk u v]
+                     nj_nk_note
+                       (nj_nk_noti
                           ([p:o]
                              ([u:nj ((not (not false)))]
                                 ([v:nk ((not (not false)))]
-                                   ([A:nj_nk ((not (not false))) u v]
-                                      nj_nk_note ((not false))
-                                        (nj_noti false
-                                           ([p:o] ([A0:nj A] nj_falsee p A0)))
-                                        (nk_noti false
-                                           ([p:o] ([A0:nk A] nk_falsee p A0)))
-                                        (nj_note ((not false)) u ((not (not
-                                           false)))
-                                           (nj_noti false
-                                              ([p:o]
-                                                 ([A0:nj A] nj_falsee p A0))))
-                                        (nk_note ((not false)) v ((not (not
-                                           false)))
-                                           (nk_noti false
-                                              ([p:o]
-                                                 ([A0:nk A] nk_falsee p A0))))
-                                        p
-                                        (nj_nk_noti false
-                                           ([A:o]
-                                              ([A0:nj false] nj_falsee A A0))
-                                           ([A:o]
-                                              ([A0:nk false] nk_falsee A A0))
+                                   ([A:nj_nk u v]
+                                      nj_nk_note
+                                        (nj_nk_noti
                                            ([p:o]
                                               ([u:nj false]
                                                  ([v:nk false]
-                                                    ([A:nj_nk false u v]
-                                                       nj_nk_falsee u v p A)))))
-                                        (nj_nk_note ((not false))
-                                           (nj_noti false
-                                              ([p:o]
-                                                 ([A0:nj A] nj_falsee p A0)))
-                                           (nk_noti false
-                                              ([p:o]
-                                                 ([A0:nk A] nk_falsee p A0)))
-                                           u v ((not (not false)))
-                                           (nj_nk_noti false
-                                              ([A:o]
-                                                 ([A0:nj false]
-                                                    nj_falsee A A0))
-                                              ([A:o]
-                                                 ([A0:nk false]
-                                                    nk_falsee A A0))
+                                                    ([A:nj_nk u v]
+                                                       nj_nk_falsee A)))))
+                                        (nj_nk_note
+                                           (nj_nk_noti
                                               ([p:o]
                                                  ([u:nj false]
                                                     ([v:nk false]
-                                                       ([A:nj_nk false u v]
-                                                          nj_nk_falsee u v p
-                                                            A))))) A)))))) A)))))
-                                                            
+                                                       ([A:nj_nk u v]
+                                                          nj_nk_falsee A)))))
+                                           A)))))) A)))))
+                                           
 ANS
 same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm2");
 ############################################
@@ -273,24 +118,19 @@ $ans = <<'ANS';
 
 The answer substitution:
 NJ =
-    nj_noti ((not (not (not false) imp not (not false))))
+    nj_noti
       ([p:o]
          ([A0:nj ((not (not (not false) imp not (not false))))]
-            nj_note ((not (not false) imp not (not false))) A0 p
-              (nj_impi ((not (not false))) ((not (not false)))
+            nj_note A0 p
+              (nj_impi
                  ([A0:nj ((not (not false)))]
-                    nj_note ((not false)) A0 ((not (not false)))
-                      (nj_noti false ([p:o] ([A0:nj false] nj_falsee p A0)))))))
+                    nj_note A0 ((not (not false)))
+                      (nj_noti ([p:o] ([A0:nj false] nj_falsee A0)))))))
 D =
-    sound_impi false ((not (not false))) kolm_false false ((not (not false)))
-      ([A0:nk false] nk_falsee false A0) kolm_false
-      ([A0:nj ((not (not false)))]
-         nj_note ((not false)) A0 ((not (not false)))
-           (nj_noti false ([p:o] ([A0:nj false] nj_falsee p A0))))
+    sound_impi
       ([u:nk false]
          ([v:nj ((not (not false)))]
-            ([A0:sound false ((not (not false))) u kolm_false v]
-               sound_falsee u v false ((not (not false))) kolm_false A0)))
+            ([A0:sound u kolm_false v] sound_falsee A0)))
                
 ANS
 same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm3");
@@ -311,136 +151,42 @@ $ans = <<'ANS';
 
 The answer substitution:
 NK =
-    nk_impi false false
+    nk_impi
       ([A0:nk false]
-         nk_dnotr false
-           (nk_impe ((not (not false))) ((not (not false)))
-              (nk_dnotr ((not (not false) imp not (not false)))
-                 (nk_noti ((not (not (not false) imp not (not false))))
+         nk_dnotr
+           (nk_impe
+              (nk_dnotr
+                 (nk_noti
                     ([p:o]
                        ([A0:nk ((not (not (not false) imp not (not false))))]
-                          nk_note ((not (not false) imp not (not false))) A0
-                            p
-                            (nk_impi ((not (not false))) ((not (not false)))
+                          nk_note A0 p
+                            (nk_impi
                                ([A0:nk ((not (not false)))]
-                                  nk_note ((not false)) A0 ((not (not
-                                    false)))
-                                    (nk_noti false
-                                       ([p:o] ([A0:nk false] nk_falsee p A0)))))))))
-              (nk_noti ((not false))
-                 ([p:o] ([A0:nk ((not false))] nk_note false A0 p A0)))))
+                                  nk_note A0 ((not (not false)))
+                                    (nk_noti
+                                       ([p:o] ([A0:nk false] nk_falsee A0)))))))))
+              (nk_noti ([p:o] ([A0:nk ((not false))] nk_note A0 p A0)))))
 D =
-    complete1 ((false imp false)) ((not (not (not (not false) imp not (not
-      false)))))
-      (kolm_imp false ((not (not false))) false ((not (not false)))
-         kolm_false kolm_false)
-      ([A:nk ((false imp false))]
-         nk_noti ((not (not (not false) imp not (not false))))
-           ([p:o]
-              ([A0:nk A]
-                 nk_note ((not (not false) imp not (not false))) A0 p
-                   (nk_impi ((not (not false))) ((not (not false)))
-                      ([A0:nk A]
-                         nk_noti ((not false))
-                           ([p:o]
-                              ([A0:nk A]
-                                 nk_note false A0 p
-                                   (nk_impe false false A (nk_dnotr false A0)))))))))
-      ([A:nk ((not (not (not (not false) imp not (not false)))))]
-         nk_impi false false
-           ([A0:nk A]
-              nk_dnotr false
-                (nk_impe ((not (not false))) ((not (not false)))
-                   (nk_dnotr ((not (not false) imp not (not false))) A)
-                   (nk_noti ((not false))
-                      ([p:o] ([A0:nk A] nk_note false A0 p A0))))))
-      (nj_noti ((not (not (not false) imp not (not false))))
-         ([p:o]
-            ([A0:nj ((not (not (not false) imp not (not false))))]
-               nj_note ((not (not false) imp not (not false))) A0 p
-                 (nj_impi ((not (not false))) ((not (not false)))
-                    ([A0:nj ((not (not false)))]
-                       nj_note ((not false)) A0 ((not (not false)))
-                         (nj_noti false
-                            ([p:o] ([A0:nj false] nj_falsee p A0))))))))
-      (nk_noti ((not (not (not false) imp not (not false))))
-         ([p:o]
-            ([A0:nk ((not (not (not false) imp not (not false))))]
-               nk_note ((not (not false) imp not (not false))) A0 p
-                 (nk_impi ((not (not false))) ((not (not false)))
-                    ([A0:nk ((not (not false)))]
-                       nk_note ((not false)) A0 ((not (not false)))
-                         (nk_noti false
-                            ([p:o] ([A0:nk false] nk_falsee p A0))))))))
-      (equiv_imp false ((not (not false))) kolm_false
-         ([A:nk false]
-            nk_noti ((not false)) ([p:o] ([A0:nk A] nk_note false A0 p A)))
-         ([A:nk ((not (not false)))] nk_dnotr false A) false ((not (not
-         false))) kolm_false
-         ([A0:nk false]
-            nk_noti ((not false))
-              ([p:o] ([A0:nk ((not false))] nk_note false A0 p A0)))
-         ([A0:nk ((not (not false)))] nk_dnotr false A0) equiv_false
-         equiv_false)
-      (nj_nk_noti ((not (not (not false) imp not (not false))))
-         ([A:o]
-            ([A0:nj ((not (not (not false) imp not (not false))))]
-               nj_note ((not (not false) imp not (not false))) A0 A
-                 (nj_impi ((not (not false))) ((not (not false)))
-                    ([A0:nj A]
-                       nj_note ((not false)) A0 ((not (not false)))
-                         (nj_noti false ([p:o] ([A0:nj A] nj_falsee p A0)))))))
-         ([A:o]
-            ([A0:nk ((not (not (not false) imp not (not false))))]
-               nk_note ((not (not false) imp not (not false))) A0 A
-                 (nk_impi ((not (not false))) ((not (not false)))
-                    ([A0:nk A]
-                       nk_note ((not false)) A0 ((not (not false)))
-                         (nk_noti false ([p:o] ([A0:nk A] nk_falsee p A0)))))))
+    complete1 (equiv_imp equiv_false equiv_false)
+      (nj_nk_noti
          ([p:o]
             ([u:nj ((not (not (not false) imp not (not false))))]
                ([v:nk ((not (not (not false) imp not (not false))))]
-                  ([A:nj_nk ((not (not (not false) imp not (not false)))) u v
-                     ]
-                     nj_nk_note ((not (not false) imp not (not false)))
-                       (nj_impi ((not (not false))) ((not (not false)))
-                          ([A0:nj A]
-                             nj_note ((not false)) A0 ((not (not false)))
-                               (nj_noti false
-                                  ([p:o] ([A0:nj A] nj_falsee p A0)))))
-                       (nk_impi ((not (not false))) ((not (not false)))
-                          ([A0:nk A]
-                             nk_note ((not false)) A0 ((not (not false)))
-                               (nk_noti false
-                                  ([p:o] ([A0:nk A] nk_falsee p A0))))) u v p
-                       (nj_nk_impi ((not (not false))) ((not (not false)))
-                          ([A:nj ((not (not false)))]
-                             nj_note ((not false)) A ((not (not false)))
-                               (nj_noti false
-                                  ([p:o] ([A0:nj A] nj_falsee p A0))))
-                          ([A:nk ((not (not false)))]
-                             nk_note ((not false)) A ((not (not false)))
-                               (nk_noti false
-                                  ([p:o] ([A0:nk A] nk_falsee p A0))))
+                  ([A:nj_nk u v]
+                     nj_nk_note
+                       (nj_nk_impi
                           ([u:nj ((not (not false)))]
                              ([v:nk ((not (not false)))]
-                                ([A:nj_nk ((not (not false))) u v]
-                                   nj_nk_note ((not false))
-                                     (nj_noti false
-                                        ([p:o] ([A0:nj A] nj_falsee p A0)))
-                                     (nk_noti false
-                                        ([p:o] ([A0:nk A] nk_falsee p A0))) u
-                                     v ((not (not false)))
-                                     (nj_nk_noti false
-                                        ([A:o] ([A0:nj false] nj_falsee A A0))
-                                        ([A:o] ([A0:nk false] nk_falsee A A0))
+                                ([A:nj_nk u v]
+                                   nj_nk_note
+                                     (nj_nk_noti
                                         ([p:o]
                                            ([u:nj false]
                                               ([v:nk false]
-                                                 ([A:nj_nk false u v]
-                                                    nj_nk_falsee u v p A)))))
-                                     A)))) A)))))
-
+                                                 ([A:nj_nk u v]
+                                                    nj_nk_falsee A))))) A))))
+                       A)))))
+                       
 ANS
 same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm4");
 ############################################
@@ -452,24 +198,18 @@ $ans = <<'ANS';
 
 The answer substitution:
 NJ =
-    nj_noti ((not (not (not false) imp not (not true))))
+    nj_noti
       ([p:o]
          ([A0:nj ((not (not (not false) imp not (not true))))]
-            nj_note ((not (not false) imp not (not true))) A0 p
-              (nj_impi ((not (not false))) ((not (not true)))
+            nj_note A0 p
+              (nj_impi
                  ([A0:nj ((not (not false)))]
-                    nj_noti ((not true))
-                      ([p:o]
-                         ([A0:nj ((not true))] nj_note true A0 p nj_truei))))))
+                    nj_noti
+                      ([p:o] ([A0:nj ((not true))] nj_note A0 p nj_truei))))))
 D =
-    sound_impi false ((not (not false))) kolm_false true ((not (not true)))
-      ([A0:nk false] nk_truei) kolm_true
-      ([A0:nj ((not (not false)))]
-         nj_noti ((not true))
-           ([p:o] ([A0:nj ((not true))] nj_note true A0 p nj_truei)))
+    sound_impi
       ([u:nk false]
-         ([v:nj ((not (not false)))]
-            ([A0:sound false ((not (not false))) u kolm_false v] sound_truei)))
+         ([v:nj ((not (not false)))] ([A0:sound u kolm_false v] sound_truei)))
             
 ANS
 same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm5");
@@ -489,130 +229,42 @@ $ans = <<'ANS';
 
 The answer substitution:
 NK =
-    nk_impi false true
+    nk_impi
       ([A0:nk false]
-         nk_dnotr true
-           (nk_impe ((not (not false))) ((not (not true)))
-              (nk_dnotr ((not (not false) imp not (not true)))
-                 (nk_noti ((not (not (not false) imp not (not true))))
+         nk_dnotr
+           (nk_impe
+              (nk_dnotr
+                 (nk_noti
                     ([p:o]
                        ([A0:nk ((not (not (not false) imp not (not true))))]
-                          nk_note ((not (not false) imp not (not true))) A0 p
-                            (nk_impi ((not (not false))) ((not (not true)))
+                          nk_note A0 p
+                            (nk_impi
                                ([A0:nk ((not (not false)))]
-                                  nk_noti ((not true))
+                                  nk_noti
                                     ([p:o]
                                        ([A0:nk ((not true))]
-                                          nk_note true A0 p nk_truei))))))))
-              (nk_noti ((not false))
-                 ([p:o] ([A0:nk ((not false))] nk_note false A0 p A0)))))
+                                          nk_note A0 p nk_truei))))))))
+              (nk_noti ([p:o] ([A0:nk ((not false))] nk_note A0 p A0)))))
 D =
-    complete1 ((false imp true)) ((not (not (not (not false) imp not (not
-      true)))))
-      (kolm_imp true ((not (not true))) false ((not (not false))) kolm_true
-         kolm_false)
-      ([A:nk ((false imp true))]
-         nk_noti ((not (not (not false) imp not (not true))))
-           ([p:o]
-              ([A0:nk A]
-                 nk_note ((not (not false) imp not (not true))) A0 p
-                   (nk_impi ((not (not false))) ((not (not true)))
-                      ([A0:nk A]
-                         nk_noti ((not true))
-                           ([p:o]
-                              ([A0:nk A]
-                                 nk_note true A0 p
-                                   (nk_impe false true A (nk_dnotr false A0)))))))))
-      ([A:nk ((not (not (not (not false) imp not (not true)))))]
-         nk_impi false true
-           ([A0:nk A]
-              nk_dnotr true
-                (nk_impe ((not (not false))) ((not (not true)))
-                   (nk_dnotr ((not (not false) imp not (not true))) A)
-                   (nk_noti ((not false))
-                      ([p:o] ([A0:nk A] nk_note false A0 p A0))))))
-      (nj_noti ((not (not (not false) imp not (not true))))
-         ([p:o]
-            ([A0:nj ((not (not (not false) imp not (not true))))]
-               nj_note ((not (not false) imp not (not true))) A0 p
-                 (nj_impi ((not (not false))) ((not (not true)))
-                    ([A0:nj ((not (not false)))]
-                       nj_noti ((not true))
-                         ([p:o]
-                            ([A0:nj ((not true))] nj_note true A0 p nj_truei)))))))
-      (nk_noti ((not (not (not false) imp not (not true))))
-         ([p:o]
-            ([A0:nk ((not (not (not false) imp not (not true))))]
-               nk_note ((not (not false) imp not (not true))) A0 p
-                 (nk_impi ((not (not false))) ((not (not true)))
-                    ([A0:nk ((not (not false)))]
-                       nk_noti ((not true))
-                         ([p:o]
-                            ([A0:nk ((not true))] nk_note true A0 p nk_truei)))))))
-      (equiv_imp true ((not (not true))) kolm_true
-         ([A:nk true]
-            nk_noti ((not true)) ([p:o] ([A0:nk A] nk_note true A0 p A)))
-         ([A:nk ((not (not true)))] nk_dnotr true A) false ((not (not
-         false))) kolm_false
-         ([A0:nk false]
-            nk_noti ((not false))
-              ([p:o] ([A0:nk ((not false))] nk_note false A0 p A0)))
-         ([A0:nk ((not (not false)))] nk_dnotr false A0) equiv_true
-         equiv_false)
-      (nj_nk_noti ((not (not (not false) imp not (not true))))
-         ([A:o]
-            ([A0:nj ((not (not (not false) imp not (not true))))]
-               nj_note ((not (not false) imp not (not true))) A0 A
-                 (nj_impi ((not (not false))) ((not (not true)))
-                    ([A0:nj A]
-                       nj_noti ((not true))
-                         ([p:o] ([A0:nj A] nj_note true A0 p nj_truei))))))
-         ([A:o]
-            ([A0:nk ((not (not (not false) imp not (not true))))]
-               nk_note ((not (not false) imp not (not true))) A0 A
-                 (nk_impi ((not (not false))) ((not (not true)))
-                    ([A0:nk A]
-                       nk_noti ((not true))
-                         ([p:o] ([A0:nk A] nk_note true A0 p nk_truei))))))
+    complete1 (equiv_imp equiv_true equiv_false)
+      (nj_nk_noti
          ([p:o]
             ([u:nj ((not (not (not false) imp not (not true))))]
                ([v:nk ((not (not (not false) imp not (not true))))]
-                  ([A:nj_nk ((not (not (not false) imp not (not true)))) u v]
-                     nj_nk_note ((not (not false) imp not (not true)))
-                       (nj_impi ((not (not false))) ((not (not true)))
-                          ([A0:nj A]
-                             nj_noti ((not true))
-                               ([p:o] ([A0:nj A] nj_note true A0 p nj_truei))))
-                       (nk_impi ((not (not false))) ((not (not true)))
-                          ([A0:nk A]
-                             nk_noti ((not true))
-                               ([p:o] ([A0:nk A] nk_note true A0 p nk_truei))))
-                       u v p
-                       (nj_nk_impi ((not (not false))) ((not (not true)))
-                          ([A:nj ((not (not false)))]
-                             nj_noti ((not true))
-                               ([p:o] ([A0:nj A] nj_note true A0 p nj_truei)))
-                          ([A:nk ((not (not false)))]
-                             nk_noti ((not true))
-                               ([p:o] ([A0:nk A] nk_note true A0 p nk_truei)))
+                  ([A:nj_nk u v]
+                     nj_nk_note
+                       (nj_nk_impi
                           ([u:nj ((not (not false)))]
                              ([v:nk ((not (not false)))]
-                                ([A:nj_nk ((not (not false))) u v]
-                                   nj_nk_noti ((not true))
-                                     ([A:o]
-                                        ([A0:nj ((not true))]
-                                           nj_note true A0 A nj_truei))
-                                     ([A:o]
-                                        ([A0:nk ((not true))]
-                                           nk_note true A0 A nk_truei))
+                                ([A:nj_nk u v]
+                                   nj_nk_noti
                                      ([p:o]
                                         ([u:nj ((not true))]
                                            ([v:nk ((not true))]
-                                              ([A:nj_nk ((not true)) u v]
-                                                 nj_nk_note true nj_truei
-                                                   nk_truei u v p nj_nk_truei
-                                                   A)))))))) A)))))
-
+                                              ([A:nj_nk u v]
+                                                 nj_nk_note nj_nk_truei A))))))))
+                       A)))))
+                       
 ANS
 same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm6");
 ############################################
@@ -624,24 +276,19 @@ $ans = <<'ANS';
 
 The answer substitution:
 NJ =
-    nj_noti ((not (not (not false) imp not (not true))))
+    nj_noti
       ([p:o]
          ([A0:nj ((not (not (not false) imp not (not true))))]
-            nj_note ((not (not false) imp not (not true))) A0 p
-              (nj_impi ((not (not false))) ((not (not true)))
+            nj_note A0 p
+              (nj_impi
                  ([A0:nj ((not (not false)))]
-                    nj_note ((not false)) A0 ((not (not true)))
-                      (nj_noti false ([p:o] ([A0:nj false] nj_falsee p A0)))))))
+                    nj_note A0 ((not (not true)))
+                      (nj_noti ([p:o] ([A0:nj false] nj_falsee A0)))))))
 D =
-    sound_impi false ((not (not false))) kolm_false true ((not (not true)))
-      ([A0:nk false] nk_falsee true A0) kolm_true
-      ([A0:nj ((not (not false)))]
-         nj_note ((not false)) A0 ((not (not true)))
-           (nj_noti false ([p:o] ([A0:nj false] nj_falsee p A0))))
+    sound_impi
       ([u:nk false]
          ([v:nj ((not (not false)))]
-            ([A0:sound false ((not (not false))) u kolm_false v]
-               sound_falsee u v true ((not (not true))) kolm_true A0)))
+            ([A0:sound u kolm_false v] sound_falsee A0)))
 
 ANS
 same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm7");
@@ -659,132 +306,43 @@ D:complete (kolm_imp kolm_true kolm_false)
 CODE
 $ans = <<'ANS';
 The answer substitution:
-
 NK =
-    nk_impi false true
+    nk_impi
       ([A0:nk false]
-         nk_dnotr true
-           (nk_impe ((not (not false))) ((not (not true)))
-              (nk_dnotr ((not (not false) imp not (not true)))
-                 (nk_noti ((not (not (not false) imp not (not true))))
+         nk_dnotr
+           (nk_impe
+              (nk_dnotr
+                 (nk_noti
                     ([p:o]
                        ([A0:nk ((not (not (not false) imp not (not true))))]
-                          nk_note ((not (not false) imp not (not true))) A0 p
-                            (nk_impi ((not (not false))) ((not (not true)))
+                          nk_note A0 p
+                            (nk_impi
                                ([A0:nk ((not (not false)))]
-                                  nk_noti ((not true))
+                                  nk_noti
                                     ([p:o]
                                        ([A0:nk ((not true))]
-                                          nk_note true A0 p nk_truei))))))))
-              (nk_noti ((not false))
-                 ([p:o] ([A0:nk ((not false))] nk_note false A0 p A0)))))
+                                          nk_note A0 p nk_truei))))))))
+              (nk_noti ([p:o] ([A0:nk ((not false))] nk_note A0 p A0)))))
 D =
-    complete1 ((false imp true)) ((not (not (not (not false) imp not (not
-      true)))))
-      (kolm_imp true ((not (not true))) false ((not (not false))) kolm_true
-         kolm_false)
-      ([A:nk ((false imp true))]
-         nk_noti ((not (not (not false) imp not (not true))))
-           ([p:o]
-              ([A0:nk A]
-                 nk_note ((not (not false) imp not (not true))) A0 p
-                   (nk_impi ((not (not false))) ((not (not true)))
-                      ([A0:nk A]
-                         nk_noti ((not true))
-                           ([p:o]
-                              ([A0:nk A]
-                                 nk_note true A0 p
-                                   (nk_impe false true A (nk_dnotr false A0)))))))))
-      ([A:nk ((not (not (not (not false) imp not (not true)))))]
-         nk_impi false true
-           ([A0:nk A]
-              nk_dnotr true
-                (nk_impe ((not (not false))) ((not (not true)))
-                   (nk_dnotr ((not (not false) imp not (not true))) A)
-                   (nk_noti ((not false))
-                      ([p:o] ([A0:nk A] nk_note false A0 p A0))))))
-      (nj_noti ((not (not (not false) imp not (not true))))
-         ([p:o]
-            ([A0:nj ((not (not (not false) imp not (not true))))]
-               nj_note ((not (not false) imp not (not true))) A0 p
-                 (nj_impi ((not (not false))) ((not (not true)))
-                    ([A0:nj ((not (not false)))]
-                       nj_noti ((not true))
-                         ([p:o]
-                            ([A0:nj ((not true))] nj_note true A0 p nj_truei)))))))
-      (nk_noti ((not (not (not false) imp not (not true))))
-         ([p:o]
-            ([A0:nk ((not (not (not false) imp not (not true))))]
-               nk_note ((not (not false) imp not (not true))) A0 p
-                 (nk_impi ((not (not false))) ((not (not true)))
-                    ([A0:nk ((not (not false)))]
-                       nk_noti ((not true))
-                         ([p:o]
-                            ([A0:nk ((not true))] nk_note true A0 p nk_truei)))))))
-      (equiv_imp true ((not (not true))) kolm_true
-         ([A:nk true]
-            nk_noti ((not true)) ([p:o] ([A0:nk A] nk_note true A0 p A)))
-         ([A:nk ((not (not true)))] nk_dnotr true A) false ((not (not
-         false))) kolm_false
-         ([A0:nk false]
-            nk_noti ((not false))
-              ([p:o] ([A0:nk ((not false))] nk_note false A0 p A0)))
-         ([A0:nk ((not (not false)))] nk_dnotr false A0) equiv_true
-         equiv_false)
-      (nj_nk_noti ((not (not (not false) imp not (not true))))
-         ([A:o]
-            ([A0:nj ((not (not (not false) imp not (not true))))]
-               nj_note ((not (not false) imp not (not true))) A0 A
-                 (nj_impi ((not (not false))) ((not (not true)))
-                    ([A0:nj A]
-                       nj_noti ((not true))
-                         ([p:o] ([A0:nj A] nj_note true A0 p nj_truei))))))
-         ([A:o]
-            ([A0:nk ((not (not (not false) imp not (not true))))]
-               nk_note ((not (not false) imp not (not true))) A0 A
-                 (nk_impi ((not (not false))) ((not (not true)))
-                    ([A0:nk A]
-                       nk_noti ((not true))
-                         ([p:o] ([A0:nk A] nk_note true A0 p nk_truei))))))
+    complete1 (equiv_imp equiv_true equiv_false)
+      (nj_nk_noti
          ([p:o]
             ([u:nj ((not (not (not false) imp not (not true))))]
                ([v:nk ((not (not (not false) imp not (not true))))]
-                  ([A:nj_nk ((not (not (not false) imp not (not true)))) u v]
-                     nj_nk_note ((not (not false) imp not (not true)))
-                       (nj_impi ((not (not false))) ((not (not true)))
-                          ([A0:nj A]
-                             nj_noti ((not true))
-                               ([p:o] ([A0:nj A] nj_note true A0 p nj_truei))))
-                       (nk_impi ((not (not false))) ((not (not true)))
-                          ([A0:nk A]
-                             nk_noti ((not true))
-                               ([p:o] ([A0:nk A] nk_note true A0 p nk_truei))))
-                       u v p
-                       (nj_nk_impi ((not (not false))) ((not (not true)))
-                          ([A:nj ((not (not false)))]
-                             nj_noti ((not true))
-                               ([p:o] ([A0:nj A] nj_note true A0 p nj_truei)))
-                          ([A:nk ((not (not false)))]
-                             nk_noti ((not true))
-                               ([p:o] ([A0:nk A] nk_note true A0 p nk_truei)))
+                  ([A:nj_nk u v]
+                     nj_nk_note
+                       (nj_nk_impi
                           ([u:nj ((not (not false)))]
                              ([v:nk ((not (not false)))]
-                                ([A:nj_nk ((not (not false))) u v]
-                                   nj_nk_noti ((not true))
-                                     ([A:o]
-                                        ([A0:nj ((not true))]
-                                           nj_note true A0 A nj_truei))
-                                     ([A:o]
-                                        ([A0:nk ((not true))]
-                                           nk_note true A0 A nk_truei))
+                                ([A:nj_nk u v]
+                                   nj_nk_noti
                                      ([p:o]
                                         ([u:nj ((not true))]
                                            ([v:nk ((not true))]
-                                              ([A:nj_nk ((not true)) u v]
-                                                 nj_nk_note true nj_truei
-                                                   nk_truei u v p nj_nk_truei
-                                                   A)))))))) A)))))
-
+                                              ([A:nj_nk u v]
+                                                 nj_nk_note nj_nk_truei A))))))))
+                       A)))))
+                       
 ANS
 same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm8");
 ############################################
@@ -796,171 +354,90 @@ $ans = <<'ANS';
 
 The answer substitution:
 NJ =
-    nj_noti ((not true))
+    nj_noti
       ([p:o]
          ([A0:nj ((not true))]
-            nj_note ((not (not (not true))))
-              (nj_noti ((not (not (not true))))
+            nj_note
+              (nj_noti
                  ([p:o]
                     ([A0:nj ((not (not (not true))))]
-                       nj_note ((not (not (not (not (not true))))))
-                         (nj_noti ((not (not (not (not (not true))))))
+                       nj_note
+                         (nj_noti
                             ([p:o]
                                ([A0:nj ((not (not (not (not (not true))))))]
-                                  nj_note ((not (not (not (not (not (not (not
-                                    true))))))))
-                                    (nj_noti ((not (not (not (not (not (not
-                                       (not true))))))))
+                                  nj_note
+                                    (nj_noti
                                        ([p:o]
                                           ([A0:
                                              nj ((not (not (not (not (not
                                                (not (not true))))))))
                                              ]
-                                             nj_note ((not (not (not (not
-                                               (not (not true))))))) A0 p
-                                               (nj_noti ((not (not (not (not
-                                                  (not true))))))
+                                             nj_note A0 p
+                                               (nj_noti
                                                   ([p:o]
                                                      ([A0:
                                                         nj ((not (not (not
                                                           (not (not
                                                           true))))))
                                                         ]
-                                                        nj_note ((not false))
-                                                          (nj_note ((not (not
-                                                             true)))
-                                                             (nj_noti ((not
-                                                                (not true)))
+                                                        nj_note
+                                                          (nj_note
+                                                             (nj_noti
                                                                 ([p:o]
                                                                    ([A0:
                                                                     nj ((not
                                                                     (not
                                                                     true)))]
                                                                     nj_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))
                                                                     A0 p
                                                                     (nj_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    true))))
                                                                     ([p:o]
                                                                     ([A0:
                                                                     nj ((not
                                                                     (not (not
                                                                     true))))]
                                                                     nj_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
                                                                     A0 p A0))))))
                                                              ((not (not
                                                              false)))
-                                                             (nj_noti ((not
-                                                                true))
+                                                             (nj_noti
                                                                 ([p:o]
                                                                    ([A0:
                                                                     nj ((not
                                                                     true))]
                                                                     nj_note
-                                                                    true A0 p
+                                                                    A0 p
                                                                     nj_truei))))
                                                           p
-                                                          (nj_noti false
+                                                          (nj_noti
                                                              ([p:o]
                                                                 ([A0:
                                                                    nj false]
                                                                    nj_falsee
-                                                                    p A0)))))))))
+                                                                    A0)))))))))
                                     p
-                                    (nj_noti ((not (not (not (not (not (not
-                                       true)))))))
+                                    (nj_noti
                                        ([p:o]
                                           ([A0:
                                              nj ((not (not (not (not (not
                                                (not true)))))))
-                                             ]
-                                             nj_note ((not (not (not (not
-                                               (not true)))))) A0 p A0))))))
-                         p
-                         (nj_noti ((not (not (not (not true)))))
+                                             ] nj_note A0 p A0)))))) p
+                         (nj_noti
                             ([p:o]
                                ([A0:nj ((not (not (not (not true)))))]
-                                  nj_note ((not (not (not true)))) A0 p A0))))))
-              p
-              (nj_noti ((not (not true)))
-                 ([p:o]
-                    ([A0:nj ((not (not true)))] nj_note ((not true)) A0 p A0)))))
+                                  nj_note A0 p A0)))))) p
+              (nj_noti ([p:o] ([A0:nj ((not (not true)))] nj_note A0 p A0)))))
 D =
-    sound_dnotr true ((not true))
-      (nk_noti ((not true))
-         ([p:o] ([A0:nk ((not true))] nk_note true A0 p nk_truei))) kolm_true
-      (nj_noti ((not (not (not (not (not (not (not true))))))))
-         ([p:o]
-            ([A0:nj ((not (not (not (not (not (not (not true))))))))]
-               nj_note ((not (not (not (not (not (not true))))))) A0 p
-                 (nj_noti ((not (not (not (not (not true))))))
-                    ([p:o]
-                       ([A0:nj ((not (not (not (not (not true))))))]
-                          nj_note ((not false))
-                            (nj_note ((not (not true)))
-                               (nj_noti ((not (not true)))
-                                  ([p:o]
-                                     ([A0:nj ((not (not true)))]
-                                        nj_note ((not (not (not (not
-                                          true))))) A0 p
-                                          (nj_noti ((not (not (not true))))
-                                             ([p:o]
-                                                ([A0:
-                                                   nj ((not (not (not
-                                                     true))))
-                                                   ]
-                                                   nj_note ((not (not true)))
-                                                     A0 p A0)))))) ((not (not
-                               false)))
-                               (nj_noti ((not true))
-                                  ([p:o]
-                                     ([A0:nj ((not true))]
-                                        nj_note true A0 p nj_truei)))) p
-                            (nj_noti false
-                               ([p:o] ([A0:nj false] nj_falsee p A0)))))))))
-      (sound_noti ((not true)) ((not (not (not (not (not true))))))
-         (kolm_not true ((not (not true))) kolm_true)
-         ([A0:o] ([A1:nk ((not true))] nk_note true A1 A0 nk_truei))
-         ([A0:o]
-            ([A1:nj ((not (not (not (not (not true))))))]
-               nj_note ((not (not true)))
-                 (nj_noti ((not (not true)))
-                    ([p:o]
-                       ([A0:nj ((not (not true)))]
-                          nj_note ((not (not (not (not true))))) A1 p
-                            (nj_noti ((not (not (not true))))
-                               ([p:o]
-                                  ([A0:nj ((not (not (not true))))]
-                                     nj_note ((not (not true))) A0 p A0))))))
-                 ((not (not A0)))
-                 (nj_noti ((not true))
-                    ([p:o] ([A0:nj ((not true))] nj_note true A0 p nj_truei)))))
+    sound_dnotr
+      (sound_noti
          ([p:o]
             ([u:nk ((not true))]
                ([v:nj ((not (not (not (not (not true))))))]
                   ([kp:kolm p ((not (not p)))]
                      ([A0:existskolm p ((not (not p))) kp]
-                        ([A1:
-                           sound ((not true)) ((not (not (not (not (not
-                             true)))))) u
-                             (kolm_not true ((not (not true))) kolm_true) v
-                           ]
-                           sound_note true ((not (not true))) nk_truei
-                             kolm_true
-                             (nj_noti ((not true))
-                                ([p:o]
-                                   ([A0:nj ((not true))]
-                                      nj_note true A0 p nj_truei))) u v p p
-                             kp sound_truei A1 existskolm_true)))))))
-
+                        ([A1:sound u (kolm_not kolm_true) v]
+                           sound_note sound_truei A1 existskolm_true)))))))
+ 
 ANS
 same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm9");
 ############################################
@@ -1008,1061 +485,102 @@ $ans = <<'ANS';
 
 The answer substitution:
 NK =
-    nk_dnotr true
-      (nk_noti ((not true))
+    nk_dnotr
+      (nk_noti
          ([p:o]
             ([A0:nk ((not true))]
-               nk_note ((not (not (not true))))
-                 (nk_noti ((not (not (not true))))
+               nk_note
+                 (nk_noti
                     ([p:o]
                        ([A0:nk ((not (not (not true))))]
-                          nk_note ((not (not (not (not (not true))))))
-                            (nk_noti ((not (not (not (not (not true))))))
+                          nk_note
+                            (nk_noti
                                ([p:o]
                                   ([A0:
                                      nk ((not (not (not (not (not true))))))]
-                                     nk_note ((not (not (not (not (not (not
-                                       (not true))))))))
-                                       (nk_noti ((not (not (not (not (not
-                                          (not (not true))))))))
+                                     nk_note
+                                       (nk_noti
                                           ([p:o]
                                              ([A0:
                                                 nk ((not (not (not (not (not
                                                   (not (not true))))))))
                                                 ]
-                                                nk_note ((not (not (not (not
-                                                  (not (not true))))))) A0 p
-                                                  (nk_noti ((not (not (not
-                                                     (not (not true))))))
+                                                nk_note A0 p
+                                                  (nk_noti
                                                      ([p:o]
                                                         ([A0:
                                                            nk ((not (not (not
                                                              (not (not
                                                              true))))))
                                                            ]
-                                                           nk_note ((not
-                                                             false))
-                                                             (nk_note ((not
-                                                                (not true)))
+                                                           nk_note
+                                                             (nk_note
                                                                 (nk_noti
-                                                                   ((not (not
-                                                                   true)))
                                                                    ([p:o]
                                                                     ([A0:
                                                                     nk ((not
                                                                     (not
                                                                     true)))]
                                                                     nk_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))
                                                                     A0 p
                                                                     (nk_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    true))))
                                                                     ([p:o]
                                                                     ([A0:
                                                                     nk ((not
                                                                     (not (not
                                                                     true))))]
                                                                     nk_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
                                                                     A0 p A0))))))
                                                                 ((not (not
                                                                 false)))
                                                                 (nk_noti
-                                                                   ((not
-                                                                   true))
                                                                    ([p:o]
                                                                     ([A0:
                                                                     nk ((not
                                                                     true))]
                                                                     nk_note
-                                                                    true A0 p
+                                                                    A0 p
                                                                     nk_truei))))
                                                              p
-                                                             (nk_noti false
+                                                             (nk_noti
                                                                 ([p:o]
                                                                    ([A0:
                                                                     nk false]
                                                                     nk_falsee
-                                                                    p A0)))))))))
+                                                                    A0)))))))))
                                        p
-                                       (nk_noti ((not (not (not (not (not
-                                          (not true)))))))
+                                       (nk_noti
                                           ([p:o]
                                              ([A0:
                                                 nk ((not (not (not (not (not
                                                   (not true)))))))
-                                                ]
-                                                nk_note ((not (not (not (not
-                                                  (not true)))))) A0 p A0))))))
-                            p
-                            (nk_noti ((not (not (not (not true)))))
+                                                ] nk_note A0 p A0)))))) p
+                            (nk_noti
                                ([p:o]
                                   ([A0:nk ((not (not (not (not true)))))]
-                                     nk_note ((not (not (not true)))) A0 p A0))))))
-                 p
-                 (nk_noti ((not (not true)))
-                    ([p:o]
-                       ([A0:nk ((not (not true)))]
-                          nk_note ((not true)) A0 p A0))))))
+                                     nk_note A0 p A0)))))) p
+                 (nk_noti
+                    ([p:o] ([A0:nk ((not (not true)))] nk_note A0 p A0))))))
 D =
-    complete1 true ((not (not true))) kolm_true
-      ([A:nk true]
-         nk_noti ((not true)) ([p:o] ([A0:nk A] nk_note true A0 p A)))
-      ([A:nk ((not (not true)))] nk_dnotr true A)
-      (nj_noti ((not true))
-         ([p:o]
-            ([A0:nj ((not true))]
-               nj_note ((not (not (not true))))
-                 (nj_noti ((not (not (not true))))
-                    ([p:o]
-                       ([A0:nj ((not (not (not true))))]
-                          nj_note ((not (not (not (not (not true))))))
-                            (nj_noti ((not (not (not (not (not true))))))
-                               ([p:o]
-                                  ([A0:
-                                     nj ((not (not (not (not (not true))))))]
-                                     nj_note ((not (not (not (not (not (not
-                                       (not true))))))))
-                                       (nj_noti ((not (not (not (not (not
-                                          (not (not true))))))))
-                                          ([p:o]
-                                             ([A0:
-                                                nj ((not (not (not (not (not
-                                                  (not (not true))))))))
-                                                ]
-                                                nj_note ((not (not (not (not
-                                                  (not (not true))))))) A0 p
-                                                  (nj_noti ((not (not (not
-                                                     (not (not true))))))
-                                                     ([p:o]
-                                                        ([A0:
-                                                           nj ((not (not (not
-                                                             (not (not
-                                                             true))))))
-                                                           ]
-                                                           nj_note ((not
-                                                             false))
-                                                             (nj_note ((not
-                                                                (not true)))
-                                                                (nj_noti
-                                                                   ((not (not
-                                                                   true)))
-                                                                   ([p:o]
-                                                                    ([A0:
-                                                                    nj ((not
-                                                                    (not
-                                                                    true)))]
-                                                                    nj_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))
-                                                                    A0 p
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    true))))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj ((not
-                                                                    (not (not
-                                                                    true))))]
-                                                                    nj_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    A0 p A0))))))
-                                                                ((not (not
-                                                                false)))
-                                                                (nj_noti
-                                                                   ((not
-                                                                   true))
-                                                                   ([p:o]
-                                                                    ([A0:
-                                                                    nj ((not
-                                                                    true))]
-                                                                    nj_note
-                                                                    true A0 p
-                                                                    nj_truei))))
-                                                             p
-                                                             (nj_noti false
-                                                                ([p:o]
-                                                                   ([A0:
-                                                                    nj false]
-                                                                    nj_falsee
-                                                                    p A0)))))))))
-                                       p
-                                       (nj_noti ((not (not (not (not (not
-                                          (not true)))))))
-                                          ([p:o]
-                                             ([A0:
-                                                nj ((not (not (not (not (not
-                                                  (not true)))))))
-                                                ]
-                                                nj_note ((not (not (not (not
-                                                  (not true)))))) A0 p A0))))))
-                            p
-                            (nj_noti ((not (not (not (not true)))))
-                               ([p:o]
-                                  ([A0:nj ((not (not (not (not true)))))]
-                                     nj_note ((not (not (not true)))) A0 p A0))))))
-                 p
-                 (nj_noti ((not (not true)))
-                    ([p:o]
-                       ([A0:nj ((not (not true)))]
-                          nj_note ((not true)) A0 p A0))))))
-      (nk_noti ((not true))
-         ([p:o]
-            ([A0:nk ((not true))]
-               nk_note ((not (not (not true))))
-                 (nk_noti ((not (not (not true))))
-                    ([p:o]
-                       ([A0:nk ((not (not (not true))))]
-                          nk_note ((not (not (not (not (not true))))))
-                            (nk_noti ((not (not (not (not (not true))))))
-                               ([p:o]
-                                  ([A0:
-                                     nk ((not (not (not (not (not true))))))]
-                                     nk_note ((not (not (not (not (not (not
-                                       (not true))))))))
-                                       (nk_noti ((not (not (not (not (not
-                                          (not (not true))))))))
-                                          ([p:o]
-                                             ([A0:
-                                                nk ((not (not (not (not (not
-                                                  (not (not true))))))))
-                                                ]
-                                                nk_note ((not (not (not (not
-                                                  (not (not true))))))) A0 p
-                                                  (nk_noti ((not (not (not
-                                                     (not (not true))))))
-                                                     ([p:o]
-                                                        ([A0:
-                                                           nk ((not (not (not
-                                                             (not (not
-                                                             true))))))
-                                                           ]
-                                                           nk_note ((not
-                                                             false))
-                                                             (nk_note ((not
-                                                                (not true)))
-                                                                (nk_noti
-                                                                   ((not (not
-                                                                   true)))
-                                                                   ([p:o]
-                                                                    ([A0:
-                                                                    nk ((not
-                                                                    (not
-                                                                    true)))]
-                                                                    nk_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))
-                                                                    A0 p
-                                                                    (nk_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    true))))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk ((not
-                                                                    (not (not
-                                                                    true))))]
-                                                                    nk_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    A0 p A0))))))
-                                                                ((not (not
-                                                                false)))
-                                                                (nk_noti
-                                                                   ((not
-                                                                   true))
-                                                                   ([p:o]
-                                                                    ([A0:
-                                                                    nk ((not
-                                                                    true))]
-                                                                    nk_note
-                                                                    true A0 p
-                                                                    nk_truei))))
-                                                             p
-                                                             (nk_noti false
-                                                                ([p:o]
-                                                                   ([A0:
-                                                                    nk false]
-                                                                    nk_falsee
-                                                                    p A0)))))))))
-                                       p
-                                       (nk_noti ((not (not (not (not (not
-                                          (not true)))))))
-                                          ([p:o]
-                                             ([A0:
-                                                nk ((not (not (not (not (not
-                                                  (not true)))))))
-                                                ]
-                                                nk_note ((not (not (not (not
-                                                  (not true)))))) A0 p A0))))))
-                            p
-                            (nk_noti ((not (not (not (not true)))))
-                               ([p:o]
-                                  ([A0:nk ((not (not (not (not true)))))]
-                                     nk_note ((not (not (not true)))) A0 p A0))))))
-                 p
-                 (nk_noti ((not (not true)))
-                    ([p:o]
-                       ([A0:nk ((not (not true)))]
-                          nk_note ((not true)) A0 p A0)))))) equiv_true
-      (nj_nk_noti ((not true))
-         ([A:o]
-            ([A0:nj ((not true))]
-               nj_note ((not (not (not true))))
-                 (nj_noti ((not (not (not true))))
-                    ([p:o]
-                       ([A0:nj A]
-                          nj_note ((not (not (not (not (not true))))))
-                            (nj_noti ((not (not (not (not (not true))))))
-                               ([p:o]
-                                  ([A0:nj A]
-                                     nj_note ((not (not (not (not (not (not
-                                       (not true))))))))
-                                       (nj_noti ((not (not (not (not (not
-                                          (not (not true))))))))
-                                          ([p:o]
-                                             ([A0:nj A]
-                                                nj_note ((not (not (not (not
-                                                  (not (not true))))))) A0 p
-                                                  (nj_noti ((not (not (not
-                                                     (not (not true))))))
-                                                     ([p:o]
-                                                        ([A0:nj A]
-                                                           nj_note ((not
-                                                             false))
-                                                             (nj_note ((not
-                                                                (not true)))
-                                                                (nj_noti
-                                                                   ((not (not
-                                                                   true)))
-                                                                   ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))
-                                                                    A0 p
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    true))))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    A0 p A0))))))
-                                                                ((not (not
-                                                                false)))
-                                                                (nj_noti
-                                                                   ((not
-                                                                   true))
-                                                                   ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_note
-                                                                    true A0 p
-                                                                    nj_truei))))
-                                                             p
-                                                             (nj_noti false
-                                                                ([p:o]
-                                                                   ([A0:
-                                                                    nj A]
-                                                                    nj_falsee
-                                                                    p A0)))))))))
-                                       p
-                                       (nj_noti ((not (not (not (not (not
-                                          (not true)))))))
-                                          ([p:o]
-                                             ([A0:nj A]
-                                                nj_note ((not (not (not (not
-                                                  (not true)))))) A0 p A0))))))
-                            p
-                            (nj_noti ((not (not (not (not true)))))
-                               ([p:o]
-                                  ([A0:nj A]
-                                     nj_note ((not (not (not true)))) A0 p A0))))))
-                 A
-                 (nj_noti ((not (not true)))
-                    ([p:o] ([A0:nj A] nj_note ((not true)) A0 p A0)))))
-         ([A:o]
-            ([A0:nk ((not true))]
-               nk_note ((not (not (not true))))
-                 (nk_noti ((not (not (not true))))
-                    ([p:o]
-                       ([A0:nk A]
-                          nk_note ((not (not (not (not (not true))))))
-                            (nk_noti ((not (not (not (not (not true))))))
-                               ([p:o]
-                                  ([A0:nk A]
-                                     nk_note ((not (not (not (not (not (not
-                                       (not true))))))))
-                                       (nk_noti ((not (not (not (not (not
-                                          (not (not true))))))))
-                                          ([p:o]
-                                             ([A0:nk A]
-                                                nk_note ((not (not (not (not
-                                                  (not (not true))))))) A0 p
-                                                  (nk_noti ((not (not (not
-                                                     (not (not true))))))
-                                                     ([p:o]
-                                                        ([A0:nk A]
-                                                           nk_note ((not
-                                                             false))
-                                                             (nk_note ((not
-                                                                (not true)))
-                                                                (nk_noti
-                                                                   ((not (not
-                                                                   true)))
-                                                                   ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))
-                                                                    A0 p
-                                                                    (nk_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    true))))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    A0 p A0))))))
-                                                                ((not (not
-                                                                false)))
-                                                                (nk_noti
-                                                                   ((not
-                                                                   true))
-                                                                   ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_note
-                                                                    true A0 p
-                                                                    nk_truei))))
-                                                             p
-                                                             (nk_noti false
-                                                                ([p:o]
-                                                                   ([A0:
-                                                                    nk A]
-                                                                    nk_falsee
-                                                                    p A0)))))))))
-                                       p
-                                       (nk_noti ((not (not (not (not (not
-                                          (not true)))))))
-                                          ([p:o]
-                                             ([A0:nk A]
-                                                nk_note ((not (not (not (not
-                                                  (not true)))))) A0 p A0))))))
-                            p
-                            (nk_noti ((not (not (not (not true)))))
-                               ([p:o]
-                                  ([A0:nk A]
-                                     nk_note ((not (not (not true)))) A0 p A0))))))
-                 A
-                 (nk_noti ((not (not true)))
-                    ([p:o] ([A0:nk A] nk_note ((not true)) A0 p A0)))))
+    complete1 equiv_true
+      (nj_nk_noti
          ([p:o]
             ([u:nj ((not true))]
                ([v:nk ((not true))]
-                  ([A:nj_nk ((not true)) u v]
-                     nj_nk_note ((not (not (not true))))
-                       (nj_noti ((not (not true)))
-                          ([p:o] ([A0:nj A] nj_note ((not true)) A0 p u)))
-                       (nk_noti ((not (not true)))
-                          ([p:o] ([A0:nk A] nk_note ((not true)) A0 p v)))
-                       (nj_noti ((not (not (not true))))
-                          ([p:o]
-                             ([A0:nj A]
-                                nj_note ((not (not (not (not (not true))))))
-                                  (nj_noti ((not (not (not (not (not
-                                     true))))))
-                                     ([p:o]
-                                        ([A0:nj A]
-                                           nj_note ((not (not (not (not (not
-                                             (not (not true))))))))
-                                             (nj_noti ((not (not (not (not
-                                                (not (not (not true))))))))
-                                                ([p:o]
-                                                   ([A0:nj A]
-                                                      nj_note ((not (not (not
-                                                        (not (not (not
-                                                        true))))))) A0 p
-                                                        (nj_noti ((not (not
-                                                           (not (not (not
-                                                           true))))))
-                                                           ([p:o]
-                                                              ([A0:nj A]
-                                                                 nj_note
-                                                                   ((not
-                                                                   false))
-                                                                   (nj_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))
-                                                                    A0 p
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    true))))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    A0 p A0))))))
-                                                                    ((not
-                                                                    (not
-                                                                    false)))
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    true))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_note
-                                                                    true A0 p
-                                                                    nj_truei))))
-                                                                   p
-                                                                   (nj_noti
-                                                                    false
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_falsee
-                                                                    p A0)))))))))
-                                             p
-                                             (nj_noti ((not (not (not (not
-                                                (not (not true)))))))
-                                                ([p:o]
-                                                   ([A0:nj A]
-                                                      nj_note ((not (not (not
-                                                        (not (not true))))))
-                                                        A0 p A0)))))) p
-                                  (nj_noti ((not (not (not (not true)))))
-                                     ([p:o]
-                                        ([A0:nj A]
-                                           nj_note ((not (not (not true))))
-                                             A0 p A0))))))
-                       (nk_noti ((not (not (not true))))
-                          ([p:o]
-                             ([A0:nk A]
-                                nk_note ((not (not (not (not (not true))))))
-                                  (nk_noti ((not (not (not (not (not
-                                     true))))))
-                                     ([p:o]
-                                        ([A0:nk A]
-                                           nk_note ((not (not (not (not (not
-                                             (not (not true))))))))
-                                             (nk_noti ((not (not (not (not
-                                                (not (not (not true))))))))
-                                                ([p:o]
-                                                   ([A0:nk A]
-                                                      nk_note ((not (not (not
-                                                        (not (not (not
-                                                        true))))))) A0 p
-                                                        (nk_noti ((not (not
-                                                           (not (not (not
-                                                           true))))))
-                                                           ([p:o]
-                                                              ([A0:nk A]
-                                                                 nk_note
-                                                                   ((not
-                                                                   false))
-                                                                   (nk_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    (nk_noti
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))
-                                                                    A0 p
-                                                                    (nk_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    true))))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    A0 p A0))))))
-                                                                    ((not
-                                                                    (not
-                                                                    false)))
-                                                                    (nk_noti
-                                                                    ((not
-                                                                    true))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_note
-                                                                    true A0 p
-                                                                    nk_truei))))
-                                                                   p
-                                                                   (nk_noti
-                                                                    false
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_falsee
-                                                                    p A0)))))))))
-                                             p
-                                             (nk_noti ((not (not (not (not
-                                                (not (not true)))))))
-                                                ([p:o]
-                                                   ([A0:nk A]
-                                                      nk_note ((not (not (not
-                                                        (not (not true))))))
-                                                        A0 p A0)))))) p
-                                  (nk_noti ((not (not (not (not true)))))
-                                     ([p:o]
-                                        ([A0:nk A]
-                                           nk_note ((not (not (not true))))
-                                             A0 p A0)))))) p
-                       (nj_nk_noti ((not (not true)))
-                          ([A:o]
-                             ([A0:nj ((not (not true)))]
-                                nj_note ((not true)) A0 A u))
-                          ([A:o]
-                             ([A0:nk ((not (not true)))]
-                                nk_note ((not true)) A0 A v))
+                  ([A:nj_nk u v]
+                     nj_nk_note
+                       (nj_nk_noti
                           ([p:o]
                              ([u:nj ((not (not true)))]
                                 ([v:nk ((not (not true)))]
-                                   ([A:nj_nk ((not (not true))) u v]
-                                      nj_nk_note ((not true)) u v u v p A A)))))
-                       (nj_nk_noti ((not (not (not true))))
-                          ([A:o]
-                             ([A0:nj ((not (not (not true))))]
-                                nj_note ((not (not (not (not (not true))))))
-                                  (nj_noti ((not (not (not (not (not
-                                     true))))))
-                                     ([p:o]
-                                        ([A0:nj A]
-                                           nj_note ((not (not (not (not (not
-                                             (not (not true))))))))
-                                             (nj_noti ((not (not (not (not
-                                                (not (not (not true))))))))
-                                                ([p:o]
-                                                   ([A0:nj A]
-                                                      nj_note ((not (not (not
-                                                        (not (not (not
-                                                        true))))))) A0 p
-                                                        (nj_noti ((not (not
-                                                           (not (not (not
-                                                           true))))))
-                                                           ([p:o]
-                                                              ([A0:nj A]
-                                                                 nj_note
-                                                                   ((not
-                                                                   false))
-                                                                   (nj_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))
-                                                                    A0 p
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    true))))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    A0 p A0))))))
-                                                                    ((not
-                                                                    (not
-                                                                    false)))
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    true))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_note
-                                                                    true A0 p
-                                                                    nj_truei))))
-                                                                   p
-                                                                   (nj_noti
-                                                                    false
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_falsee
-                                                                    p A0)))))))))
-                                             p
-                                             (nj_noti ((not (not (not (not
-                                                (not (not true)))))))
-                                                ([p:o]
-                                                   ([A0:nj A]
-                                                      nj_note ((not (not (not
-                                                        (not (not true))))))
-                                                        A0 p A0)))))) A
-                                  (nj_noti ((not (not (not (not true)))))
-                                     ([p:o]
-                                        ([A0:nj A]
-                                           nj_note ((not (not (not true))))
-                                             A0 p A0)))))
-                          ([A:o]
-                             ([A0:nk ((not (not (not true))))]
-                                nk_note ((not (not (not (not (not true))))))
-                                  (nk_noti ((not (not (not (not (not
-                                     true))))))
-                                     ([p:o]
-                                        ([A0:nk A]
-                                           nk_note ((not (not (not (not (not
-                                             (not (not true))))))))
-                                             (nk_noti ((not (not (not (not
-                                                (not (not (not true))))))))
-                                                ([p:o]
-                                                   ([A0:nk A]
-                                                      nk_note ((not (not (not
-                                                        (not (not (not
-                                                        true))))))) A0 p
-                                                        (nk_noti ((not (not
-                                                           (not (not (not
-                                                           true))))))
-                                                           ([p:o]
-                                                              ([A0:nk A]
-                                                                 nk_note
-                                                                   ((not
-                                                                   false))
-                                                                   (nk_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    (nk_noti
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))
-                                                                    A0 p
-                                                                    (nk_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    true))))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    A0 p A0))))))
-                                                                    ((not
-                                                                    (not
-                                                                    false)))
-                                                                    (nk_noti
-                                                                    ((not
-                                                                    true))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_note
-                                                                    true A0 p
-                                                                    nk_truei))))
-                                                                   p
-                                                                   (nk_noti
-                                                                    false
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_falsee
-                                                                    p A0)))))))))
-                                             p
-                                             (nk_noti ((not (not (not (not
-                                                (not (not true)))))))
-                                                ([p:o]
-                                                   ([A0:nk A]
-                                                      nk_note ((not (not (not
-                                                        (not (not true))))))
-                                                        A0 p A0)))))) A
-                                  (nk_noti ((not (not (not (not true)))))
-                                     ([p:o]
-                                        ([A0:nk A]
-                                           nk_note ((not (not (not true))))
-                                             A0 p A0)))))
+                                   ([A:nj_nk u v] nj_nk_note A A)))))
+                       (nj_nk_noti
                           ([p:o]
                              ([u:nj ((not (not (not true))))]
                                 ([v:nk ((not (not (not true))))]
-                                   ([A:nj_nk ((not (not (not true)))) u v]
-                                      nj_nk_note ((not (not (not (not (not
-                                        true))))))
-                                        (nj_noti ((not (not (not (not
-                                           true)))))
-                                           ([p:o]
-                                              ([A0:nj A]
-                                                 nj_note ((not (not (not
-                                                   true)))) A0 p u)))
-                                        (nk_noti ((not (not (not (not
-                                           true)))))
-                                           ([p:o]
-                                              ([A0:nk A]
-                                                 nk_note ((not (not (not
-                                                   true)))) A0 p v)))
-                                        (nj_noti ((not (not (not (not (not
-                                           true))))))
-                                           ([p:o]
-                                              ([A0:nj A]
-                                                 nj_note ((not (not (not (not
-                                                   (not (not (not
-                                                   true))))))))
-                                                   (nj_noti ((not (not (not
-                                                      (not (not (not (not
-                                                      true))))))))
-                                                      ([p:o]
-                                                         ([A0:nj A]
-                                                            nj_note ((not
-                                                              (not (not (not
-                                                              (not (not
-                                                              true))))))) A0
-                                                              p
-                                                              (nj_noti ((not
-                                                                 (not (not
-                                                                 (not (not
-                                                                 true))))))
-                                                                 ([p:o]
-                                                                    (
-                                                                    [A0:
-                                                                    nj A]
-                                                                    nj_note
-                                                                    ((not
-                                                                    false))
-                                                                    (nj_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))
-                                                                    A0 p
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    true))))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    A0 p A0))))))
-                                                                    ((not
-                                                                    (not
-                                                                    false)))
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    true))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_note
-                                                                    true A0 p
-                                                                    nj_truei))))
-                                                                    p
-                                                                    (nj_noti
-                                                                    false
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_falsee
-                                                                    p A0)))))))))
-                                                   p
-                                                   (nj_noti ((not (not (not
-                                                      (not (not (not
-                                                      true)))))))
-                                                      ([p:o]
-                                                         ([A0:nj A]
-                                                            nj_note ((not
-                                                              (not (not (not
-                                                              (not true))))))
-                                                              A0 p A0))))))
-                                        (nk_noti ((not (not (not (not (not
-                                           true))))))
-                                           ([p:o]
-                                              ([A0:nk A]
-                                                 nk_note ((not (not (not (not
-                                                   (not (not (not
-                                                   true))))))))
-                                                   (nk_noti ((not (not (not
-                                                      (not (not (not (not
-                                                      true))))))))
-                                                      ([p:o]
-                                                         ([A0:nk A]
-                                                            nk_note ((not
-                                                              (not (not (not
-                                                              (not (not
-                                                              true))))))) A0
-                                                              p
-                                                              (nk_noti ((not
-                                                                 (not (not
-                                                                 (not (not
-                                                                 true))))))
-                                                                 ([p:o]
-                                                                    (
-                                                                    [A0:
-                                                                    nk A]
-                                                                    nk_note
-                                                                    ((not
-                                                                    false))
-                                                                    (nk_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    (nk_noti
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))
-                                                                    A0 p
-                                                                    (nk_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    true))))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    A0 p A0))))))
-                                                                    ((not
-                                                                    (not
-                                                                    false)))
-                                                                    (nk_noti
-                                                                    ((not
-                                                                    true))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_note
-                                                                    true A0 p
-                                                                    nk_truei))))
-                                                                    p
-                                                                    (nk_noti
-                                                                    false
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_falsee
-                                                                    p A0)))))))))
-                                                   p
-                                                   (nk_noti ((not (not (not
-                                                      (not (not (not
-                                                      true)))))))
-                                                      ([p:o]
-                                                         ([A0:nk A]
-                                                            nk_note ((not
-                                                              (not (not (not
-                                                              (not true))))))
-                                                              A0 p A0)))))) p
-                                        (nj_nk_noti ((not (not (not (not
-                                           true)))))
-                                           ([A:o]
-                                              ([A0:
-                                                 nj ((not (not (not (not
-                                                   true)))))
-                                                 ]
-                                                 nj_note ((not (not (not
-                                                   true)))) A0 A u))
-                                           ([A:o]
-                                              ([A0:
-                                                 nk ((not (not (not (not
-                                                   true)))))
-                                                 ]
-                                                 nk_note ((not (not (not
-                                                   true)))) A0 A v))
+                                   ([A:nj_nk u v]
+                                      nj_nk_note
+                                        (nj_nk_noti
                                            ([p:o]
                                               ([u:
                                                  nj ((not (not (not (not
@@ -2072,191 +590,9 @@ D =
                                                     nk ((not (not (not (not
                                                       true)))))
                                                     ]
-                                                    ([A:
-                                                       nj_nk ((not (not (not
-                                                         (not true))))) u v
-                                                       ]
-                                                       nj_nk_note ((not (not
-                                                         (not true)))) u v u
-                                                         v p A A)))))
-                                        (nj_nk_noti ((not (not (not (not (not
-                                           true))))))
-                                           ([A:o]
-                                              ([A0:
-                                                 nj ((not (not (not (not (not
-                                                   true))))))
-                                                 ]
-                                                 nj_note ((not (not (not (not
-                                                   (not (not (not
-                                                   true))))))))
-                                                   (nj_noti ((not (not (not
-                                                      (not (not (not (not
-                                                      true))))))))
-                                                      ([p:o]
-                                                         ([A0:nj A]
-                                                            nj_note ((not
-                                                              (not (not (not
-                                                              (not (not
-                                                              true))))))) A0
-                                                              p
-                                                              (nj_noti ((not
-                                                                 (not (not
-                                                                 (not (not
-                                                                 true))))))
-                                                                 ([p:o]
-                                                                    (
-                                                                    [A0:
-                                                                    nj A]
-                                                                    nj_note
-                                                                    ((not
-                                                                    false))
-                                                                    (nj_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))
-                                                                    A0 p
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    true))))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    A0 p A0))))))
-                                                                    ((not
-                                                                    (not
-                                                                    false)))
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    true))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_note
-                                                                    true A0 p
-                                                                    nj_truei))))
-                                                                    p
-                                                                    (nj_noti
-                                                                    false
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_falsee
-                                                                    p A0)))))))))
-                                                   A
-                                                   (nj_noti ((not (not (not
-                                                      (not (not (not
-                                                      true)))))))
-                                                      ([p:o]
-                                                         ([A0:nj A]
-                                                            nj_note ((not
-                                                              (not (not (not
-                                                              (not true))))))
-                                                              A0 p A0)))))
-                                           ([A:o]
-                                              ([A0:
-                                                 nk ((not (not (not (not (not
-                                                   true))))))
-                                                 ]
-                                                 nk_note ((not (not (not (not
-                                                   (not (not (not
-                                                   true))))))))
-                                                   (nk_noti ((not (not (not
-                                                      (not (not (not (not
-                                                      true))))))))
-                                                      ([p:o]
-                                                         ([A0:nk A]
-                                                            nk_note ((not
-                                                              (not (not (not
-                                                              (not (not
-                                                              true))))))) A0
-                                                              p
-                                                              (nk_noti ((not
-                                                                 (not (not
-                                                                 (not (not
-                                                                 true))))))
-                                                                 ([p:o]
-                                                                    (
-                                                                    [A0:
-                                                                    nk A]
-                                                                    nk_note
-                                                                    ((not
-                                                                    false))
-                                                                    (nk_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    (nk_noti
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))
-                                                                    A0 p
-                                                                    (nk_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    true))))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    A0 p A0))))))
-                                                                    ((not
-                                                                    (not
-                                                                    false)))
-                                                                    (nk_noti
-                                                                    ((not
-                                                                    true))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_note
-                                                                    true A0 p
-                                                                    nk_truei))))
-                                                                    p
-                                                                    (nk_noti
-                                                                    false
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_falsee
-                                                                    p A0)))))))))
-                                                   A
-                                                   (nk_noti ((not (not (not
-                                                      (not (not (not
-                                                      true)))))))
-                                                      ([p:o]
-                                                         ([A0:nk A]
-                                                            nk_note ((not
-                                                              (not (not (not
-                                                              (not true))))))
-                                                              A0 p A0)))))
+                                                    ([A:nj_nk u v]
+                                                       nj_nk_note A A)))))
+                                        (nj_nk_noti
                                            ([p:o]
                                               ([u:
                                                  nj ((not (not (not (not (not
@@ -2266,217 +602,9 @@ D =
                                                     nk ((not (not (not (not
                                                       (not true))))))
                                                     ]
-                                                    ([A:
-                                                       nj_nk ((not (not (not
-                                                         (not (not true))))))
-                                                         u v
-                                                       ]
-                                                       nj_nk_note ((not (not
-                                                         (not (not (not (not
-                                                         (not true))))))))
-                                                         (nj_noti ((not (not
-                                                            (not (not (not
-                                                            (not true)))))))
-                                                            ([p:o]
-                                                               ([A0:nj A]
-                                                                  nj_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    true))))))
-                                                                    A0 p u)))
-                                                         (nk_noti ((not (not
-                                                            (not (not (not
-                                                            (not true)))))))
-                                                            ([p:o]
-                                                               ([A0:nk A]
-                                                                  nk_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    true))))))
-                                                                    A0 p v)))
-                                                         (nj_noti ((not (not
-                                                            (not (not (not
-                                                            (not (not
-                                                            true))))))))
-                                                            ([p:o]
-                                                               ([A0:nj A]
-                                                                  nj_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))))
-                                                                    A0 p
-                                                                    (
-                                                                    nj_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    true))))))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_note
-                                                                    ((not
-                                                                    false))
-                                                                    (nj_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))
-                                                                    A0 p
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    true))))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    A0 p A0))))))
-                                                                    ((not
-                                                                    (not
-                                                                    false)))
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    true))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_note
-                                                                    true A0 p
-                                                                    nj_truei))))
-                                                                    p
-                                                                    (nj_noti
-                                                                    false
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_falsee
-                                                                    p A0)))))))))
-                                                         (nk_noti ((not (not
-                                                            (not (not (not
-                                                            (not (not
-                                                            true))))))))
-                                                            ([p:o]
-                                                               ([A0:nk A]
-                                                                  nk_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))))
-                                                                    A0 p
-                                                                    (
-                                                                    nk_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    true))))))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_note
-                                                                    ((not
-                                                                    false))
-                                                                    (nk_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    (nk_noti
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))
-                                                                    A0 p
-                                                                    (nk_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    true))))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    A0 p A0))))))
-                                                                    ((not
-                                                                    (not
-                                                                    false)))
-                                                                    (nk_noti
-                                                                    ((not
-                                                                    true))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_note
-                                                                    true A0 p
-                                                                    nk_truei))))
-                                                                    p
-                                                                    (nk_noti
-                                                                    false
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_falsee
-                                                                    p A0)))))))))
-                                                         p
-                                                         (nj_nk_noti ((not
-                                                            (not (not (not
-                                                            (not (not
-                                                            true)))))))
-                                                            ([A:o]
-                                                               ([A0:
-                                                                  nj ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))))
-                                                                  ]
-                                                                  nj_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    true))))))
-                                                                    A0 A u))
-                                                            ([A:o]
-                                                               ([A0:
-                                                                  nk ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))))
-                                                                  ]
-                                                                  nk_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    true))))))
-                                                                    A0 A v))
+                                                    ([A:nj_nk u v]
+                                                       nj_nk_note
+                                                         (nj_nk_noti
                                                             ([p:o]
                                                                ([u:
                                                                   nj ((not
@@ -2493,176 +621,11 @@ D =
                                                                     true)))))))
                                                                     ]
                                                                     ([A:
-                                                                    nj_nk
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))))
-                                                                    u v]
+                                                                    nj_nk u v
+                                                                    ]
                                                                     nj_nk_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    true))))))
-                                                                    u v u v p
                                                                     A A)))))
-                                                         (nj_nk_noti ((not
-                                                            (not (not (not
-                                                            (not (not (not
-                                                            true))))))))
-                                                            ([A:o]
-                                                               ([A0:
-                                                                  nj ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    true))))))))
-                                                                  ]
-                                                                  nj_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))))
-                                                                    A0 A
-                                                                    (
-                                                                    nj_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    true))))))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_note
-                                                                    ((not
-                                                                    false))
-                                                                    (nj_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))
-                                                                    A0 p
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    true))))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    A0 p A0))))))
-                                                                    ((not
-                                                                    (not
-                                                                    false)))
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    true))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_note
-                                                                    true A0 p
-                                                                    nj_truei))))
-                                                                    p
-                                                                    (nj_noti
-                                                                    false
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_falsee
-                                                                    p A0))))))))
-                                                            ([A:o]
-                                                               ([A0:
-                                                                  nk ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    true))))))))
-                                                                  ]
-                                                                  nk_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))))
-                                                                    A0 A
-                                                                    (
-                                                                    nk_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    true))))))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_note
-                                                                    ((not
-                                                                    false))
-                                                                    (nk_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    (nk_noti
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))
-                                                                    A0 p
-                                                                    (nk_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    true))))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    A0 p A0))))))
-                                                                    ((not
-                                                                    (not
-                                                                    false)))
-                                                                    (nk_noti
-                                                                    ((not
-                                                                    true))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_note
-                                                                    true A0 p
-                                                                    nk_truei))))
-                                                                    p
-                                                                    (nk_noti
-                                                                    false
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_falsee
-                                                                    p A0))))))))
+                                                         (nj_nk_noti
                                                             ([p:o]
                                                                ([u:
                                                                   nj ((not
@@ -2679,263 +642,10 @@ D =
                                                                     true))))))))
                                                                     ]
                                                                     ([A:
-                                                                    nj_nk
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    true))))))))
-                                                                    u v]
+                                                                    nj_nk u v
+                                                                    ]
                                                                     nj_nk_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))))
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    true))))))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_note
-                                                                    ((not
-                                                                    false))
-                                                                    (nj_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))
-                                                                    A0 p
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    true))))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    A0 p A0))))))
-                                                                    ((not
-                                                                    (not
-                                                                    false)))
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    true))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_note
-                                                                    true A0 p
-                                                                    nj_truei))))
-                                                                    p
-                                                                    (nj_noti
-                                                                    false
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_falsee
-                                                                    p A0))))))
-                                                                    (nk_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    true))))))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_note
-                                                                    ((not
-                                                                    false))
-                                                                    (nk_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    (nk_noti
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))
-                                                                    A0 p
-                                                                    (nk_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    true))))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    A0 p A0))))))
-                                                                    ((not
-                                                                    (not
-                                                                    false)))
-                                                                    (nk_noti
-                                                                    ((not
-                                                                    true))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_note
-                                                                    true A0 p
-                                                                    nk_truei))))
-                                                                    p
-                                                                    (nk_noti
-                                                                    false
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_falsee
-                                                                    p A0))))))
-                                                                    u v p
                                                                     (nj_nk_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    true))))))
-                                                                    ([A:o]
-                                                                    ([A0:
-                                                                    nj ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    true))))))
-                                                                    ]
-                                                                    nj_note
-                                                                    ((not
-                                                                    false))
-                                                                    (nj_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))
-                                                                    A0 p
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    true))))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    A0 p A0))))))
-                                                                    ((not
-                                                                    (not
-                                                                    false)))
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    true))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_note
-                                                                    true A0 p
-                                                                    nj_truei))))
-                                                                    A
-                                                                    (nj_noti
-                                                                    false
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_falsee
-                                                                    p A0)))))
-                                                                    ([A:o]
-                                                                    ([A0:
-                                                                    nk ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    true))))))
-                                                                    ]
-                                                                    nk_note
-                                                                    ((not
-                                                                    false))
-                                                                    (nk_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    (nk_noti
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))
-                                                                    A0 p
-                                                                    (nk_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    true))))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    A0 p A0))))))
-                                                                    ((not
-                                                                    (not
-                                                                    false)))
-                                                                    (nk_noti
-                                                                    ((not
-                                                                    true))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_note
-                                                                    true A0 p
-                                                                    nk_truei))))
-                                                                    A
-                                                                    (nk_noti
-                                                                    false
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_falsee
-                                                                    p A0)))))
                                                                     ([p:o]
                                                                     ([u:
                                                                     nj ((not
@@ -2950,227 +660,22 @@ D =
                                                                     true))))))
                                                                     ]
                                                                     ([A:
-                                                                    nj_nk
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    true))))))
-                                                                    u v]
+                                                                    nj_nk u v
+                                                                    ]
                                                                     nj_nk_note
-                                                                    ((not
-                                                                    false))
-                                                                    (nj_noti
-                                                                    false
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_falsee
-                                                                    p A0)))
-                                                                    (nk_noti
-                                                                    false
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_falsee
-                                                                    p A0)))
-                                                                    (nj_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))
-                                                                    u p
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    true))))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    A0 p A0))))))
-                                                                    ((not
-                                                                    (not
-                                                                    false)))
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    true))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_note
-                                                                    true A0 p
-                                                                    nj_truei))))
-                                                                    (nk_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    (nk_noti
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))
-                                                                    v p
-                                                                    (nk_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    true))))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    A0 p A0))))))
-                                                                    ((not
-                                                                    (not
-                                                                    false)))
-                                                                    (nk_noti
-                                                                    ((not
-                                                                    true))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_note
-                                                                    true A0 p
-                                                                    nk_truei))))
-                                                                    p
                                                                     (nj_nk_noti
-                                                                    false
-                                                                    ([A:o]
-                                                                    ([A0:
-                                                                    nj false]
-                                                                    nj_falsee
-                                                                    A A0))
-                                                                    ([A:o]
-                                                                    ([A0:
-                                                                    nk false]
-                                                                    nk_falsee
-                                                                    A A0))
                                                                     ([p:o]
                                                                     ([u:
                                                                     nj false]
                                                                     ([v:
                                                                     nk false]
                                                                     ([A:
-                                                                    nj_nk
-                                                                    false u v
+                                                                    nj_nk u v
                                                                     ]
                                                                     nj_nk_falsee
-                                                                    u v p A)))))
+                                                                    A)))))
                                                                     (nj_nk_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    true))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_note
-                                                                    true A0 p
-                                                                    nj_truei)))
-                                                                    (nk_noti
-                                                                    ((not
-                                                                    true))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_note
-                                                                    true A0 p
-                                                                    nk_truei)))
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))
-                                                                    u p
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    true))))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    A0 p A0))))))
-                                                                    (nk_noti
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))
-                                                                    v p
-                                                                    (nk_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    true))))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    A0 p A0))))))
-                                                                    ((not
-                                                                    (not
-                                                                    false)))
                                                                     (nj_nk_noti
-                                                                    ((not
-                                                                    true))
-                                                                    ([A:o]
-                                                                    ([A0:
-                                                                    nj ((not
-                                                                    true))]
-                                                                    nj_note
-                                                                    true A0 A
-                                                                    nj_truei))
-                                                                    ([A:o]
-                                                                    ([A0:
-                                                                    nk ((not
-                                                                    true))]
-                                                                    nk_note
-                                                                    true A0 A
-                                                                    nk_truei))
                                                                     ([p:o]
                                                                     ([u:
                                                                     nj ((not
@@ -3179,67 +684,12 @@ D =
                                                                     nk ((not
                                                                     true))]
                                                                     ([A:
-                                                                    nj_nk
-                                                                    ((not
-                                                                    true)) u
-                                                                    v]
+                                                                    nj_nk u v
+                                                                    ]
                                                                     nj_nk_note
-                                                                    true
-                                                                    nj_truei
-                                                                    nk_truei
-                                                                    u v p
                                                                     nj_nk_truei
                                                                     A)))))
                                                                     (nj_nk_noti
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    ([A:o]
-                                                                    ([A0:
-                                                                    nj ((not
-                                                                    (not
-                                                                    true)))]
-                                                                    nj_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))
-                                                                    u A
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    true))))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    A0 p A0)))))
-                                                                    ([A:o]
-                                                                    ([A0:
-                                                                    nk ((not
-                                                                    (not
-                                                                    true)))]
-                                                                    nk_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))
-                                                                    v A
-                                                                    (nk_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    true))))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    A0 p A0)))))
                                                                     ([p:o]
                                                                     ([u:
                                                                     nj ((not
@@ -3250,65 +700,10 @@ D =
                                                                     (not
                                                                     true)))]
                                                                     ([A:
-                                                                    nj_nk
-                                                                    ((not
-                                                                    (not
-                                                                    true))) u
-                                                                    v]
+                                                                    nj_nk u v
+                                                                    ]
                                                                     nj_nk_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    true))))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj A]
-                                                                    nj_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    A0 p u)))
-                                                                    (nk_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    true))))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nk A]
-                                                                    nk_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    A0 p v)))
-                                                                    u v p
                                                                     (nj_nk_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    true))))
-                                                                    ([A:o]
-                                                                    ([A0:
-                                                                    nj ((not
-                                                                    (not (not
-                                                                    true))))]
-                                                                    nj_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    A0 A u))
-                                                                    ([A:o]
-                                                                    ([A0:
-                                                                    nk ((not
-                                                                    (not (not
-                                                                    true))))]
-                                                                    nk_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    A0 A v))
                                                                     ([p:o]
                                                                     ([u:
                                                                     nj ((not
@@ -3319,17 +714,11 @@ D =
                                                                     (not (not
                                                                     true))))]
                                                                     ([A:
-                                                                    nj_nk
-                                                                    ((not
-                                                                    (not (not
-                                                                    true))))
-                                                                    u v]
+                                                                    nj_nk u v
+                                                                    ]
                                                                     nj_nk_note
-                                                                    ((not
-                                                                    (not
-                                                                    true))) u
-                                                                    v u v p A
-                                                                    A))))) A)))))))))))
+                                                                    A A)))))
+                                                                    A)))))))))))
                                                                     A))))))))))))))))))))
 
 ANS
@@ -3354,27 +743,19 @@ $ans = <<'ANS';
 
 The answer substitution:
 NJ =
-    nj_noti ((not (not (not (not (not true) or not (not false))) and not (not
-      (not (not (not false)))))))
+    nj_noti
       ([p:o]
          ([A0:
             nj ((not (not (not (not (not true) or not (not false))) and not
               (not (not (not (not false)))))))
             ]
-            nj_note ((not (not (not (not true) or not (not false))) and not
-              (not (not (not (not false)))))) A0 p
-              (nj_andi ((not (not (not (not true) or not (not false)))))
-                 ((not (not (not (not (not false))))))
-                 (nj_noti ((not (not (not true) or not (not false))))
+            nj_note A0 p
+              (nj_andi
+                 (nj_noti
                     ([p:o]
                        ([A0:nj ((not (not (not true) or not (not false))))]
-                          nj_note ((not (not (not (not (not (not (not true)
-                            or not (not false))) and not (not false))) or not
-                            (not (not (not true) and not (not true))))))
-                            (nj_noti ((not (not (not (not (not (not (not
-                               true) or not (not false))) and not (not
-                               false))) or not (not (not (not true) and not
-                               (not true))))))
+                          nj_note
+                            (nj_noti
                                ([p:o]
                                   ([A0:
                                      nj ((not (not (not (not (not (not (not
@@ -3382,16 +763,8 @@ NJ =
                                        (not false))) or not (not (not (not
                                        true) and not (not true))))))
                                      ]
-                                     nj_note ((not (not (not true) imp not
-                                       (not (not (not (not (not (not (not
-                                       true) or not (not false))) and not
-                                       (not false))) or not (not (not (not
-                                       true) and not (not true))))))))
-                                       (nj_noti ((not (not (not true) imp not
-                                          (not (not (not (not (not (not (not
-                                          true) or not (not false))) and not
-                                          (not false))) or not (not (not (not
-                                          true) and not (not true))))))))
+                                     nj_note
+                                       (nj_noti
                                           ([p:o]
                                              ([A0:
                                                 nj ((not (not (not true) imp
@@ -3402,32 +775,12 @@ NJ =
                                                   (not true) and not (not
                                                   true))))))))
                                                 ]
-                                                nj_note ((not (not true) imp
-                                                  not (not (not (not (not
-                                                  (not (not (not true) or not
-                                                  (not false))) and not (not
-                                                  false))) or not (not (not
-                                                  (not true) and not (not
-                                                  true))))))) A0 p
-                                                  (nj_impi ((not (not true)))
-                                                     ((not (not (not (not
-                                                     (not (not (not (not
-                                                     true) or not (not
-                                                     false))) and not (not
-                                                     false))) or not (not
-                                                     (not (not true) and not
-                                                     (not true)))))))
+                                                nj_note A0 p
+                                                  (nj_impi
                                                      ([A0:
                                                         nj ((not (not true)))
                                                         ]
-                                                        nj_noti ((not (not
-                                                          (not (not (not (not
-                                                          (not true) or not
-                                                          (not false))) and
-                                                          not (not false)))
-                                                          or not (not (not
-                                                          (not true) and not
-                                                          (not true))))))
+                                                        nj_noti
                                                           ([p:o]
                                                              ([A0:
                                                                 nj ((not (not
@@ -3445,44 +798,9 @@ NJ =
                                                                   not (not
                                                                   true))))))
                                                                 ]
-                                                                nj_note ((not
-                                                                  (not (not
-                                                                  (not (not
-                                                                  (not true)
-                                                                  or not (not
-                                                                  false)))
-                                                                  and not
-                                                                  (not
-                                                                  false))) or
-                                                                  not (not
-                                                                  (not (not
-                                                                  true) and
-                                                                  not (not
-                                                                  true)))))
-                                                                  A0 p
+                                                                nj_note A0 p
                                                                   (nj_orir
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not
-                                                                    true) and
-                                                                    not (not
-                                                                    true)))))
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    (not
-                                                                    true) or
-                                                                    not (not
-                                                                    false)))
-                                                                    and not
-                                                                    (not
-                                                                    false)))))
                                                                     (nj_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    true) and
-                                                                    not (not
-                                                                    true))))
                                                                     ([p:o]
                                                                     ([A0:
                                                                     nj ((not
@@ -3491,36 +809,19 @@ NJ =
                                                                     not (not
                                                                     true))))]
                                                                     nj_note
-                                                                    ((not
-                                                                    (not
-                                                                    true) and
-                                                                    not (not
-                                                                    true)))
                                                                     A0 p
                                                                     (nj_andi
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
                                                                     (nj_noti
-                                                                    ((not
-                                                                    true))
                                                                     ([p:o]
                                                                     ([A0:
                                                                     nj ((not
                                                                     true))]
                                                                     nj_note
-                                                                    true A0 p
+                                                                    A0 p
                                                                     nj_truei)))
                                                                     A0))))))))))))
                                        p
-                                       (nj_noti ((not (not true) imp not (not
-                                          (not (not (not (not (not (not true)
-                                          or not (not false))) and not (not
-                                          false))) or not (not (not (not
-                                          true) and not (not true)))))))
+                                       (nj_noti
                                           ([p:o]
                                              ([A0:
                                                 nj ((not (not true) imp not
@@ -3531,47 +832,22 @@ NJ =
                                                   (not true) and not (not
                                                   true)))))))
                                                 ]
-                                                nj_note ((not (not (not (not
-                                                  (not (not (not true) or not
-                                                  (not false))) and not (not
-                                                  false))) or not (not (not
-                                                  (not true) and not (not
-                                                  true))))))
-                                                  (nj_impe ((not (not true)))
-                                                     ((not (not (not (not
-                                                     (not (not (not (not
-                                                     true) or not (not
-                                                     false))) and not (not
-                                                     false))) or not (not
-                                                     (not (not true) and not
-                                                     (not true))))))) A0
-                                                     (nj_noti ((not true))
+                                                nj_note
+                                                  (nj_impe A0
+                                                     (nj_noti
                                                         ([p:o]
                                                            ([A0:
                                                               nj ((not true))
                                                               ]
-                                                              nj_note ((not
-                                                                (not (not
-                                                                true))))
+                                                              nj_note
                                                                 (nj_noti
-                                                                   ((not (not
-                                                                   (not
-                                                                   true))))
                                                                    ([p:o]
                                                                     ([A0:
                                                                     nj ((not
                                                                     (not (not
                                                                     true))))]
                                                                     nj_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    true))))))
                                                                     (nj_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    true))))))
                                                                     ([p:o]
                                                                     ([A0:
                                                                     nj ((not
@@ -3580,17 +856,7 @@ NJ =
                                                                     true))))))
                                                                     ]
                                                                     nj_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    true))))))))
                                                                     (nj_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    true))))))))
                                                                     ([p:o]
                                                                     ([A0:
                                                                     nj ((not
@@ -3600,17 +866,8 @@ NJ =
                                                                     true))))))))
                                                                     ]
                                                                     nj_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))))
                                                                     A0 p
                                                                     (nj_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    true))))))
                                                                     ([p:o]
                                                                     ([A0:
                                                                     nj ((not
@@ -3619,69 +876,43 @@ NJ =
                                                                     true))))))
                                                                     ]
                                                                     nj_note
-                                                                    ((not
-                                                                    false))
                                                                     (nj_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
                                                                     (nj_noti
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
                                                                     ([p:o]
                                                                     ([A0:
                                                                     nj ((not
                                                                     (not
                                                                     true)))]
                                                                     nj_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))
                                                                     A0 p
                                                                     (nj_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    true))))
                                                                     ([p:o]
                                                                     ([A0:
                                                                     nj ((not
                                                                     (not (not
                                                                     true))))]
                                                                     nj_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
                                                                     A0 p A0))))))
                                                                     ((not
                                                                     (not
                                                                     false)))
                                                                     (nj_noti
-                                                                    ((not
-                                                                    true))
                                                                     ([p:o]
                                                                     ([A0:
                                                                     nj ((not
                                                                     true))]
                                                                     nj_note
-                                                                    true A0 p
+                                                                    A0 p
                                                                     nj_truei))))
                                                                     p
                                                                     (nj_noti
-                                                                    false
                                                                     ([p:o]
                                                                     ([A0:
                                                                     nj false]
                                                                     nj_falsee
-                                                                    p A0)))))))))
+                                                                    A0)))))))))
                                                                     p
                                                                     (nj_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))))
                                                                     ([p:o]
                                                                     ([A0:
                                                                     nj ((not
@@ -3691,17 +922,9 @@ NJ =
                                                                     true)))))))
                                                                     ]
                                                                     nj_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    true))))))
                                                                     A0 p A0))))))
                                                                     p
                                                                     (nj_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))
                                                                     ([p:o]
                                                                     ([A0:
                                                                     nj ((not
@@ -3710,27 +933,18 @@ NJ =
                                                                     true)))))
                                                                     ]
                                                                     nj_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    true))))
                                                                     A0 p A0))))))
                                                                 p
                                                                 (nj_noti
-                                                                   ((not (not
-                                                                   true)))
                                                                    ([p:o]
                                                                     ([A0:
                                                                     nj ((not
                                                                     (not
                                                                     true)))]
                                                                     nj_note
-                                                                    ((not
-                                                                    true)) A0
-                                                                    p A0)))))))
+                                                                    A0 p A0)))))))
                                                   p A0)))))) p
-                            (nj_noti ((not (not (not (not (not (not true) or
-                               not (not false))) and not (not false))) or not
-                               (not (not (not true) and not (not true)))))
+                            (nj_noti
                                ([p:o]
                                   ([A0:
                                      nj ((not (not (not (not (not (not true)
@@ -3738,36 +952,22 @@ NJ =
                                        false))) or not (not (not (not true)
                                        and not (not true)))))
                                      ]
-                                     nj_note ((not (not (not true) or not
-                                       (not false))))
-                                       (nj_ore ((not (not (not (not (not (not
-                                          true) or not (not false))) and not
-                                          (not false))))) ((not (not (not
-                                          (not true) and not (not true)))))
-                                          ((not (not (not (not true) or not
-                                          (not false))))) A0
+                                     nj_note
+                                       (nj_ore A0
                                           ([A1:
                                              nj ((not (not (not (not (not
                                                (not true) or not (not
                                                false))) and not (not
                                                false)))))
                                              ]
-                                             nj_noti ((not (not (not true) or
-                                               not (not false))))
+                                             nj_noti
                                                ([p:o]
                                                   ([A0:
                                                      nj ((not (not (not true)
                                                        or not (not false))))
                                                      ]
-                                                     nj_note ((not (not (not
-                                                       (not (not true) or not
-                                                       (not false))) and not
-                                                       (not false)))) A1 p
-                                                       (nj_noti ((not (not
-                                                          (not (not true) or
-                                                          not (not false)))
-                                                          and not (not
-                                                          false)))
+                                                     nj_note A1 p
+                                                       (nj_noti
                                                           ([p:o]
                                                              ([A0:
                                                                 nj ((not (not
@@ -3779,59 +979,30 @@ NJ =
                                                                   (not
                                                                   false)))
                                                                 ]
-                                                                nj_note ((not
-                                                                  (not (not
-                                                                  true) or
-                                                                  not (not
-                                                                  false))))
+                                                                nj_note
                                                                   (nj_andel
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not
-                                                                    true) or
-                                                                    not (not
-                                                                    false)))))
-                                                                    ((not
-                                                                    (not
-                                                                    false)))
                                                                     A0) p A0))))))
                                           ([A2:
                                              nj ((not (not (not (not true)
                                                and not (not true)))))
                                              ]
-                                             nj_noti ((not (not (not true) or
-                                               not (not false))))
+                                             nj_noti
                                                ([p:o]
                                                   ([A0:
                                                      nj ((not (not (not true)
                                                        or not (not false))))
                                                      ]
-                                                     nj_note ((not (not true)
-                                                       or not (not false)))
-                                                       A0 p
-                                                       (nj_oril ((not (not
-                                                          true))) ((not (not
-                                                          false)))
-                                                          (nj_noti ((not
-                                                             true))
+                                                     nj_note A0 p
+                                                       (nj_oril
+                                                          (nj_noti
                                                              ([p:o]
                                                                 ([A0:
                                                                    nj ((not
                                                                     true))
                                                                    ]
-                                                                   nj_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    true) and
-                                                                    not (not
-                                                                    true))))
-                                                                    A2 p
+                                                                   nj_note A2
+                                                                    p
                                                                     (nj_noti
-                                                                    ((not
-                                                                    (not
-                                                                    true) and
-                                                                    not (not
-                                                                    true)))
                                                                     ([p:o]
                                                                     ([A0:
                                                                     nj ((not
@@ -3840,1224 +1011,65 @@ NJ =
                                                                     not (not
                                                                     true)))]
                                                                     nj_note
-                                                                    ((not
-                                                                    true))
                                                                     (nj_ander
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
                                                                     A0) p A0)))))))))))
                                        p A0))))))
-                 (nj_noti ((not (not (not (not false)))))
+                 (nj_noti
                     ([p:o]
                        ([A0:nj ((not (not (not (not false)))))]
-                          nj_note ((not (not (not false)))) A0 p
-                            (nj_noti ((not (not false)))
+                          nj_note A0 p
+                            (nj_noti
                                ([p:o]
                                   ([A0:nj ((not (not false)))]
-                                     nj_note ((not false))
-                                       (nj_note ((not false)) A0 ((not (not
-                                          false)))
-                                          (nj_noti false
+                                     nj_note
+                                       (nj_note A0 ((not (not false)))
+                                          (nj_noti
                                              ([p:o]
-                                                ([A0:nj false] nj_falsee p A0))))
+                                                ([A0:nj false] nj_falsee A0))))
                                        p
-                                       (nj_noti false
-                                          ([p:o]
-                                             ([A0:nj false] nj_falsee p A0))))))))))))
+                                       (nj_noti
+                                          ([p:o] ([A0:nj false] nj_falsee A0))))))))))))
 D =
-    sound_andi ((not false)) ((not (not (not (not (not false))))))
-      (nk_noti false ([p:o] ([A0:nk false] nk_falsee p A0)))
-      (kolm_not false ((not (not false))) kolm_false)
-      (nj_noti ((not (not (not (not false)))))
-         ([p:o]
-            ([A0:nj ((not (not (not (not false)))))]
-               nj_note ((not (not (not false)))) A0 p
-                 (nj_noti ((not (not false)))
-                    ([p:o]
-                       ([A0:nj ((not (not false)))]
-                          nj_note ((not false))
-                            (nj_note ((not false)) A0 ((not (not false)))
-                               (nj_noti false
-                                  ([p:o] ([A0:nj false] nj_falsee p A0)))) p
-                            (nj_noti false
-                               ([p:o] ([A0:nj false] nj_falsee p A0)))))))))
-      ((true or false)) ((not (not (not (not true) or not (not false)))))
-      (nk_ore (((true or false) and false)) ((true and true)) ((true or
-         false))
-         (nk_impe true ((((true or false) and false) or true and true))
-            (nk_impi true ((((true or false) and false) or true and true))
-               ([A0:nk true]
-                  nk_orir ((true and true)) (((true or false) and false))
-                    (nk_andi true true nk_truei A0)))
-            (nk_dnotr true
-               (nk_noti ((not true))
-                  ([p:o] ([A0:nk ((not true))] nk_note true A0 p nk_truei)))))
-         ([A1:nk (((true or false) and false))]
-            nk_andel ((true or false)) false A1)
-         ([A2:nk ((true and true))]
-            nk_oril true false (nk_ander true true A2)))
-      (kolm_or false ((not (not false))) true ((not (not true))) kolm_false
-         kolm_true)
-      (nj_noti ((not (not (not true) or not (not false))))
-         ([p:o]
-            ([A0:nj ((not (not (not true) or not (not false))))]
-               nj_note ((not (not (not (not (not (not (not true) or not (not
-                 false))) and not (not false))) or not (not (not (not true)
-                 and not (not true))))))
-                 (nj_noti ((not (not (not (not (not (not (not true) or not
-                    (not false))) and not (not false))) or not (not (not (not
-                    true) and not (not true))))))
-                    ([p:o]
-                       ([A0:
-                          nj ((not (not (not (not (not (not (not true) or not
-                            (not false))) and not (not false))) or not (not
-                            (not (not true) and not (not true))))))
-                          ]
-                          nj_note ((not (not (not true) imp not (not (not
-                            (not (not (not (not (not true) or not (not
-                            false))) and not (not false))) or not (not (not
-                            (not true) and not (not true))))))))
-                            (nj_noti ((not (not (not true) imp not (not (not
-                               (not (not (not (not (not true) or not (not
-                               false))) and not (not false))) or not (not
-                               (not (not true) and not (not true))))))))
-                               ([p:o]
-                                  ([A0:
-                                     nj ((not (not (not true) imp not (not
-                                       (not (not (not (not (not (not true) or
-                                       not (not false))) and not (not
-                                       false))) or not (not (not (not true)
-                                       and not (not true))))))))
-                                     ]
-                                     nj_note ((not (not true) imp not (not
-                                       (not (not (not (not (not (not true) or
-                                       not (not false))) and not (not
-                                       false))) or not (not (not (not true)
-                                       and not (not true))))))) A0 p
-                                       (nj_impi ((not (not true))) ((not (not
-                                          (not (not (not (not (not (not true)
-                                          or not (not false))) and not (not
-                                          false))) or not (not (not (not
-                                          true) and not (not true)))))))
-                                          ([A0:nj ((not (not true)))]
-                                             nj_noti ((not (not (not (not
-                                               (not (not (not true) or not
-                                               (not false))) and not (not
-                                               false))) or not (not (not (not
-                                               true) and not (not true))))))
-                                               ([p:o]
-                                                  ([A0:
-                                                     nj ((not (not (not (not
-                                                       (not (not (not true)
-                                                       or not (not false)))
-                                                       and not (not false)))
-                                                       or not (not (not (not
-                                                       true) and not (not
-                                                       true))))))
-                                                     ]
-                                                     nj_note ((not (not (not
-                                                       (not (not (not true)
-                                                       or not (not false)))
-                                                       and not (not false)))
-                                                       or not (not (not (not
-                                                       true) and not (not
-                                                       true))))) A0 p
-                                                       (nj_orir ((not (not
-                                                          (not (not true) and
-                                                          not (not true)))))
-                                                          ((not (not (not
-                                                          (not (not (not
-                                                          true) or not (not
-                                                          false))) and not
-                                                          (not false)))))
-                                                          (nj_noti ((not (not
-                                                             (not true) and
-                                                             not (not
-                                                             true))))
-                                                             ([p:o]
-                                                                ([A0:
-                                                                   nj ((not
-                                                                    (not (not
-                                                                    true) and
-                                                                    not (not
-                                                                    true))))
-                                                                   ]
-                                                                   nj_note
-                                                                    ((not
-                                                                    (not
-                                                                    true) and
-                                                                    not (not
-                                                                    true)))
-                                                                    A0 p
-                                                                    (nj_andi
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    true))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj ((not
-                                                                    true))]
-                                                                    nj_note
-                                                                    true A0 p
-                                                                    nj_truei)))
-                                                                    A0))))))))))))
-                            p
-                            (nj_noti ((not (not true) imp not (not (not (not
-                               (not (not (not (not true) or not (not false)))
-                               and not (not false))) or not (not (not (not
-                               true) and not (not true)))))))
-                               ([p:o]
-                                  ([A0:
-                                     nj ((not (not true) imp not (not (not
-                                       (not (not (not (not (not true) or not
-                                       (not false))) and not (not false))) or
-                                       not (not (not (not true) and not (not
-                                       true)))))))
-                                     ]
-                                     nj_note ((not (not (not (not (not (not
-                                       (not true) or not (not false))) and
-                                       not (not false))) or not (not (not
-                                       (not true) and not (not true))))))
-                                       (nj_impe ((not (not true))) ((not (not
-                                          (not (not (not (not (not (not true)
-                                          or not (not false))) and not (not
-                                          false))) or not (not (not (not
-                                          true) and not (not true))))))) A0
-                                          (nj_noti ((not true))
-                                             ([p:o]
-                                                ([A0:nj ((not true))]
-                                                   nj_note ((not (not (not
-                                                     true))))
-                                                     (nj_noti ((not (not (not
-                                                        true))))
-                                                        ([p:o]
-                                                           ([A0:
-                                                              nj ((not (not
-                                                                (not true))))
-                                                              ]
-                                                              nj_note ((not
-                                                                (not (not
-                                                                (not (not
-                                                                true))))))
-                                                                (nj_noti
-                                                                   ((not (not
-                                                                   (not (not
-                                                                   (not
-                                                                   true))))))
-                                                                   ([p:o]
-                                                                    ([A0:
-                                                                    nj ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    true))))))
-                                                                    ]
-                                                                    nj_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    true))))))))
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    true))))))))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    true))))))))
-                                                                    ]
-                                                                    nj_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))))
-                                                                    A0 p
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    true))))))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    true))))))
-                                                                    ]
-                                                                    nj_note
-                                                                    ((not
-                                                                    false))
-                                                                    (nj_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj ((not
-                                                                    (not
-                                                                    true)))]
-                                                                    nj_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))
-                                                                    A0 p
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    true))))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj ((not
-                                                                    (not (not
-                                                                    true))))]
-                                                                    nj_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    A0 p A0))))))
-                                                                    ((not
-                                                                    (not
-                                                                    false)))
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    true))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj ((not
-                                                                    true))]
-                                                                    nj_note
-                                                                    true A0 p
-                                                                    nj_truei))))
-                                                                    p
-                                                                    (nj_noti
-                                                                    false
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj false]
-                                                                    nj_falsee
-                                                                    p A0)))))))))
-                                                                    p
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))))
-                                                                    ]
-                                                                    nj_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    true))))))
-                                                                    A0 p A0))))))
-                                                                p
-                                                                (nj_noti
-                                                                   ((not (not
-                                                                   (not (not
-                                                                   true)))))
-                                                                   ([p:o]
-                                                                    ([A0:
-                                                                    nj ((not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))
-                                                                    ]
-                                                                    nj_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    true))))
-                                                                    A0 p A0))))))
-                                                     p
-                                                     (nj_noti ((not (not
-                                                        true)))
-                                                        ([p:o]
-                                                           ([A0:
-                                                              nj ((not (not
-                                                                true)))
-                                                              ]
-                                                              nj_note ((not
-                                                                true)) A0 p
-                                                                A0))))))) p
-                                       A0)))))) p
-                 (nj_noti ((not (not (not (not (not (not true) or not (not
-                    false))) and not (not false))) or not (not (not (not
-                    true) and not (not true)))))
-                    ([p:o]
-                       ([A0:
-                          nj ((not (not (not (not (not (not true) or not (not
-                            false))) and not (not false))) or not (not (not
-                            (not true) and not (not true)))))
-                          ]
-                          nj_note ((not (not (not true) or not (not false))))
-                            (nj_ore ((not (not (not (not (not (not true) or
-                               not (not false))) and not (not false)))))
-                               ((not (not (not (not true) and not (not
-                               true))))) ((not (not (not (not true) or not
-                               (not false))))) A0
-                               ([A1:
-                                  nj ((not (not (not (not (not (not true) or
-                                    not (not false))) and not (not false)))))
-                                  ]
-                                  nj_noti ((not (not (not true) or not (not
-                                    false))))
-                                    ([p:o]
-                                       ([A0:
-                                          nj ((not (not (not true) or not
-                                            (not false))))
-                                          ]
-                                          nj_note ((not (not (not (not (not
-                                            true) or not (not false))) and
-                                            not (not false)))) A1 p
-                                            (nj_noti ((not (not (not (not
-                                               true) or not (not false))) and
-                                               not (not false)))
-                                               ([p:o]
-                                                  ([A0:
-                                                     nj ((not (not (not (not
-                                                       true) or not (not
-                                                       false))) and not (not
-                                                       false)))
-                                                     ]
-                                                     nj_note ((not (not (not
-                                                       true) or not (not
-                                                       false))))
-                                                       (nj_andel ((not (not
-                                                          (not (not true) or
-                                                          not (not false)))))
-                                                          ((not (not false)))
-                                                          A0) p A0))))))
-                               ([A2:
-                                  nj ((not (not (not (not true) and not (not
-                                    true)))))
-                                  ]
-                                  nj_noti ((not (not (not true) or not (not
-                                    false))))
-                                    ([p:o]
-                                       ([A0:
-                                          nj ((not (not (not true) or not
-                                            (not false))))
-                                          ]
-                                          nj_note ((not (not true) or not
-                                            (not false))) A0 p
-                                            (nj_oril ((not (not true))) ((not
-                                               (not false)))
-                                               (nj_noti ((not true))
-                                                  ([p:o]
-                                                     ([A0:nj ((not true))]
-                                                        nj_note ((not (not
-                                                          (not true) and not
-                                                          (not true)))) A2 p
-                                                          (nj_noti ((not (not
-                                                             true) and not
-                                                             (not true)))
-                                                             ([p:o]
-                                                                ([A0:
-                                                                   nj ((not
-                                                                    (not
-                                                                    true) and
-                                                                    not (not
-                                                                    true)))
-                                                                   ]
-                                                                   nj_note
-                                                                    ((not
-                                                                    true))
-                                                                    (nj_ander
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    A0) p A0)))))))))))
-                            p A0))))))
-      (sound_noti false ((not (not false))) kolm_false
-         ([A0:o] ([A1:nk false] nk_falsee A0 A1))
-         ([A0:o]
-            ([A1:nj ((not (not false)))]
-               nj_note ((not false)) A1 ((not (not A0)))
-                 (nj_noti false ([p:o] ([A0:nj false] nj_falsee p A0)))))
+    sound_andi
+      (sound_noti
          ([p:o]
             ([u:nk false]
                ([v:nj ((not (not false)))]
                   ([kp:kolm p ((not (not p)))]
                      ([A0:existskolm p ((not (not p))) kp]
-                        ([A1:sound false ((not (not false))) u kolm_false v]
-                           sound_falsee u v p ((not (not p))) kp A1)))))))
-      (sound_ore ((true and true)) ((not (not (not (not true) and not (not
-         true)))))
-         (kolm_and true ((not (not true))) true ((not (not true))) kolm_true
-            kolm_true) ((true or false)) ((not (not true) or not (not
-         false)))
-         ([A:nk ((true and true))] nk_oril true false (nk_ander true true A))
-         (kolm_or false ((not (not false))) true ((not (not true)))
-            kolm_false kolm_true)
-         ([A:nj ((not (not (not (not true) and not (not true)))))]
-            nj_noti ((not (not (not true) or not (not false))))
-              ([p:o]
-                 ([A0:nj A]
-                    nj_note ((not (not true) or not (not false))) A0 p
-                      (nj_oril ((not (not true))) ((not (not false)))
-                         (nj_noti ((not true))
-                            ([p:o]
-                               ([A0:nj A]
-                                  nj_note ((not (not (not true) and not (not
-                                    true)))) A p
-                                    (nj_noti ((not (not true) and not (not
-                                       true)))
-                                       ([p:o]
-                                          ([A0:nj A]
-                                             nj_note ((not true))
-                                               (nj_ander ((not (not true)))
-                                                  ((not (not true))) A0) p A0))))))))))
-         (((true or false) and false)) ((not (not (not (not (not (not true)
-         or not (not false))) and not (not false)))))
-         (kolm_and false ((not (not false))) ((true or false)) ((not (not
-            (not (not true) or not (not false))))) kolm_false
-            (kolm_or false ((not (not false))) true ((not (not true)))
-               kolm_false kolm_true))
-         ([A0:nk (((true or false) and false))]
-            nk_andel ((true or false)) false A0)
-         ([A0:
-            nj ((not (not (not (not (not (not true) or not (not false))) and
-              not (not false)))))
-            ]
-            nj_noti ((not (not (not true) or not (not false))))
-              ([p:o]
-                 ([A0:nj ((not (not (not true) or not (not false))))]
-                    nj_note ((not (not (not (not (not true) or not (not
-                      false))) and not (not false)))) A0 p
-                      (nj_noti ((not (not (not (not true) or not (not
-                         false))) and not (not false)))
-                         ([p:o]
-                            ([A0:
-                               nj ((not (not (not (not true) or not (not
-                                 false))) and not (not false)))
-                               ]
-                               nj_note ((not (not (not true) or not (not
-                                 false))))
-                                 (nj_andel ((not (not (not (not true) or not
-                                    (not false))))) ((not (not false))) A0) p
-                                 A0))))))
-         (nk_impe true ((((true or false) and false) or true and true))
-            (nk_impi true ((((true or false) and false) or true and true))
-               ([A0:nk true]
-                  nk_orir ((true and true)) (((true or false) and false))
-                    (nk_andi true true nk_truei A0)))
-            (nk_dnotr true
-               (nk_noti ((not true))
-                  ([p:o] ([A0:nk ((not true))] nk_note true A0 p nk_truei)))))
-         (nj_noti ((not (not (not (not (not (not (not true) or not (not
-            false))) and not (not false))) or not (not (not (not true) and
-            not (not true))))))
-            ([p:o]
-               ([A0:
-                  nj ((not (not (not (not (not (not (not true) or not (not
-                    false))) and not (not false))) or not (not (not (not
-                    true) and not (not true))))))
-                  ]
-                  nj_note ((not (not (not true) imp not (not (not (not (not
-                    (not (not (not true) or not (not false))) and not (not
-                    false))) or not (not (not (not true) and not (not
-                    true))))))))
-                    (nj_noti ((not (not (not true) imp not (not (not (not
-                       (not (not (not (not true) or not (not false))) and not
-                       (not false))) or not (not (not (not true) and not (not
-                       true))))))))
-                       ([p:o]
-                          ([A0:
-                             nj ((not (not (not true) imp not (not (not (not
-                               (not (not (not (not true) or not (not false)))
-                               and not (not false))) or not (not (not (not
-                               true) and not (not true))))))))
-                             ]
-                             nj_note ((not (not true) imp not (not (not (not
-                               (not (not (not (not true) or not (not false)))
-                               and not (not false))) or not (not (not (not
-                               true) and not (not true))))))) A0 p
-                               (nj_impi ((not (not true))) ((not (not (not
-                                  (not (not (not (not (not true) or not (not
-                                  false))) and not (not false))) or not (not
-                                  (not (not true) and not (not true)))))))
-                                  ([A0:nj ((not (not true)))]
-                                     nj_noti ((not (not (not (not (not (not
-                                       (not true) or not (not false))) and
-                                       not (not false))) or not (not (not
-                                       (not true) and not (not true))))))
-                                       ([p:o]
-                                          ([A0:
-                                             nj ((not (not (not (not (not
-                                               (not (not true) or not (not
-                                               false))) and not (not false)))
-                                               or not (not (not (not true)
-                                               and not (not true))))))
-                                             ]
-                                             nj_note ((not (not (not (not
-                                               (not (not true) or not (not
-                                               false))) and not (not false)))
-                                               or not (not (not (not true)
-                                               and not (not true))))) A0 p
-                                               (nj_orir ((not (not (not (not
-                                                  true) and not (not
-                                                  true))))) ((not (not (not
-                                                  (not (not (not true) or not
-                                                  (not false))) and not (not
-                                                  false)))))
-                                                  (nj_noti ((not (not (not
-                                                     true) and not (not
-                                                     true))))
-                                                     ([p:o]
-                                                        ([A0:
-                                                           nj ((not (not (not
-                                                             true) and not
-                                                             (not true))))
-                                                           ]
-                                                           nj_note ((not (not
-                                                             true) and not
-                                                             (not true))) A0
-                                                             p
-                                                             (nj_andi ((not
-                                                                (not true)))
-                                                                ((not (not
-                                                                true)))
-                                                                (nj_noti
-                                                                   ((not
-                                                                   true))
-                                                                   ([p:o]
-                                                                    ([A0:
-                                                                    nj ((not
-                                                                    true))]
-                                                                    nj_note
-                                                                    true A0 p
-                                                                    nj_truei)))
-                                                                A0))))))))))))
-                    p
-                    (nj_noti ((not (not true) imp not (not (not (not (not
-                       (not (not (not true) or not (not false))) and not (not
-                       false))) or not (not (not (not true) and not (not
-                       true)))))))
-                       ([p:o]
-                          ([A0:
-                             nj ((not (not true) imp not (not (not (not (not
-                               (not (not (not true) or not (not false))) and
-                               not (not false))) or not (not (not (not true)
-                               and not (not true)))))))
-                             ]
-                             nj_note ((not (not (not (not (not (not (not
-                               true) or not (not false))) and not (not
-                               false))) or not (not (not (not true) and not
-                               (not true))))))
-                               (nj_impe ((not (not true))) ((not (not (not
-                                  (not (not (not (not (not true) or not (not
-                                  false))) and not (not false))) or not (not
-                                  (not (not true) and not (not true))))))) A0
-                                  (nj_noti ((not true))
-                                     ([p:o]
-                                        ([A0:nj ((not true))]
-                                           nj_note ((not (not (not true))))
-                                             (nj_noti ((not (not (not
-                                                true))))
-                                                ([p:o]
-                                                   ([A0:
-                                                      nj ((not (not (not
-                                                        true))))
-                                                      ]
-                                                      nj_note ((not (not (not
-                                                        (not (not true))))))
-                                                        (nj_noti ((not (not
-                                                           (not (not (not
-                                                           true))))))
-                                                           ([p:o]
-                                                              ([A0:
-                                                                 nj ((not
-                                                                   (not (not
-                                                                   (not (not
-                                                                   true))))))
-                                                                 ]
-                                                                 nj_note
-                                                                   ((not (not
-                                                                   (not (not
-                                                                   (not (not
-                                                                   (not
-                                                                   true))))))))
-                                                                   (nj_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    true))))))))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    true))))))))
-                                                                    ]
-                                                                    nj_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))))
-                                                                    A0 p
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    true))))))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    true))))))
-                                                                    ]
-                                                                    nj_note
-                                                                    ((not
-                                                                    false))
-                                                                    (nj_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj ((not
-                                                                    (not
-                                                                    true)))]
-                                                                    nj_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))
-                                                                    A0 p
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    true))))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj ((not
-                                                                    (not (not
-                                                                    true))))]
-                                                                    nj_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    A0 p A0))))))
-                                                                    ((not
-                                                                    (not
-                                                                    false)))
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    true))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj ((not
-                                                                    true))]
-                                                                    nj_note
-                                                                    true A0 p
-                                                                    nj_truei))))
-                                                                    p
-                                                                    (nj_noti
-                                                                    false
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj false]
-                                                                    nj_falsee
-                                                                    p A0)))))))))
-                                                                   p
-                                                                   (nj_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))))
-                                                                    ]
-                                                                    nj_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not (not
-                                                                    true))))))
-                                                                    A0 p A0))))))
-                                                        p
-                                                        (nj_noti ((not (not
-                                                           (not (not
-                                                           true)))))
-                                                           ([p:o]
-                                                              ([A0:
-                                                                 nj ((not
-                                                                   (not (not
-                                                                   (not
-                                                                   true)))))
-                                                                 ]
-                                                                 nj_note
-                                                                   ((not (not
-                                                                   (not
-                                                                   true))))
-                                                                   A0 p A0))))))
-                                             p
-                                             (nj_noti ((not (not true)))
-                                                ([p:o]
-                                                   ([A0:nj ((not (not true)))
-                                                      ]
-                                                      nj_note ((not true)) A0
-                                                        p A0))))))) p A0))))))
+                        ([A1:sound u kolm_false v] sound_falsee A1)))))))
+      (sound_ore
          ([u:nk ((true and true))]
             ([v:nj ((not (not (not (not true) and not (not true)))))]
-               ([A0:
-                  sound ((true and true)) ((not (not (not (not true) and not
-                    (not true))))) u
-                    (kolm_and true ((not (not true))) true ((not (not true)))
-                       kolm_true kolm_true) v
-                  ]
-                  sound_oril true ((not (not true))) (nk_ander true true u)
-                    kolm_true
-                    (nj_noti ((not true))
-                       ([p:o]
-                          ([A0:nj ((not true))]
-                             nj_note ((not (not (not true) and not (not
-                               true)))) v p
-                               (nj_noti ((not (not true) and not (not true)))
-                                  ([p:o]
-                                     ([A0:
-                                        nj ((not (not true) and not (not
-                                          true)))
-                                        ]
-                                        nj_note ((not true))
-                                          (nj_ander ((not (not true))) ((not
-                                             (not true))) A0) p A0))))))
-                    false ((not (not false))) kolm_false
-                    (sound_ander true true ((not (not true))) true u
-                       kolm_true kolm_true v A0 existskolm_true))))
+               ([A0:sound u (kolm_and kolm_true kolm_true) v]
+                  sound_oril (sound_ander A0 existskolm_true))))
          ([u:nk (((true or false) and false))]
             ([v:
                nj ((not (not (not (not (not (not true) or not (not false)))
                  and not (not false)))))
                ]
                ([A1:
-                  sound (((true or false) and false)) ((not (not (not (not
-                    (not (not true) or not (not false))) and not (not
-                    false))))) u
-                    (kolm_and false ((not (not false))) ((true or false))
-                       ((not (not (not (not true) or not (not false)))))
-                       kolm_false
-                       (kolm_or false ((not (not false))) true ((not (not
-                          true))) kolm_false kolm_true)) v
-                  ]
-                  sound_andel ((true or false)) false ((not (not true) or not
-                    (not false))) ((not (not false))) u kolm_false
-                    (kolm_or false ((not (not false))) true ((not (not
-                       true))) kolm_false kolm_true) v A1 existskolm_false)))
-         (sound_impe true ((((true or false) and false) or true and true))
-            ((not (not true))) ((not (not (not (not (not (not true) or not
-            (not false))) and not (not false))) or not (not (not (not true)
-            and not (not true)))))
-            (nk_impi true ((((true or false) and false) or true and true))
-               ([A0:nk true]
-                  nk_orir ((true and true)) (((true or false) and false))
-                    (nk_andi true true nk_truei A0)))
-            (kolm_or ((true and true)) ((not (not (not (not true) and not
-               (not true))))) (((true or false) and false)) ((not (not (not
-               (not (not (not true) or not (not false))) and not (not
-               false)))))
-               (kolm_and true ((not (not true))) true ((not (not true)))
-                  kolm_true kolm_true)
-               (kolm_and false ((not (not false))) ((true or false)) ((not
-                  (not (not (not true) or not (not false))))) kolm_false
-                  (kolm_or false ((not (not false))) true ((not (not true)))
-                     kolm_false kolm_true))) kolm_true
-            (nj_noti ((not (not (not true) imp not (not (not (not (not (not
-               (not (not true) or not (not false))) and not (not false))) or
-               not (not (not (not true) and not (not true))))))))
-               ([p:o]
-                  ([A0:
-                     nj ((not (not (not true) imp not (not (not (not (not
-                       (not (not (not true) or not (not false))) and not (not
-                       false))) or not (not (not (not true) and not (not
-                       true))))))))
-                     ]
-                     nj_note ((not (not true) imp not (not (not (not (not
-                       (not (not (not true) or not (not false))) and not (not
-                       false))) or not (not (not (not true) and not (not
-                       true))))))) A0 p
-                       (nj_impi ((not (not true))) ((not (not (not (not (not
-                          (not (not (not true) or not (not false))) and not
-                          (not false))) or not (not (not (not true) and not
-                          (not true)))))))
-                          ([A0:nj ((not (not true)))]
-                             nj_noti ((not (not (not (not (not (not (not
-                               true) or not (not false))) and not (not
-                               false))) or not (not (not (not true) and not
-                               (not true))))))
-                               ([p:o]
-                                  ([A0:
-                                     nj ((not (not (not (not (not (not (not
-                                       true) or not (not false))) and not
-                                       (not false))) or not (not (not (not
-                                       true) and not (not true))))))
-                                     ]
-                                     nj_note ((not (not (not (not (not (not
-                                       true) or not (not false))) and not
-                                       (not false))) or not (not (not (not
-                                       true) and not (not true))))) A0 p
-                                       (nj_orir ((not (not (not (not true)
-                                          and not (not true))))) ((not (not
-                                          (not (not (not (not true) or not
-                                          (not false))) and not (not
-                                          false)))))
-                                          (nj_noti ((not (not (not true) and
-                                             not (not true))))
-                                             ([p:o]
-                                                ([A0:
-                                                   nj ((not (not (not true)
-                                                     and not (not true))))
-                                                   ]
-                                                   nj_note ((not (not true)
-                                                     and not (not true))) A0
-                                                     p
-                                                     (nj_andi ((not (not
-                                                        true))) ((not (not
-                                                        true)))
-                                                        (nj_noti ((not true))
-                                                           ([p:o]
-                                                              ([A0:
-                                                                 nj ((not
-                                                                   true))
-                                                                 ]
-                                                                 nj_note true
-                                                                   A0 p
-                                                                   nj_truei)))
-                                                        A0))))))))))))
-            (nk_dnotr true
-               (nk_noti ((not true))
-                  ([p:o] ([A0:nk ((not true))] nk_note true A0 p nk_truei))))
-            (nj_noti ((not true))
-               ([p:o]
-                  ([A0:nj ((not true))]
-                     nj_note ((not (not (not true))))
-                       (nj_noti ((not (not (not true))))
-                          ([p:o]
-                             ([A0:nj ((not (not (not true))))]
-                                nj_note ((not (not (not (not (not true))))))
-                                  (nj_noti ((not (not (not (not (not
-                                     true))))))
-                                     ([p:o]
-                                        ([A0:
-                                           nj ((not (not (not (not (not
-                                             true))))))
-                                           ]
-                                           nj_note ((not (not (not (not (not
-                                             (not (not true))))))))
-                                             (nj_noti ((not (not (not (not
-                                                (not (not (not true))))))))
-                                                ([p:o]
-                                                   ([A0:
-                                                      nj ((not (not (not (not
-                                                        (not (not (not
-                                                        true))))))))
-                                                      ]
-                                                      nj_note ((not (not (not
-                                                        (not (not (not
-                                                        true))))))) A0 p
-                                                        (nj_noti ((not (not
-                                                           (not (not (not
-                                                           true))))))
-                                                           ([p:o]
-                                                              ([A0:
-                                                                 nj ((not
-                                                                   (not (not
-                                                                   (not (not
-                                                                   true))))))
-                                                                 ]
-                                                                 nj_note
-                                                                   ((not
-                                                                   false))
-                                                                   (nj_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj ((not
-                                                                    (not
-                                                                    true)))]
-                                                                    nj_note
-                                                                    ((not
-                                                                    (not (not
-                                                                    (not
-                                                                    true)))))
-                                                                    A0 p
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    (not (not
-                                                                    true))))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj ((not
-                                                                    (not (not
-                                                                    true))))]
-                                                                    nj_note
-                                                                    ((not
-                                                                    (not
-                                                                    true)))
-                                                                    A0 p A0))))))
-                                                                    ((not
-                                                                    (not
-                                                                    false)))
-                                                                    (nj_noti
-                                                                    ((not
-                                                                    true))
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj ((not
-                                                                    true))]
-                                                                    nj_note
-                                                                    true A0 p
-                                                                    nj_truei))))
-                                                                   p
-                                                                   (nj_noti
-                                                                    false
-                                                                    ([p:o]
-                                                                    ([A0:
-                                                                    nj false]
-                                                                    nj_falsee
-                                                                    p A0)))))))))
-                                             p
-                                             (nj_noti ((not (not (not (not
-                                                (not (not true)))))))
-                                                ([p:o]
-                                                   ([A0:
-                                                      nj ((not (not (not (not
-                                                        (not (not true)))))))
-                                                      ]
-                                                      nj_note ((not (not (not
-                                                        (not (not true))))))
-                                                        A0 p A0)))))) p
-                                  (nj_noti ((not (not (not (not true)))))
-                                     ([p:o]
-                                        ([A0:
-                                           nj ((not (not (not (not true)))))]
-                                           nj_note ((not (not (not true))))
-                                             A0 p A0)))))) p
-                       (nj_noti ((not (not true)))
-                          ([p:o]
-                             ([A0:nj ((not (not true)))]
-                                nj_note ((not true)) A0 p A0))))))
-            (sound_impi true ((not (not true))) kolm_true ((((true or false)
-               and false) or true and true)) ((not (not (not (not (not (not
-               (not (not true) or not (not false))) and not (not false))) or
-               not (not (not (not true) and not (not true)))))))
-               ([A0:nk true]
-                  nk_orir ((true and true)) (((true or false) and false))
-                    (nk_andi true true nk_truei A0))
-               (kolm_or ((true and true)) ((not (not (not (not true) and not
-                  (not true))))) (((true or false) and false)) ((not (not
-                  (not (not (not (not true) or not (not false))) and not (not
-                  false)))))
-                  (kolm_and true ((not (not true))) true ((not (not true)))
-                     kolm_true kolm_true)
-                  (kolm_and false ((not (not false))) ((true or false)) ((not
-                     (not (not (not true) or not (not false))))) kolm_false
-                     (kolm_or false ((not (not false))) true ((not (not
-                        true))) kolm_false kolm_true)))
-               ([A0:nj ((not (not true)))]
-                  nj_noti ((not (not (not (not (not (not (not true) or not
-                    (not false))) and not (not false))) or not (not (not (not
-                    true) and not (not true))))))
-                    ([p:o]
-                       ([A0:
-                          nj ((not (not (not (not (not (not (not true) or not
-                            (not false))) and not (not false))) or not (not
-                            (not (not true) and not (not true))))))
-                          ]
-                          nj_note ((not (not (not (not (not (not true) or not
-                            (not false))) and not (not false))) or not (not
-                            (not (not true) and not (not true))))) A0 p
-                            (nj_orir ((not (not (not (not true) and not (not
-                               true))))) ((not (not (not (not (not (not true)
-                               or not (not false))) and not (not false)))))
-                               (nj_noti ((not (not (not true) and not (not
-                                  true))))
-                                  ([p:o]
-                                     ([A0:
-                                        nj ((not (not (not true) and not (not
-                                          true))))
-                                        ]
-                                        nj_note ((not (not true) and not (not
-                                          true))) A0 p
-                                          (nj_andi ((not (not true))) ((not
-                                             (not true)))
-                                             (nj_noti ((not true))
-                                                ([p:o]
-                                                   ([A0:nj ((not true))]
-                                                      nj_note true A0 p
-                                                        nj_truei))) A0))))))))
+                  sound u
+                    (kolm_and kolm_false (kolm_or kolm_false kolm_true)) v
+                  ] sound_andel A1 existskolm_false)))
+         (sound_impe
+            (sound_impi
                ([u:nk true]
                   ([v:nj ((not (not true)))]
-                     ([A0:sound true ((not (not true))) u kolm_true v]
-                        sound_orir ((true and true)) ((not (not (not (not
-                          true) and not (not true)))))
-                          (nk_andi true true nk_truei u)
-                          (kolm_and true ((not (not true))) true ((not (not
-                             true))) kolm_true kolm_true)
-                          (nj_noti ((not (not (not true) and not (not
-                             true))))
-                             ([p:o]
-                                ([A0:
-                                   nj ((not (not (not true) and not (not
-                                     true))))
-                                   ]
-                                   nj_note ((not (not true) and not (not
-                                     true))) A0 p
-                                     (nj_andi ((not (not true))) ((not (not
-                                        true)))
-                                        (nj_noti ((not true))
-                                           ([p:o]
-                                              ([A0:nj ((not true))]
-                                                 nj_note true A0 p nj_truei)))
-                                        v)))) (((true or false) and false))
-                          ((not (not (not (not (not (not true) or not (not
-                          false))) and not (not false)))))
-                          (kolm_and false ((not (not false))) ((true or
-                             false)) ((not (not (not (not true) or not (not
-                             false))))) kolm_false
-                             (kolm_or false ((not (not false))) true ((not
-                                (not true))) kolm_false kolm_true))
-                          (sound_andi true ((not (not true))) u kolm_true v
-                             true ((not (not true))) nk_truei kolm_true
-                             (nj_noti ((not true))
-                                ([p:o]
-                                   ([A0:nj ((not true))]
-                                      nj_note true A0 p nj_truei))) A0
-                             sound_truei)))))
-            (sound_dnotr true ((not true))
-               (nk_noti ((not true))
-                  ([p:o] ([A0:nk ((not true))] nk_note true A0 p nk_truei)))
-               kolm_true
-               (nj_noti ((not (not (not (not (not (not (not true))))))))
-                  ([p:o]
-                     ([A0:nj ((not (not (not (not (not (not (not true))))))))
-                        ]
-                        nj_note ((not (not (not (not (not (not true))))))) A0
-                          p
-                          (nj_noti ((not (not (not (not (not true))))))
-                             ([p:o]
-                                ([A0:nj ((not (not (not (not (not true))))))]
-                                   nj_note ((not false))
-                                     (nj_note ((not (not true)))
-                                        (nj_noti ((not (not true)))
-                                           ([p:o]
-                                              ([A0:nj ((not (not true)))]
-                                                 nj_note ((not (not (not (not
-                                                   true))))) A0 p
-                                                   (nj_noti ((not (not (not
-                                                      true))))
-                                                      ([p:o]
-                                                         ([A0:
-                                                            nj ((not (not
-                                                              (not true))))
-                                                            ]
-                                                            nj_note ((not
-                                                              (not true))) A0
-                                                              p A0))))))
-                                        ((not (not false)))
-                                        (nj_noti ((not true))
-                                           ([p:o]
-                                              ([A0:nj ((not true))]
-                                                 nj_note true A0 p nj_truei))))
-                                     p
-                                     (nj_noti false
-                                        ([p:o] ([A0:nj false] nj_falsee p A0)))))))))
-               (sound_noti ((not true)) ((not (not (not (not (not true))))))
-                  (kolm_not true ((not (not true))) kolm_true)
-                  ([A0:o] ([A1:nk ((not true))] nk_note true A1 A0 nk_truei))
-                  ([A0:o]
-                     ([A1:nj ((not (not (not (not (not true))))))]
-                        nj_note ((not (not true)))
-                          (nj_noti ((not (not true)))
-                             ([p:o]
-                                ([A0:nj ((not (not true)))]
-                                   nj_note ((not (not (not (not true))))) A1
-                                     p
-                                     (nj_noti ((not (not (not true))))
-                                        ([p:o]
-                                           ([A0:nj ((not (not (not true))))]
-                                              nj_note ((not (not true))) A0 p
-                                                A0)))))) ((not (not A0)))
-                          (nj_noti ((not true))
-                             ([p:o]
-                                ([A0:nj ((not true))]
-                                   nj_note true A0 p nj_truei)))))
+                     ([A0:sound u kolm_true v]
+                        sound_orir (sound_andi A0 sound_truei)))))
+            (sound_dnotr
+               (sound_noti
                   ([p:o]
                      ([u:nk ((not true))]
                         ([v:nj ((not (not (not (not (not true))))))]
                            ([kp:kolm p ((not (not p)))]
                               ([A0:existskolm p ((not (not p))) kp]
-                                 ([A1:
-                                    sound ((not true)) ((not (not (not (not
-                                      (not true)))))) u
-                                      (kolm_not true ((not (not true)))
-                                         kolm_true) v
-                                    ]
-                                    sound_note true ((not (not true)))
-                                      nk_truei kolm_true
-                                      (nj_noti ((not true))
-                                         ([p:o]
-                                            ([A0:nj ((not true))]
-                                               nj_note true A0 p nj_truei)))
-                                      u v p p kp sound_truei A1
-                                      existskolm_true)))))))) existskolm_true)
-         (existskolm_and true ((not (not true))) kolm_true true ((not (not
-            true))) kolm_true existskolm_true existskolm_true)
-         (existskolm_and false ((not (not false))) kolm_false ((true or
-            false)) ((not (not (not (not true) or not (not false)))))
-            (kolm_or false ((not (not false))) true ((not (not true)))
-               kolm_false kolm_true) existskolm_false
-            (existskolm_or false ((not (not false))) kolm_false true ((not
-               (not true))) kolm_true existskolm_false existskolm_true)))
+                                 ([A1:sound u (kolm_not kolm_true) v]
+                                    sound_note sound_truei A1 existskolm_true))))))))
+            existskolm_true) (existskolm_and existskolm_true existskolm_true)
+         (existskolm_and existskolm_false
+            (existskolm_or existskolm_false existskolm_true)))
 
 ANS
 same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm11");
@@ -5231,13 +1243,13 @@ same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm11")
 #                                        (nj_noti
 #                                            ([p21:o] [u19:nj false] nj_falsee u19)))))))))
 #    NK.
-CODE
-$ans = <<'ANS';
-
-The answer substitution:
-
-ANS
-same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm12");
+# CODE
+# $ans = <<'ANS';
+# 
+# The answer substitution:
+# 
+# ANS
+# same_answers_twelf( `$TJTWELF -e 1 -b --query "$code" $MODULE\n`, $ans,"kolm12");
 ############################################
 ############################################
 # $code = <<'CODE';
