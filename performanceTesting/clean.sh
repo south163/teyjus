@@ -1,0 +1,3 @@
+echo Cleaning...
+rm -f *.lp *.lpo *.sig *.mod *.output *.timing
+echo Done.

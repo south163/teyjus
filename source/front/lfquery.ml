@@ -7,7 +7,7 @@
 let fvar_types = ref Table.empty
 
 let freeVarTab = ref Intmap.empty
-
+  
 let fvartypes_init (Lfabsyn.Query(fvars, ptSymb, ty)) =
   let types = List.fold_left (fun tbl (s,t) -> Table.add (Symbol.symbol (Symb.name s)) t tbl) 
                              Table.empty 
@@ -25,25 +25,34 @@ let freeVarTab_init fvars =
   freeVarTab := init_aux fvars 0 Intmap.empty;
   true
 
+
+let time f dscr =
+  let start = Sys.time () in
+  let x = f () in
+  Printf.printf "Execution Time(%s): %fs\n" dscr (Sys.time () -. start);
+  x
+    
 let submit_query query metadata kinds constants =
-  let (term, fvars) = 
-    match Translator.get_translation () with
-        "naive" -> Translator.NaiveTranslation.translate_query query metadata kinds constants
-      | "optimized" -> Translator.OptimizedTranslation.translate_query query metadata kinds constants in
-  let (term',_,_) = Parse.fixTerm (Parse.removeNestedAbstractions term) in
+  let (term, fvars) =
+    time 
+      (fun () ->
+        match Translator.get_translation () with
+        | "naive" ->
+          Translator.NaiveTranslation.translate_query query metadata kinds constants
+        | "optimized" ->
+          Translator.OptimizedTranslation.translate_query query metadata kinds constants)
+      "translate query"
+  in
+  time
+    (fun () ->
+      let (term',_,_) = Parse.fixTerm (Parse.removeNestedAbstractions term) in 
 (*  let _ = print_endline ("translated query: "^(Absyn.string_of_term term')) in  *)
-  Ccode_stubs.setTypeAndTermLocation (); 
-  Readterm.readTermAndType term' (Types.Molecule(Absyn.ApplicationType(Pervasive.kbool,[]),[])) fvars [];
-  fvartypes_init query;
-  freeVarTab_init fvars
-(*
-let string_of_lpsol (subst, dsprs) =
-  let string_of_sub (tysymb, term) = (Absyn.getTypeSymbolName tysymb) ^ " = " ^ (Absyn.string_of_term term) ^ "\n" in
-  let subStr = List.fold_left (fun str sub -> str ^ (string_of_sub sub)) "" subst in
-  let string_of_dispr (t1, t2) = (Absyn.string_of_term t1) ^ " = " ^ (Absyn.string_of_term t2) ^ "\n" in
-  let disprStr = List.fold_left (fun str dspr -> str ^ (string_of_dispr dspr)) "" dsprs in
-  "substitution:\n" ^ subStr ^ "disagreement pairs:\n" ^ disprStr
-*)
+      Ccode_stubs.setTypeAndTermLocation (); 
+      Readterm.readTermAndType term' (Types.Molecule(Absyn.ApplicationType(Pervasive.kbool,[]),[])) fvars []; 
+      fvartypes_init query; 
+      freeVarTab_init fvars)
+    "set up simulator to solve query"
+
 let show_answers lpmodule ((Lfsig.Signature(types,objmap)) as lfsig) metadata = 
   let lpsol = Buildterm.build_solution lpmodule (!freeVarTab) in 
 (*  let _ = print_endline (string_of_lpsol lpsol) in *)

@@ -1,0 +1,37 @@
+#!/bin/bash
+if [ -e $1 ]
+then
+  bname=$(basename $1 .lf)
+  lname=${bname}.tjtwelf
+
+  queries=()
+
+  while IFS=$'\n' read line; do
+    queries+=("$line")
+  done <"queries.txt"
+
+  
+  ~/tools/teyjus/tjtwelf -b -e 1 -m 1 "${queries[@]}" $bname.lf> ${lname}.output
+
+  grep '^Execution Time(parse sig)' ${lname}.output >> ${lname}.timing
+  grep '^Execution Time(translate signature)' ${lname}.output >> ${lname}.timing
+  grep '^Execution Time(compile, link, and start simulator)' ${lname}.output >> ${lname}.timing
+  grep '^Execution Time(solve query)' ${lname}.output >> ${lname}.timing
+  grep '^Execution Time(show answer)' ${lname}.output >> ${lname}.timing
+  grep '^Execution Time(parse query)' ${lname}.output >> ${lname}.timing
+  grep '^Execution Time(translate query)' ${lname}.output >> ${lname}.timing
+  grep '^Execution Time(set up simulator to solve query)' ${lname}.output >> ${lname}.timing
+  cat ${lname}.timing
+
+  rm top.sig
+  rm top.mod
+  rm top.lp
+  rm top.lpo
+  rm top.md
+
+  rm ${lname}.output
+  
+else
+  echo "Usage: tjtwelf-timing [FILE]"
+  exit 65
+fi

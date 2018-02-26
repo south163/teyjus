@@ -1,0 +1,60 @@
+elmt : type.
+a : elmt.
+
+list : type.
+nil : list.
+cons : elmt -> list -> list.
+
+append : list -> list -> list -> type.
+appNil : {L:list} append nil L L.
+appCons : {X:elmt}{L1:list}{L2:list}{L3:list} append L1 L2 L3 -> append (cons X L1) L2 (cons X L3).
+
+reverse : list -> list -> type.
+reverseNil : reverse nil nil.
+reverseCons : {X:elmt}{L1:list}{L2:list}{L3:list} append L3 (cons X nil) L2 -> reverse L1 L3 -> reverse (cons X L1) L2.
+
+reverse2 : list -> list -> type.
+rev_aux : list -> list -> list -> type.
+rev_auxNil : {L:list} rev_aux nil L L.
+rev_auxCons : {X:elmt}{L1:list}{L2:list}{L3:list}rev_aux L1 L2 (cons X L3) -> rev_aux (cons X L1) L2 L3.
+rev : {L1:list}{L2:list} rev_aux L1 L2 nil -> reverse2 L1 L2.
+
+%query 1 *  reverse (cons a (cons a (cons a (cons a (cons a
+                       (cons a (cons a (cons a (cons a (cons a 
+                       nil)))))))))) L.
+
+%query 1 *  reverse (cons a (cons a (cons a (cons a (cons a
+                       (cons a (cons a (cons a (cons a (cons a 
+                       (cons a (cons a (cons a (cons a (cons a
+                       (cons a (cons a (cons a (cons a (cons a 
+                       nil)))))))))))))))))))) L.
+
+%query 1 *  reverse (cons a (cons a (cons a (cons a (cons a
+                       (cons a (cons a (cons a (cons a (cons a 
+                       (cons a (cons a (cons a (cons a (cons a
+                       (cons a (cons a (cons a (cons a (cons a 
+                       (cons a (cons a (cons a (cons a (cons a
+                       (cons a (cons a (cons a (cons a (cons a 
+                       nil)))))))))))))))))))))))))))))) L.
+
+%query 1 *  reverse (cons a (cons a (cons a (cons a (cons a
+                       (cons a (cons a (cons a (cons a (cons a 
+                       (cons a (cons a (cons a (cons a (cons a
+                       (cons a (cons a (cons a (cons a (cons a 
+                       (cons a (cons a (cons a (cons a (cons a
+                       (cons a (cons a (cons a (cons a (cons a 
+                       (cons a (cons a (cons a (cons a (cons a
+                       (cons a (cons a (cons a (cons a (cons a 
+                       nil)))))))))))))))))))))))))))))))))))))))) L.
+
+%query 1 *  reverse (cons a (cons a (cons a (cons a (cons a
+                       (cons a (cons a (cons a (cons a (cons a 
+                       (cons a (cons a (cons a (cons a (cons a
+                       (cons a (cons a (cons a (cons a (cons a 
+                       (cons a (cons a (cons a (cons a (cons a
+                       (cons a (cons a (cons a (cons a (cons a 
+                       (cons a (cons a (cons a (cons a (cons a
+                       (cons a (cons a (cons a (cons a (cons a 
+                       (cons a (cons a (cons a (cons a (cons a
+                       (cons a (cons a (cons a (cons a (cons a 
+                       nil)))))))))))))))))))))))))))))))))))))))))))))))))) L.

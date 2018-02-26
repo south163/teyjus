@@ -11,7 +11,8 @@ let queryStrings = ref []
 let heapSize = ref 0
 let path = ref "./"
                        
-let addQuery str = queryStrings := !queryStrings @ [str]
+let addQuery str =
+  queryStrings := !queryStrings @ [str]
 
 let setPath p =
   path := p
@@ -75,7 +76,11 @@ let parse_args () =
   Arg.parse specList setInputName usageMsg 
 
 
-
+let time f dscr =
+  let start = Sys.time () in
+  let x = f () in
+  Printf.printf "Execution Time(%s): %fs\n" dscr (Sys.time () -. start);
+  x
             
 
 
@@ -84,7 +89,7 @@ let _ =
   let _ = parse_args () in
   let _ = checkInput () in
   (* parse LF signature *)
-  let res = ParseTwelf.parse_sig (!inputName) in
+  let res = time (fun () -> ParseTwelf.parse_sig (!inputName)) "parse sig" in
   let sign =
     (match res with
          Some(s) -> s
@@ -95,8 +100,8 @@ let _ =
   (* Query solving in batch mode. interaction is suppressed *)
   let solveQueryBatch () =
     let rec solveQueryBatchAux numResults =
-      if Query.solveQuery () && numResults < !maxSolutions then
-        (Lfquery.show_answers currmod sign md;
+      if (time Query.solveQuery "solve query") && numResults < !maxSolutions then
+        (time (fun () -> Lfquery.show_answers currmod sign md) "show answer";
          solveQueryBatchAux (numResults + 1))
       else
          numResults
@@ -129,9 +134,9 @@ let _ =
                            "Let's try it again:");
             moreAnswers ()
     in
-    if (Query.solveQuery ()) then
+    if (time Query.solveQuery "solve query") then
       if (Query.queryHasVars ()) then
-        (Lfquery.show_answers currmod sign md; 
+        (time (fun () -> Lfquery.show_answers currmod sign md) "show answer"; 
          if (moreAnswers ()) then
            solveQueryInteract ()
          else
@@ -147,7 +152,9 @@ let _ =
            prerr_endline "Error: Only queries which are base types are supported at this time."
        | Some(lfquery) -> 
 (*           print_endline ("LF query: " ^ PrintLF.string_of_query' lfquery); *)
-           if Lfquery.submit_query lfquery md (Absyn.getModuleKindTable currmod) (Absyn.getModuleConstantTable currmod) then 
+           if Lfquery.submit_query lfquery md
+                                   (Absyn.getModuleKindTable currmod)
+                                   (Absyn.getModuleConstantTable currmod) then 
              (if !batch
               then solveQueryBatch ()
               else solveQueryInteract () )
@@ -162,13 +169,13 @@ let _ =
     enter interactive mode *)
   let solveQueries () =
     if !batch then
-      List.iter (fun s -> solveQuery (ParseTwelf.parse_queryStr s)) !queryStrings
+      List.iter (fun s -> solveQuery (time (fun () -> ParseTwelf.parse_queryStr s) "parse query")) !queryStrings
     else
-      (List.iter (fun s -> solveQuery (ParseTwelf.parse_queryStr s)) !queryStrings;
+      (List.iter (fun s -> solveQuery (time (fun () -> (ParseTwelf.parse_queryStr s)) "parse query")) !queryStrings;
        (* enter interactive mode *)
        while true do 
     (*    let _ = print_string ("[" ^ "top" ^"] ?- ") in *)
-         solveQuery (ParseTwelf.parse_queryT ()) 
+         solveQuery (time ParseTwelf.parse_queryT "parse query") 
        done )
   in
   solveQueries ()
