@@ -27,11 +27,9 @@ type gamma = symbset (* context *)
 
 type aposanntype =
   | Pos of (Symb.symbol * aneganntype) list * Lfabsyn.id * Lfabsyn.term list
-  | PosNone
 
 and aneganntype =
   | Neg of (Symb.symbol * aposanntype) list * Lfabsyn.id * Lfabsyn.term list * symbset
-  | NegNone
 
 (*Helper methods*)
 

@@ -100,7 +100,21 @@ let rec pr_disprs ppf = function
 let pr_solution ppf (subst, disprs) =
   Format.fprintf ppf "@[<v 0>%a@.%a@]" pr_substs subst pr_disprs disprs
 
-  
+let rec pr_posanntype ppf (Strictness.Pos(pis,h,args)) =
+  let rec pr_pis ppf = function
+    | [] -> ()
+    | (s,negty) :: pis ->
+       Format.fprintf ppf "@[<2>{@,%a@ :@ %a@,}@ %a@]" pr_symb s pr_neganntype negty pr_pis pis
+  in
+  Format.fprintf ppf "@[<2>%a@,%a@ %a@]" pr_pis pis pr_id h pr_terms args
+
+and pr_neganntype ppf (Strictness.Neg(pis,h,args,strict)) = 
+  let rec pr_pis ppf = function
+    | [] -> ()
+    | (s,posty) :: pis ->
+        Format.fprintf ppf "@[<2>{@,%a@ :@ %a@,}@ %a@]" pr_symb s pr_posanntype posty pr_pis pis
+  in
+  Format.fprintf ppf "@[<2>%a@,%a@ %a@]" pr_pis pis pr_id h pr_terms args            
 
 (* use general formmatting functions to print to stdout *)
 let print_id = pr_id Format.std_formatter 
@@ -140,6 +154,12 @@ let string_of_query_explicit q =
   Format.flush_str_formatter ()
 let string_of_solution sol =
   pr_solution Format.str_formatter sol;
+  Format.flush_str_formatter ()
+let string_of_posanntype pty =
+  pr_posanntype Format.str_formatter pty;
+  Format.flush_str_formatter ()
+let string_of_neganntype nty =
+  pr_neganntype Format.str_formatter nty;
   Format.flush_str_formatter ()
 
 (*** This set of functions is for printing implicit LF given  

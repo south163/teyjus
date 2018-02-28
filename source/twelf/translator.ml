@@ -374,170 +374,123 @@ struct
     in
     swapped
 
+  let enc_pi_struct bvar body =
+    makeApp
+      (Absyn.ConstantTerm(Pervasive.allConstant,[],Errormsg.none))
+      [Absyn.AbstractionTerm(Absyn.NestedAbstraction(bvar,body),Errormsg.none)]
+               
   (** Encode an LF type as a term repsenting a clause.
         @returns a function that when applied to the encoding of an LF
                  constant `c' produces a term encoding the judgement
                  `c : t'. *)
-
-  let rec encode_type_negative metadata consttbl vars sub ty neg_tp =
-    match ty with
-        Lfabsyn.PiType(s,typ,body,dep) ->
-        fun m ->
-        (
-          let (s', sub') =
-            let s' = Symbol.symbol (Symb.name s) in
-            if Option.isSome (Table.find s' vars)
-            then let s'' = gen_name metadata vars s' in
-                 (s'', (s',s'')::sub)
-            else (s', sub)
-          in
-            match neg_tp with
-            | Strictness.Neg (binders, tycon, tms, stricts) ->
-              let bvar = Absyn.BoundVar(s', ref None, ref false, ref (Some(flatten_type ty))) in
-              let vars' = Table.add s' bvar vars in
-              let vartm = Absyn.makeBoundVarTerm bvar Errormsg.none in
-              let neg_tp' = Strictness.Neg(List.tl binders, tycon, tms, stricts) in
-              let r = (encode_type_negative metadata consttbl vars' sub' body neg_tp') (makeApp m [vartm]) in
-              let bodytm =
-                if (Strictness.SymbSet.mem s stricts)
-                then
-                  r
-                else
-                  let l = (encode_type_positive metadata consttbl vars' sub typ (snd (List.hd binders))) vartm in
-                  makeApp (Absyn.ConstantTerm(Pervasive.implConstant, [], Errormsg.none)) [l;r]
-              in
-              let abstm =
-                Absyn.AbstractionTerm(
-                  Absyn.NestedAbstraction(bvar, bodytm),
-                  Errormsg.none)
-              in
-              makeApp (Absyn.ConstantTerm(Pervasive.allConstant, [], Errormsg.none)) [abstm]
-            | Strictness.NegNone ->
-              let bvar = Absyn.BoundVar(s', ref None, ref false, ref (Some(flatten_type ty))) in
-              let vars' = Table.add s' bvar vars in
-              let vartm = Absyn.makeBoundVarTerm bvar Errormsg.none in
-              let r = (encode_type_negative metadata consttbl vars'  sub' body neg_tp) (makeApp m [vartm]) in
-              let bodytm =
-                let l = (encode_type_positive metadata consttbl vars' sub typ Strictness.PosNone) vartm in
-                makeApp (Absyn.ConstantTerm(Pervasive.implConstant, [], Errormsg.none)) [l;r]
-              in
-              let abstm =
-                Absyn.AbstractionTerm(
-                  Absyn.NestedAbstraction(bvar, bodytm),
-                  Errormsg.none)
-              in
-              makeApp (Absyn.ConstantTerm(Pervasive.allConstant, [], Errormsg.none)) [abstm]
-          )
-    | Lfabsyn.AppType(id,tms) ->
-          fun m ->
-            (match (Metadata.getLP metadata (Lfabsyn.get_id_symb id)) with
-                 Some(s') ->
-                   (match Table.find s' consttbl with
-                        Some(c) ->
-                          let lptms = List.map (encode_term consttbl metadata vars sub) tms in
-                          let tytm = makeApp (Absyn.ConstantTerm(c,[],Errormsg.none)) lptms in
-                          makeApp (Absyn.ConstantTerm(Option.get (Table.find hastypeSymb consttbl), [], Errormsg.none)) [m;tytm]
-                      | None ->
-                          Errormsg.error Errormsg.none
-                                         ("No constant found for LP symbol: '" ^ (Symbol.printName s') ^ 
-                                            "' when translating LF type: '" ^ (PrintLF.string_of_typ ty) ^ "'"); 
-                          Absyn.ErrorTerm)
-               | None ->
-                   Errormsg.error Errormsg.none
-                                  ("No mapping found for LF constant: '" ^ (PrintLF.string_of_id id) ^
-                                       "' in LF type: '" ^ (PrintLF.string_of_typ ty) ^ "'");
-                   Absyn.ErrorTerm)
-      | Lfabsyn.IdType(id) ->
-          fun m ->
-            (match (Metadata.getLP metadata (Lfabsyn.get_id_symb id)) with
-                 Some(s) ->
-                   (match Table.find s consttbl with
-                        Some(c) -> makeApp (Absyn.ConstantTerm(Option.get (Table.find hastypeSymb consttbl), [], Errormsg.none)) [m;Absyn.ConstantTerm(c,[],Errormsg.none)]
-                      | None ->
-                          Errormsg.error Errormsg.none
-                                         ("No constant found for LP symbol: '" ^ (Symbol.printName s) ^ "'");
-                          Absyn.ErrorTerm)
-               | None ->
-                   Errormsg.error Errormsg.none
-                                  ("No mapping found for LF constant: '" ^ (PrintLF.string_of_id id) ^ "'");
-                   Absyn.ErrorTerm)
-
-  (** Similar to {!encode_type_negative} but generates a term representing
-      a goal rather than a clause. *)
-  and encode_type_positive metadata consttbl vars sub ty pos_tp =
-    match ty with
-      Lfabsyn.PiType(s,typ,body,dep) ->
-      fun m ->
-      (
-          let (s', sub') =
-            let s' = Symbol.symbol (Symb.name s) in
-            if Option.isSome (Table.find s' vars)
-            then let s'' = gen_name metadata vars s' in
-                 (s'', (s',s'')::sub)
-            else (s', sub)
-          in
-          match pos_tp with
-          | Strictness.Pos (binders, tycon, tms) ->
-            let bvar = Absyn.BoundVar(s', ref None, ref false, ref (Some(flatten_type ty))) in
-            let vars' = Table.add s' bvar vars in
-            let vartm = Absyn.makeBoundVarTerm bvar Errormsg.none in
-            let l = (encode_type_negative metadata consttbl vars' sub typ (snd(List.hd binders))) vartm in
-            let pos_tp' = Strictness.Pos(List.tl binders, tycon, tms) in
-            let r = (encode_type_positive metadata consttbl vars' sub' body pos_tp') (makeApp m [vartm]) in
-            let bodytm = makeApp (Absyn.ConstantTerm(Pervasive.implConstant, [], Errormsg.none)) [l;r] in
-            let abstm =
-              Absyn.AbstractionTerm(
-                Absyn.NestedAbstraction(bvar, bodytm),
-                Errormsg.none)
-            in
-            makeApp (Absyn.ConstantTerm(Pervasive.allConstant, [], Errormsg.none)) [abstm]
-          | Strictness.PosNone ->
-            let bvar = Absyn.BoundVar(s', ref None, ref false, ref (Some(flatten_type ty))) in
-            let vars' = Table.add s' bvar vars in
-            let vartm = Absyn.makeBoundVarTerm bvar Errormsg.none in
-            let l = (encode_type_negative metadata consttbl vars' sub typ Strictness.NegNone) vartm in
-            let r = (encode_type_positive metadata consttbl vars' sub' body pos_tp) (makeApp m [vartm]) in
-            let bodytm = makeApp (Absyn.ConstantTerm(Pervasive.implConstant, [], Errormsg.none)) [l;r] in
-            let abstm =
-              Absyn.AbstractionTerm(
-                Absyn.NestedAbstraction(bvar, bodytm),
-                Errormsg.none)
-            in
-            makeApp (Absyn.ConstantTerm(Pervasive.allConstant, [], Errormsg.none)) [abstm]
-        )
-    | Lfabsyn.AppType(id,tms) ->
-      fun m ->
-        (match (Metadata.getLP metadata (Lfabsyn.get_id_symb id)) with
-           Some(s) ->
-           (match Table.find s consttbl with
+  let rec encode_type_negative metadata consttbl vars sub ((Strictness.Neg(pis,h,args,strict)) as nty) =
+    let rec enc_pi_neg ((acc_encoding,vars,sub):((Absyn.aterm -> Absyn.aterm)->Absyn.aterm -> Absyn.aterm)* Absyn.atypesymbol Table.SymbolTable.t * (Symbol.symbol * Symbol.symbol) list) ((s,pos_ann_type):Symb.symbol * Strictness.aposanntype) =
+      let (s', sub') =
+        let s' = Symbol.symbol (Symb.name s) in 
+        if Option.isSome (Table.find s' vars) 
+        then let s'' = gen_name metadata vars s' in 
+             (s'', (s',s'')::sub) 
+        else (s', sub) 
+      in
+      let bvar = Absyn.BoundVar(s', ref None, ref false, ref (Some(flatten_posanntype pos_ann_type))) in
+      let vars' = Table.add s' bvar vars in
+      let vartm = Absyn.makeBoundVarTerm bvar Errormsg.none in
+     ((fun x -> (* (x (makeApp m [vartm])) *)
+         let encoded_ty =
+           fun m ->
+             let r = x (makeApp m [vartm]) in
+             let body =
+               if Strictness.SymbSet.mem s strict
+               then
+                 r
+               else
+                 let l = (encode_type_positive metadata consttbl vars' sub pos_ann_type) vartm in
+                 makeApp (Absyn.ConstantTerm(Pervasive.implConstant,[],Errormsg.none)) [l;r]
+             in
+             enc_pi_struct bvar body
+         in
+         (acc_encoding encoded_ty)),
+      vars',
+      sub')
+    in
+    let (encoded_pis,vars',sub') = List.fold_left enc_pi_neg ((fun x m -> x m),vars,sub) pis in
+    let enc_base_tm =
+      (match Metadata.getLP metadata (Lfabsyn.get_id_symb h) with
+         Some(s') ->
+           (match Table.find s' consttbl with
               Some(c) ->
-              let lptms = List.map (encode_term consttbl metadata vars sub) tms in
-              let tytm = makeApp (Absyn.ConstantTerm(c,[],Errormsg.none)) lptms in
-              makeApp (Absyn.ConstantTerm(Option.get (Table.find hastypeSymb consttbl), [], Errormsg.none)) [m;tytm]
+                let arg_tms = List.map (encode_term consttbl metadata vars' sub') args in
+                makeApp (Absyn.ConstantTerm(c,[],Errormsg.none)) arg_tms 
             | None ->
-              Errormsg.error Errormsg.none
-                ("No constant found for LP symbol: '" ^ (Symbol.printName s) ^ "'");
-              Absyn.ErrorTerm)
-         | None ->
-           Errormsg.error Errormsg.none
-             ("No mapping found for LF constant: '" ^ (Lfabsyn.get_id_name id) ^ "'");
-           Absyn.ErrorTerm)
-    | Lfabsyn.IdType(id) ->
+               Errormsg.error Errormsg.none
+                              ("No constant found for LP symbol: '" ^ (Symbol.printName s') ^
+                                 "' when translating LF type: '" ^ (PrintLF.string_of_neganntype nty) ^ "'");
+               Absyn.ErrorTerm)
+       | None ->
+          Errormsg.error Errormsg.none
+                         ("No mapping found for LF constant: '" ^ (PrintLF.string_of_id h) ^
+                            "' in LF type: '" ^ (PrintLF.string_of_neganntype nty) ^ "'");
+          Absyn.ErrorTerm)
+    in
+    let enc_base =
       fun m ->
-        (match (Metadata.getLP metadata (Lfabsyn.get_id_symb id)) with
-           Some(s) ->
-           (match Table.find s consttbl with
-              Some(c) ->
-              makeApp (Absyn.ConstantTerm(Option.get (Table.find hastypeSymb consttbl), [], Errormsg.none)) [m;Absyn.ConstantTerm(c,[],Errormsg.none)]
-            | None ->
-              Errormsg.error Errormsg.none
-                ("No constant found for LP symbol: '" ^ (Symbol.printName s) ^ "'");
-              Absyn.ErrorTerm)
-         | None ->
-           Errormsg.error Errormsg.none
-             ("No mapping found for LF constant: '" ^ (PrintLF.string_of_id id) ^ "'");
-           Absyn.ErrorTerm)
+        makeApp (Absyn.ConstantTerm(Option.get (Table.find hastypeSymb consttbl),[],Errormsg.none))
+                [m;enc_base_tm]
+    in 
+    encoded_pis enc_base
 
+  and encode_type_positive metadata consttbl vars sub ((Strictness.Pos(pis,h,args)) as pty) =
+    let rec enc_pi_pos (acc_encoding,vars,sub) (s,neg_ann_type) = 
+      let (s', sub') =
+        let s' = Symbol.symbol (Symb.name s) in 
+        if Option.isSome (Table.find s' vars) 
+        then let s'' = gen_name metadata vars s' in 
+             (s'', (s',s'')::sub) 
+        else (s', sub) 
+      in
+      let bvar = Absyn.BoundVar(s', ref None, ref false, ref (Some(flatten_neganntype neg_ann_type))) in
+      let vars' = Table.add s' bvar vars in
+      let vartm = Absyn.makeBoundVarTerm bvar Errormsg.none in
+     ((fun x -> (* (x (makeApp m [vartm])) *)
+         let encoded_ty =
+           fun m ->
+             let r = x (makeApp m [vartm]) in
+             let body =
+               let l = (encode_type_negative metadata consttbl vars' sub neg_ann_type) vartm in
+               makeApp (Absyn.ConstantTerm(Pervasive.implConstant,[],Errormsg.none)) [l;r]
+             in
+             enc_pi_struct bvar body
+         in
+         (acc_encoding encoded_ty)),
+      vars',
+      sub')
+    in
+    let (encoded_pis,vars',sub') = List.fold_left enc_pi_pos ((fun x m -> x m),vars,sub) pis in
+    let enc_base_tm =
+      (match Metadata.getLP metadata (Lfabsyn.get_id_symb h) with
+         Some(s') ->
+           (match Table.find s' consttbl with
+              Some(c) ->
+                let arg_tms = List.map (encode_term consttbl metadata vars' sub') args in
+                makeApp (Absyn.ConstantTerm(c,[],Errormsg.none)) arg_tms 
+            | None ->
+               Errormsg.error Errormsg.none
+                              ("No constant found for LP symbol: '" ^ (Symbol.printName s') ^
+                                 "' when translating LF type: '" ^ (PrintLF.string_of_posanntype pty) ^ "'");
+               Absyn.ErrorTerm)
+       | None ->
+          Errormsg.error Errormsg.none
+                         ("No mapping found for LF constant: '" ^ (PrintLF.string_of_id h) ^
+                            "' in LF type: '" ^ (PrintLF.string_of_posanntype pty) ^ "'");
+          Absyn.ErrorTerm)
+    in
+    let enc_base =
+      fun m ->
+        makeApp (Absyn.ConstantTerm(Option.get (Table.find hastypeSymb consttbl),[],Errormsg.none))
+                [m;enc_base_tm]
+    in 
+    encoded_pis enc_base
+      
 
   (* Process each type level declaration and each corresponding object level declaration. *)
   let process metadata constants types objs =
@@ -552,7 +505,7 @@ struct
                       let (neg_typ, str_vars) =
                         (Strictness.find_strict_vars_neg typ (Strictness.SymbSet.empty)) 
                       in 
-                      let clause = (encode_type_negative metadata constants Table.empty [] typ neg_typ) aterm in
+                      let clause = (encode_type_negative metadata constants Table.empty [] neg_typ) aterm in
                       List.append clauselst [clause]
                   | None ->
                       Errormsg.error Errormsg.none
@@ -607,7 +560,7 @@ struct
     let pos_tp =
       fst (Strictness.find_strict_vars_pos querytype Strictness.SymbSet.empty)
     in
-    let enctype =  (encode_type_positive metadata constTab typesymbTable' [] querytype pos_tp) varterm in
+    let enctype =  (encode_type_positive metadata constTab typesymbTable' [] pos_tp) varterm in
     (enctype, pt_typsymb :: fvarlist)
 
           

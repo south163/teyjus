@@ -12,11 +12,9 @@ type symbset = SymbSet.t
 
 type aposanntype =
   | Pos of (Symb.symbol * aneganntype) list * Lfabsyn.id * Lfabsyn.term list
-  | PosNone
 
 and aneganntype = 
   | Neg of (Symb.symbol * aposanntype) list * Lfabsyn.id * Lfabsyn.term list * symbset
-  | NegNone
 
 val find_strict_vars_pos : Lfabsyn.typ -> symbset -> (aposanntype * symbset)
 val find_strict_vars_neg : Lfabsyn.typ -> symbset -> (aneganntype * symbset)
