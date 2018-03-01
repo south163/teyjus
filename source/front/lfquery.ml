@@ -7,7 +7,7 @@
 let fvar_types = ref Table.empty
 
 let freeVarTab = ref Intmap.empty
-
+  
 let fvartypes_init (Lfabsyn.Query(fvars, ptSymb, ty)) =
   let types = List.fold_left (fun tbl (s,t) -> Table.add (Symbol.symbol (Symb.name s)) t tbl) 
                              Table.empty 
@@ -25,30 +25,36 @@ let freeVarTab_init fvars =
   freeVarTab := init_aux fvars 0 Intmap.empty;
   true
 
-(* Follows the translateTermTopLevel from parse.ml *)
+let time f dscr =
+  let start = Sys.time () in
+  let x = f () in
+  Printf.printf "Execution Time(%s): %fs\n" dscr (Sys.time () -. start);
+  x
+    
 let submit_query query metadata kinds constants =
-  let (term, fvars) = 
-    match Translator.get_translation () with
-        "naive" -> Translator.NaiveTranslation.translate_query query metadata kinds constants
-      | "optimized" -> Translator.OptimizedTranslation.translate_query query metadata kinds constants in
-  let (fixedterm,fvars',ftyvars) = Parse.fixTerm (Parse.removeNestedAbstractions term) in
-  (*  let _ = print_endline ("translated query: "^(Absyn.string_of_term term')) in  *)
-  
-  Ccode_stubs.setTypeAndTermLocation (); 
-  Readterm.readTermAndType fixedterm (Types.Molecule(Absyn.ApplicationType(Pervasive.kbool,[]),[])) fvars' ftyvars;
-  fvartypes_init query;
-  freeVarTab_init fvars'
-(*
-let string_of_lpsol (subst, dsprs) =
-  let string_of_sub (tysymb, term) = (Absyn.getTypeSymbolName tysymb) ^ " = " ^ (Absyn.string_of_term term) ^ "\n" in
-  let subStr = List.fold_left (fun str sub -> str ^ (string_of_sub sub)) "" subst in
-  let string_of_dispr (t1, t2) = (Absyn.string_of_term t1) ^ " = " ^ (Absyn.string_of_term t2) ^ "\n" in
-  let disprStr = List.fold_left (fun str dspr -> str ^ (string_of_dispr dspr)) "" dsprs in
-  "substitution:\n" ^ subStr ^ "disagreement pairs:\n" ^ disprStr
-*)
+  let (term, fvars) =
+    time 
+      (fun () ->
+        match Translator.get_translation () with
+        | "naive" ->
+          Translator.NaiveTranslation.translate_query query metadata kinds constants
+        | "optimized" ->
+          Translator.OptimizedTranslation.translate_query query metadata kinds constants)
+      "translate query"
+  in
+  time
+    (fun () ->
+      let (fixedterm,fvars',ftyvars) = Parse.fixTerm (Parse.removeNestedAbstractions term) in 
+(*  let _ = print_endline ("translated query: "^(Absyn.string_of_term term')) in  *)
+      Ccode_stubs.setTypeAndTermLocation (); 
+      Readterm.readTermAndType fixedterm (Types.Molecule(Absyn.ApplicationType(Pervasive.kbool,[]),[])) fvars' ftyvars; 
+      fvartypes_init query; 
+      freeVarTab_init fvars')
+    "set up simulator to solve query"
+
 let show_answers lpmodule ((Lfsig.Signature(types,objmap)) as lfsig) metadata = 
-  let lpsol = Buildterm.build_solution lpmodule (!freeVarTab) in 
+  let lpsol = time (fun () -> Buildterm.build_solution lpmodule (!freeVarTab)) "build term" in 
 (*  let _ = print_endline (string_of_lpsol lpsol) in *)
-  let lfsol = Inverse.invert lfsig metadata (!fvar_types) lpsol in
+  let lfsol = time (fun () -> Inverse.invert lfsig metadata (!fvar_types) lpsol) "invert term" in
   (print_endline "\nThe answer substitution:";
    print_endline (PrintLF.string_of_solution_implicit types objmap lfsol))

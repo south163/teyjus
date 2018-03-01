@@ -1,0 +1,20 @@
+#!/usr/bin/env tcsh
+if (! -f $1) then
+  echo "Usage: twelf-timing [FILE]"
+  exit 65
+else
+  set bname = `basename $1 .elf`
+  set lname = ${bname}.twelf
+  ~/tools/twelf/bin/twelf-server > ${lname}.output <<INPUTFILE
+
+  loadFile $1
+  Timers.show
+INPUTFILE
+  grep '^Parsing' ${lname}.output >> ${lname}.timing
+  grep '^Reconstruction' ${lname}.output >> ${lname}.timing
+  grep '^Solving' ${lname}.output >> ${lname}.timing
+  grep '^Printing' ${lname}.output >> ${lname}.timing
+  grep '^Total' ${lname}.output >> ${lname}.timing
+  rm ${lname}.output
+  cat ${lname}.timing
+endif

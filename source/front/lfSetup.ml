@@ -9,6 +9,11 @@ let setup_sim path heapSize name =
   Module.moduleInstall !name ;
   Module.initModuleContext () 
 
+let time f dscr =
+  let start = Sys.time () in
+  let x = f () in
+  Printf.printf "Execution Time(%s): %fs\n" dscr (Sys.time () -. start);
+  x
 
 
 (** Read the mapping between LF and LP constants
@@ -79,6 +84,7 @@ let output_files (metadata, kinds, constants, clauses) name =
   close_out out_mod
                                                          
 let setup_system path heapSize sign name =
-  let (md,_,_,_) as res = translate_sig sign in
-  output_files res name; compile_and_link name; setup_sim path heapSize name;
+  let (md,_,_,_) as res = time (fun () -> translate_sig sign) "translate signature" in
+  time (fun () -> output_files res name; compile_and_link name; setup_sim path heapSize name)
+       "compile, link, and start simulator";
   ( Module.getCurrentModule (), md)
