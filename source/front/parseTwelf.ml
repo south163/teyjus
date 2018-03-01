@@ -12,7 +12,9 @@ let spine_map f s =
       | IntSyn.App(e, s') -> 
         let e' = f e in
         (e' :: aux s')
-      | IntSyn.SClo(s',IntSyn.Shift(0)) -> aux s'
+      | IntSyn.SClo(s',sub) ->
+         (* Figure out what we need to do with non-identity sub here *)
+         aux s'
   in
   aux s 
 
@@ -179,6 +181,12 @@ and sub_to_args bvars sub =
         (Lfabsyn.IdTerm(Lfabsyn.Var(s, ty)) :: (sub_to_args bvars sub'))
     | IntSyn.Dot(IntSyn.Exp(e), sub') -> (exp_to_term bvars e) :: (sub_to_args bvars sub')
     | IntSyn.Dot(IntSyn.Axp(e), sub') -> (exp_to_term bvars e) :: (sub_to_args bvars sub')
+    | IntSyn.Dot(IntSyn.Undef, sub') ->
+       (* TODO: To make more readable should come up with names for these *)
+       Lfabsyn.IdTerm(Lfabsyn.LogicVar(Symb.symbol "_", Lfabsyn.Unknown)) :: (sub_to_args bvars sub')
+    | IntSyn.Dot(IntSyn.Block(_),sub') ->
+       prerr_endline "Blocks should not appear in our subs.";
+       sub_to_args bvars sub'                                   
     | IntSyn.Shift(k) -> []
 and build_type_from_dctx bvars ctx =
   match ctx with
@@ -385,7 +393,7 @@ let parse_query parseStream =
         let (ty, name_op, evars) = ReconQuery.queryToQuery(query, Paths.Loc ("stdIn", Paths.Reg(0,0))) in
         let query = query_to_query (ty, name_op, evars) in
         Some(query)
-      with _ -> None )
+      with Failure(s) -> print_endline ("Error: " ^ s ^ "."); None)
   | Tparsing.Parsing.Lexer'.Stream'.Empty -> None
 
                     
