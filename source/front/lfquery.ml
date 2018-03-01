@@ -54,8 +54,8 @@ let submit_query query metadata kinds constants =
     "set up simulator to solve query"
 
 let show_answers lpmodule ((Lfsig.Signature(types,objmap)) as lfsig) metadata = 
-  let lpsol = Buildterm.build_solution lpmodule (!freeVarTab) in 
+  let lpsol = time (fun () -> Buildterm.build_solution lpmodule (!freeVarTab)) "build term" in 
 (*  let _ = print_endline (string_of_lpsol lpsol) in *)
-  let lfsol = Inverse.invert lfsig metadata (!fvar_types) lpsol in
+  let lfsol = time (fun () -> Inverse.invert lfsig metadata (!fvar_types) lpsol) "invert term" in
   (print_endline "\nThe answer substitution:";
    print_endline (PrintLF.string_of_solution_implicit types objmap lfsol))

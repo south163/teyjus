@@ -100,7 +100,7 @@ let _ =
   (* Query solving in batch mode. interaction is suppressed *)
   let solveQueryBatch () =
     let rec solveQueryBatchAux numResults =
-      if (time Query.solveQuery "solve query") && numResults < !maxSolutions then
+      if numResults < !maxSolutions && (time Query.solveQuery "solve query")  then
         (time (fun () -> Lfquery.show_answers currmod sign md) "show answer";
          solveQueryBatchAux (numResults + 1))
       else

@@ -21,6 +21,8 @@ then
   grep '^Execution Time(parse query)' ${lname}.output >> ${lname}.timing
   grep '^Execution Time(translate query)' ${lname}.output >> ${lname}.timing
   grep '^Execution Time(set up simulator to solve query)' ${lname}.output >> ${lname}.timing
+  grep '^Execution Time(build term)' ${lname}.output >> ${lname}.timing
+  grep '^Execution Time(invert term)' ${lname}.output >> ${lname}.timing
   cat ${lname}.timing
 
   rm top.sig
