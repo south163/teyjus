@@ -73,3 +73,4 @@ source/test/*/*/*.lpo
 source/test/*/*/actual
 source/test/*/*/*.dis-actual
 source/test/*/*/*.s-acc
+performanceTesting/**/*.timing

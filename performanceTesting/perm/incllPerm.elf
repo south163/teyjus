@@ -250,52 +250,52 @@ idl2 :
 idl3 : {X1:sort} prog (^ (idl X1 (nil X1) (nil X1))).
 
 
-%query * 1
-(sqnt rnil rnil rnil rnil
-   (^ (perm int
-            (| int '1 (| int '2 (| int '3 (| int '4 (| int '5 
-               (| int '5 (| int '4 (| int '3 (| int '2 (| int '1
-               (nil int)))))))))))
-            L))).
+% %query * 1
+% (sqnt rnil rnil rnil rnil
+%    (^ (perm int
+%             (| int '1 (| int '2 (| int '3 (| int '4 (| int '5 
+%                (| int '5 (| int '4 (| int '3 (| int '2 (| int '1
+%                (nil int)))))))))))
+%             L))).
 
 
-%query * 1
-(sqnt rnil rnil rnil rnil
-   (^ (perm int
-            (| int '1 (| int '2 (| int '3 (| int '4 (| int '5 
-               (| int '5 (| int '4 (| int '3 (| int '2 (| int '1
-               (| int '1 (| int '2 (| int '3 (| int '4 (| int '5 
-               (| int '5 (| int '4 (| int '3 (| int '2 (| int '1
-               (nil int)))))))))))))))))))))
-            L))).
+% %query * 1
+% (sqnt rnil rnil rnil rnil
+%    (^ (perm int
+%             (| int '1 (| int '2 (| int '3 (| int '4 (| int '5 
+%                (| int '5 (| int '4 (| int '3 (| int '2 (| int '1
+%                (| int '1 (| int '2 (| int '3 (| int '4 (| int '5 
+%                (| int '5 (| int '4 (| int '3 (| int '2 (| int '1
+%                (nil int)))))))))))))))))))))
+%             L))).
 
 
-%query * 1
-(sqnt rnil rnil rnil rnil
-   (^ (perm int
-            (| int '1 (| int '2 (| int '3 (| int '4 (| int '5 
-               (| int '5 (| int '4 (| int '3 (| int '2 (| int '1
-               (| int '1 (| int '2 (| int '3 (| int '4 (| int '5 
-               (| int '5 (| int '4 (| int '3 (| int '2 (| int '1
-               (| int '1 (| int '2 (| int '3 (| int '4 (| int '5 
-               (| int '5 (| int '4 (| int '3 (| int '2 (| int '1
-               (nil int)))))))))))))))))))))))))))))))
-            L))).
+% %query * 1
+% (sqnt rnil rnil rnil rnil
+%    (^ (perm int
+%             (| int '1 (| int '2 (| int '3 (| int '4 (| int '5 
+%                (| int '5 (| int '4 (| int '3 (| int '2 (| int '1
+%                (| int '1 (| int '2 (| int '3 (| int '4 (| int '5 
+%                (| int '5 (| int '4 (| int '3 (| int '2 (| int '1
+%                (| int '1 (| int '2 (| int '3 (| int '4 (| int '5 
+%                (| int '5 (| int '4 (| int '3 (| int '2 (| int '1
+%                (nil int)))))))))))))))))))))))))))))))
+%             L))).
 
 
-%query * 1
-(sqnt rnil rnil rnil rnil
-   (^ (perm int
-            (| int '1 (| int '2 (| int '3 (| int '4 (| int '5 
-               (| int '5 (| int '4 (| int '3 (| int '2 (| int '1
-               (| int '1 (| int '2 (| int '3 (| int '4 (| int '5 
-               (| int '5 (| int '4 (| int '3 (| int '2 (| int '1
-               (| int '1 (| int '2 (| int '3 (| int '4 (| int '5 
-               (| int '5 (| int '4 (| int '3 (| int '2 (| int '1
-               (| int '1 (| int '2 (| int '3 (| int '4 (| int '5 
-               (| int '5 (| int '4 (| int '3 (| int '2 (| int '1
-               (nil int)))))))))))))))))))))))))))))))))))))))))
-            L))).
+% %query * 1
+% (sqnt rnil rnil rnil rnil
+%    (^ (perm int
+%             (| int '1 (| int '2 (| int '3 (| int '4 (| int '5 
+%                (| int '5 (| int '4 (| int '3 (| int '2 (| int '1
+%                (| int '1 (| int '2 (| int '3 (| int '4 (| int '5 
+%                (| int '5 (| int '4 (| int '3 (| int '2 (| int '1
+%                (| int '1 (| int '2 (| int '3 (| int '4 (| int '5 
+%                (| int '5 (| int '4 (| int '3 (| int '2 (| int '1
+%                (| int '1 (| int '2 (| int '3 (| int '4 (| int '5 
+%                (| int '5 (| int '4 (| int '3 (| int '2 (| int '1
+%                (nil int)))))))))))))))))))))))))))))))))))))))))
+%             L))).
 
 
 %query * 1
