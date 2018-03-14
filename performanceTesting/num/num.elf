@@ -42,20 +42,20 @@ mklist-step :
       mklist A B Pf -> mklist (+ A C) (+ B C) (plus_cong A B C C Pf (refl C)).
 mklist-stop : {A:num} mklist A A (refl A).
 
-% size 32 
-%query * 1
-  mklist
-    (+
-       (+ (+ (+ (+ (+ z s) (+ z s)) (+ (+ z s) (+ z s)))
-             (+ (+ (+ z s) (+ z s)) (+ (+ z s) (+ z s))))
-          (+ (+ (+ (+ z s) (+ z s)) (+ (+ z s) (+ z s)))
-             (+ (+ (+ z s) (+ z s)) (+ (+ z s) (+ z s)))))
-       (+ (+ (+ (+ (+ z s) (+ z s)) (+ (+ z s) (+ z s)))
-             (+ (+ (+ z s) (+ z s)) (+ (+ z s) (+ z s))))
-          (+ (+ (+ (+ z s) (+ z s)) (+ (+ z s) (+ z s)))
-             (+ (+ (+ z s) (+ z s)) (+ (+ z s) (+ z s))))))
-    L
-    P.
+% % size 32 
+% %query * 1
+%   mklist
+%     (+
+%        (+ (+ (+ (+ (+ z s) (+ z s)) (+ (+ z s) (+ z s)))
+%              (+ (+ (+ z s) (+ z s)) (+ (+ z s) (+ z s))))
+%           (+ (+ (+ (+ z s) (+ z s)) (+ (+ z s) (+ z s)))
+%              (+ (+ (+ z s) (+ z s)) (+ (+ z s) (+ z s)))))
+%        (+ (+ (+ (+ (+ z s) (+ z s)) (+ (+ z s) (+ z s)))
+%              (+ (+ (+ z s) (+ z s)) (+ (+ z s) (+ z s))))
+%           (+ (+ (+ (+ z s) (+ z s)) (+ (+ z s) (+ z s)))
+%              (+ (+ (+ z s) (+ z s)) (+ (+ z s) (+ z s))))))
+%     L
+%     P.
 
 % % size 64 
 % %query * 1

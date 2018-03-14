@@ -1,0 +1,92 @@
+Goal: Build an argument that the translation based approach provides better performance
+Why: To support this approach and the theoretical results in a paper/the thesis
+
+Define better performance:
+  1. the setup time for our system is reasonable
+     (setup: parse signature, translate signature, setup teyjus simulator)
+  2. the time required to solve a query is less than that required using Twelf
+     (solve query: parse query, translate query, setup simulator to solve, solve
+	               query in Teyjus(search), invert solution)
+	2.1. If one can show that parsing, translating, simulator setup, and inversion
+	    time is negligible then can directly compare solving times
+  3. the printing time for solutions is reasonable
+	 
+What information will we need for this?
+  1a. A collection of example signatures
+  1b. How long is needed to do setup in our system
+  1c. How long is needed to do setup in Twelf
+
+  2a. A collection of example signatures and queries
+  2b. How long is needed to solve each query in our system
+    2.1a. A breakdown of the time spent on each aspect of solving in our system
+  2c. How long is needed to solve each query in Twelf
+	2.1b. A breakdown of the time spent parsing & searching for solution in Twelf
+	
+  3a. A collection of example signatures and queries
+  3b. How long is needed to print the solution to each query in our system
+  3c. How long is needed to print the solution to each query in Twelf
+  
+How will we collect this information?
+  set of example signatures and queries:
+    - reverse : naively reverse a list of length n
+	- miniml : double a number of size n
+	- miniml-typed : add 10 to a number of size n
+	- num : transform an expression of size n into a normal form
+	         the normal form is such that (+ (+ a b) (+ c d))
+			 becomes (+ (+ (+ a b) c) d)
+	- perm : find a permutation of a list of length n
+	- kolm : use Kolmogorov translation to translate a classical derivation of 
+	         size n to an intuitionistic derivation
+    - cps : closure conversion			 
+  
+  in Twelf:
+    The twelf system has timers which time various aspects. The aspects relevant
+	to the data we collect are: Parsing, Reconstructing, Solving, and Printing.
+	According to the Users Guide, there is an issue with the timing of printing
+	in that it is counted in both the solving and printing timers.
+	
+	1. load base signature file in Twelf and return the total time for
+	   Parsing and Reconstruction
+	   
+	2. set Twelf print depth to 0 (to avoid printing solutions), load the base 
+	   signature and reset the timers. Then load a second file containing the query
+	   to solve and return the total time for parsing, reconstruction, and solving.
+
+    3. load the base signature, reset the timers, then load file with query. Return
+	   the total time for printing.
+  
+  in Tjtwelf:
+    Since we did not build in any timers and we want to separate out the cost of
+	various aspects we use the OCaml Sys.time function in determining how long a 
+	particular processing step takes. To do this we wrap particular calls in the 
+	source code with a "time" function which will determine how long it takes to
+	run and prints the result to stdin.
+	
+	1. run tjtwelf with the base signature and collect the time for parsing, 
+	   reconstruction, translation, and setting up the simulator.
+	   
+	2. run tjtwelf in batch mode providing each query which corresponds to the
+	   particular signature and collect the time for each component of solving
+	   each query.
+	   
+	3. run tjtwelf in batch mode providing each query which corresponds to the 
+	   specified signature and collect the time to print each query's solution.
+	   
+Goal: Look into the num example and determine why the larger example queries 
+      are causing a "Fatal Error: out of memory".
+Why: Given past work and the behavior of Twelf on this example this behavior
+     is unexpected.
+	 
+	 ( looks like issue was in build term and my bug. I constructed the proof term
+	   even though it was implicit and it is veeeery large. )
+	 
+What information will we need?
+  1. On which queries does the error occur
+  2. Is our implementation properly translating the signature and query
+  3. At what stage in the query solving process is the error occurring
+	   
+Goal: Understand on what class of examples the translation based approach performs
+      better than Twelf and why.
+	  Similarly with the class of examples on which is performs worse than Twelf.
+Why:  Not all of the examples (specifically: perm) performed as well given the 
+      initial data collected.
