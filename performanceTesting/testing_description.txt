@@ -1,3 +1,21 @@
+Immediate Tasks:
+
+  - given the fix to inefficiency in constructing OCaml representation of a solution
+    a quick test using a simple example such as reverse should be done to see if
+	the time necessary for this processing step still swamps everything else
+	
+  - test framework for collecting data about twelf should be restructured as laid
+    out in the discussion below and re-run to collect the required data for all
+	examples
+	
+  - for example queries shorter than 1s to solve, determine either new queries or
+    a modified testing structure to make times more significant
+	
+  - finish testing all the example signatures
+  
+  
+  
+
 Goal: Build an argument that the translation based approach provides better performance
 Why: To support this approach and the theoretical results in a paper/the thesis
 
@@ -72,21 +90,171 @@ How will we collect this information?
 	3. run tjtwelf in batch mode providing each query which corresponds to the 
 	   specified signature and collect the time to print each query's solution.
 	   
-Goal: Look into the num example and determine why the larger example queries 
+What has been collected?
+  1. There is data on the time needed for setup using our approach 
+     for examples: reverse, num, miniml, miniml-typed, perm
+  2. There is data on the time needed to solve example queries in Twelf
+     for examples: reverse, num, miniml, miniml-typed, perm
+	 but this included printing solutions.
+  3. There is data on the time needed to solve example queries using Tjtwelf
+     (using the translation with all optimizations)
+	 for examples: reverse, num, miniml, miniml-typed, perm
+  4. There is data on the time needed to print solutions in our system
+     for examples: reverse, num, miniml, miniml-typed, perm 
+	 
+Observations from initial analysis:
+  1. There is clear performance improvement for the miniml and reverse examples
+  2. We get an out of memory error on the num examples of size 256 and 512,
+     but there is performance benefit on the smaller num examples
+  3. The Twelf system has an out of memory error on only the num example of 
+     size 512
+  4. our system performs worse on the perm example
+  5. the miniml-typed examples perform worse as size increases
+  6. times for all examples are less than one second
+  7. The comparison with Twelf solving time is not similar to the data in Zach's 
+     work
+	 
+Tasks based on observations:
+  1. modify the Twelf testing framework to identify parsing/reconstruction time
+     for the query independent of the rest of the signature
+  2. modify the Twelf testing framework to isolate the solving time from the 
+     printing time, relative to the comment in the users guide
+  3. complete testing in both systems for the additional example signatures
+  4. find a way to make the timing data for example queries more significant,
+     to lessen the effect of noise in our data
+	 
+Subgoals to investigate based on analysis:
+  1. Look into the num example and determine why the larger example queries 
+      are causing a "Fatal Error: out of memory".
+  2. Understand on what class of examples the translation based approach performs
+      better than Twelf and why.
+	  Similarly with the class of examples on which is performs worse than Twelf.
+  3. Ensure that our results are consistent with the results in Zach's thesis
+	   
+Subgoal: Look into the num example and determine why the larger example queries 
       are causing a "Fatal Error: out of memory".
 Why: Given past work and the behavior of Twelf on this example this behavior
      is unexpected.
 	 
-	 ( looks like issue was in build term and my bug. I constructed the proof term
-	   even though it was implicit and it is veeeery large. )
+What information will we want?
+  1. what data would Zach have obtained from this example
+  2. is this behavior repeatable in our system when running only a single query
+  3. at what point in the process the out of memory error occurs
+     3.1. is the implementation of this part correct
+  
+How will we collect this information?
+  1. collect timing data using Zach's timing setup 
+     The raw data from Zach's work is unavailable but we do have access to the
+	 parinati system and his timing scripts. Using these we can run these examples
+	 to check what the behavior would be using his approach.
+
+  2. directly run the problematic queries individually (not using the timing scripts)
+  
+  3. begin by returning after finding the solution using Teyjus and incrementally
+     extend to each step of the solution processing until the problematic component
+	 is identified
+    3.1a. Verify that the solution found (in Teyjus) is correct by inspection
+	3.1b. Verify the translated signature & query we generate is correct by inspection
+	3.1c. Verify that the OCaml representation of the solution we build is correct
+	      through first inspecting result and then ensuring the code correct
+	3.1d. Verify that the result of inversion is the correct LF solution by 
+	      inspecting the resulting solution and ensuring the code is correct
+	3.1e. Verify that the printing routine is correct by observing the output
+	      and inspecting the code
+
+What has been collected?
+  1. Using Zach's testing framework for his system and for Twelf collected timing
+     data for this example
 	 
-What information will we need?
-  1. On which queries does the error occur
-  2. Is our implementation properly translating the signature and query
-  3. At what stage in the query solving process is the error occurring
-	   
-Goal: Understand on what class of examples the translation based approach performs
+  2. Attempted to run the queries individually using our system
+  
+  3. Performed incremental extensions of the processing of solution to find where
+     the error occurs: when building OCaml representation
+    3.1. Inspection of this code was performed
+
+Observations of this data:
+  1. Twelf is able to handle the query of size 512 in Zach's testing framework in 
+     which solutions are not printed.
+	 
+  2. The out of memory error occurs when we are building an OCaml representation 
+     of the solution from the C representation
+	 
+  3. Being confident in the correctness of the implementation I investigated 
+     what terms were part of this solution and which term was being worked on when 
+	 we run out of memory. It turns out that the problem is with the proof term. In
+	 this example, the (anonymous) proof term is quite large, but is not to be
+	 returned as part of the solution. The substitutions for anonymous variables
+	 were being kept during the transition from C to OCaml and removed during the
+	 inversion step.
+	 
+  4. There is no need to process these anonymous variables when building the OCaml
+     representation. By ignoring this term we should not run out of memory on these
+	 examples.
+	 
+Tasks based on these observations:
+  1. verify that this change does make it such that the num queries are solved
+     successfully.
+  2. run a quick test to determine if, with this change, the total run time of
+     our system on a single query (including building the OCaml representation)
+	 is comparable with Twelf. The hugely inflated numbers seen initially may 
+	 have been due to considering proof terms which we now omit.
+	 
+Subgoal: Understand on what class of examples the translation based approach performs
       better than Twelf and why.
 	  Similarly with the class of examples on which is performs worse than Twelf.
 Why:  Not all of the examples (specifically: perm) performed as well given the 
       initial data collected.
+	  
+What information will we need for this?
+  1. A collection of examples on which our system performs better than Twelf
+     and a collection of examples on which it performs worse than Twelf.
+	 
+  2. Identification of characteristics of these example signatures
+  
+  3. Identification of characteristics of the example queries we ran
+  
+  4. any known inefficiencies or potential pitfalls of the Teyjus system
+  
+How will this information be collected?
+  1. we will use the results of earlier data collection on the set of 
+     examples in handle
+	 
+  2. the signatures should be inspected to determine what sort of structure the
+     types have 
+	 
+  3. each class of example queries should be inspected to determine how the
+     search behaves given the signature
+	 
+  4. ??? More thinking required to come up with more concrete ideas here
+  
+Subgoal : Ensure that our results are consistent with the results in Zach's thesis
+Why: The initial data we collected did not match up with Zach's tables. To gain 
+     confidence in our system we would like to show it is comparable.
+	 
+What information will we need for this?
+  1. Timing data for queries solved using Zach's system, including the various
+     translation optimizations
+  
+  2. Timing data for queries solved using our system under various translation
+     optimization levels
+	 
+How will this information be collected?
+  1. We will use parinati to translate a signature which includes a single query
+     which gets encoded as a special "main" predicate. We time the simulator using
+	 the query "true." to determine overhead, and then time it solving the 
+	 translated query. The difference of these two is kept as the time to solve
+	 the query. 
+	 This process will be repeated using the various versions of translation
+	 available in parinati.
+	 
+  2. We will run our system using each version of translation and provide the
+     queries for each example signature to be solved. We will collect the timing
+	 data for the search portion of the query solving.
+	 
+Tasks for this subgoal:
+  1. fix available parinati implementation to properly generate the translated query
+     such that manual fixing is not required.
+  2. create a testing framework, based on Zach's timing script, that is not sensitive
+     to weather or not other processes run during the testing.
+  ***3. consider if this work is worth doing (specifically: fixing parinati and
+     Zach's timing framework)
