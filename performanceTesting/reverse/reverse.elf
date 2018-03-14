@@ -19,35 +19,120 @@ rev_auxNil : {L:list} rev_aux nil L L.
 rev_auxCons : {X:elmt}{L1:list}{L2:list}{L3:list}rev_aux L1 L2 (cons X L3) -> rev_aux (cons X L1) L2 L3.
 rev : {L1:list}{L2:list} rev_aux L1 L2 nil -> reverse2 L1 L2.
 
-%query 1 *  reverse (cons a (cons a (cons a (cons a (cons a
-                       (cons a (cons a (cons a (cons a (cons a 
-                       nil)))))))))) L.
+% %query 1 *  reverse (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        nil)))))))))) L.
 
-%query 1 *  reverse (cons a (cons a (cons a (cons a (cons a
-                       (cons a (cons a (cons a (cons a (cons a 
-                       (cons a (cons a (cons a (cons a (cons a
-                       (cons a (cons a (cons a (cons a (cons a 
-                       nil)))))))))))))))))))) L.
+% %query 1 *  reverse (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        nil)))))))))))))))))))) L.
 
-%query 1 *  reverse (cons a (cons a (cons a (cons a (cons a
-                       (cons a (cons a (cons a (cons a (cons a 
-                       (cons a (cons a (cons a (cons a (cons a
-                       (cons a (cons a (cons a (cons a (cons a 
-                       (cons a (cons a (cons a (cons a (cons a
-                       (cons a (cons a (cons a (cons a (cons a 
-                       nil)))))))))))))))))))))))))))))) L.
+% %query 1 *  reverse (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        nil)))))))))))))))))))))))))))))) L.
 
-%query 1 *  reverse (cons a (cons a (cons a (cons a (cons a
-                       (cons a (cons a (cons a (cons a (cons a 
-                       (cons a (cons a (cons a (cons a (cons a
-                       (cons a (cons a (cons a (cons a (cons a 
-                       (cons a (cons a (cons a (cons a (cons a
-                       (cons a (cons a (cons a (cons a (cons a 
-                       (cons a (cons a (cons a (cons a (cons a
-                       (cons a (cons a (cons a (cons a (cons a 
-                       nil)))))))))))))))))))))))))))))))))))))))) L.
+% %query 1 *  reverse (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        nil)))))))))))))))))))))))))))))))))))))))) L.
 
-%query 1 *  reverse (cons a (cons a (cons a (cons a (cons a
+% %query 1 *  reverse (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        nil)))))))))))))))))))))))))))))))))))))))))))))))))) L.
+
+% %query 1 *  reverse (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        nil
+%                        ))))))))))))))))))))))))))))))))))))))))))))))))))
+%                        ))))))))))))))))))))))))))))))))))))))))))))))))))
+% L.
+
+
+% %query 1 * reverse (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        (cons a (cons a (cons a (cons a (cons a
+%                        (cons a (cons a (cons a (cons a (cons a 
+%                        nil
+%                        ))))))))))))))))))))))))))))))))))))))))))))))))))
+%                        ))))))))))))))))))))))))))))))))))))))))))))))))))
+%                        ))))))))))))))))))))))))))))))))))))))))))))))))))
+%                        ))))))))))))))))))))))))))))))))))))))))))))))))))
+% L.
+
+%query 1 * reverse (cons a (cons a (cons a (cons a (cons a
                        (cons a (cons a (cons a (cons a (cons a 
                        (cons a (cons a (cons a (cons a (cons a
                        (cons a (cons a (cons a (cons a (cons a 
@@ -57,4 +142,49 @@ rev : {L1:list}{L2:list} rev_aux L1 L2 nil -> reverse2 L1 L2.
                        (cons a (cons a (cons a (cons a (cons a 
                        (cons a (cons a (cons a (cons a (cons a
                        (cons a (cons a (cons a (cons a (cons a 
-                       nil)))))))))))))))))))))))))))))))))))))))))))))))))) L.
+                       (cons a (cons a (cons a (cons a (cons a
+                       (cons a (cons a (cons a (cons a (cons a 
+                       (cons a (cons a (cons a (cons a (cons a
+                       (cons a (cons a (cons a (cons a (cons a 
+                       (cons a (cons a (cons a (cons a (cons a
+                       (cons a (cons a (cons a (cons a (cons a 
+                       (cons a (cons a (cons a (cons a (cons a
+                       (cons a (cons a (cons a (cons a (cons a 
+                       (cons a (cons a (cons a (cons a (cons a
+                       (cons a (cons a (cons a (cons a (cons a 
+                       (cons a (cons a (cons a (cons a (cons a
+                       (cons a (cons a (cons a (cons a (cons a 
+                       (cons a (cons a (cons a (cons a (cons a
+                       (cons a (cons a (cons a (cons a (cons a 
+                       (cons a (cons a (cons a (cons a (cons a
+                       (cons a (cons a (cons a (cons a (cons a 
+                       (cons a (cons a (cons a (cons a (cons a
+                       (cons a (cons a (cons a (cons a (cons a 
+                       (cons a (cons a (cons a (cons a (cons a
+                       (cons a (cons a (cons a (cons a (cons a 
+                       (cons a (cons a (cons a (cons a (cons a
+                       (cons a (cons a (cons a (cons a (cons a 
+                       (cons a (cons a (cons a (cons a (cons a
+                       (cons a (cons a (cons a (cons a (cons a 
+                       (cons a (cons a (cons a (cons a (cons a
+                       (cons a (cons a (cons a (cons a (cons a 
+                       (cons a (cons a (cons a (cons a (cons a
+                       (cons a (cons a (cons a (cons a (cons a 
+                       (cons a (cons a (cons a (cons a (cons a
+                       (cons a (cons a (cons a (cons a (cons a 
+                       (cons a (cons a (cons a (cons a (cons a
+                       (cons a (cons a (cons a (cons a (cons a 
+                       (cons a (cons a (cons a (cons a (cons a
+                       (cons a (cons a (cons a (cons a (cons a 
+                       (cons a (cons a (cons a (cons a (cons a
+                       (cons a (cons a (cons a (cons a (cons a 
+                       (cons a (cons a (cons a (cons a (cons a
+                       (cons a (cons a (cons a (cons a (cons a 
+                       (cons a (cons a (cons a (cons a (cons a
+                       (cons a (cons a (cons a (cons a (cons a 
+                       nil))))))))))))))))))))))))))))))))))))))))))))))))))
+                       ))))))))))))))))))))))))))))))))))))))))))))))))))
+                       ))))))))))))))))))))))))))))))))))))))))))))))))))
+                       ))))))))))))))))))))))))))))))))))))))))))))))))))
+                       ))))))))))))))))))))))))))))))))))))))))))))))))))
+L.

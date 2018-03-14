@@ -24,7 +24,7 @@ int : sort.
 '5 : trm int.
 list : sort -> sort.
 nil : {A:sort} trm (list A).
-| : {A:sort} trm A -> trm (list A) -> trm (list A).
+bar : {A:sort} trm A -> trm (list A) -> trm (list A).
 ^ : atm -> frm.
 iImp : frm -> frm -> frm.
 lImp : frm -> frm -> frm.
@@ -212,104 +212,104 @@ elem : trm int -> atm.
 perm1 :
    {X:trm int} {L:trm (list int)} {K:trm (list int)}
       prog
-         (lImp (lImp (^ (elem X)) (^ (perm int L K))) (^ (perm int (| int X L) K))).
+         (lImp (lImp (^ (elem X)) (^ (perm int L K))) (^ (perm int (bar int X L) K))).
 perm2 :
    {K:trm (list int)} {X:trm int}
       prog
          (lImp (^ (perm int (nil int) K))
-             (lImp (^ (elem X)) (^ (perm int (nil int) (| int X K))))).
+             (lImp (^ (elem X)) (^ (perm int (nil int) (bar int X K))))).
 perm3 : {X1:sort} prog (^ (perm X1 (nil X1) (nil X1))).
 rev1 :
    {X:trm int} {L:trm (list int)} {K:trm (list int)}
       prog
-         (orImp (orImp (^ (elem X)) (^ (rev int L K))) (^ (rev int (| int X L) K))).
+         (orImp (orImp (^ (elem X)) (^ (rev int L K))) (^ (rev int (bar int X L) K))).
 rev2 :
    {K:trm (list int)} {X:trm int}
       prog
          (orImp (^ (rev int (nil int) K))
-             (orImp (^ (elem X)) (^ (rev int (nil int) (| int X K))))).
+             (orImp (^ (elem X)) (^ (rev int (nil int) (bar int X K))))).
 rev3 : {X1:sort} prog (^ (rev X1 (nil X1) (nil X1))).
 id1 :
    {X:trm int} {L:trm (list int)} {K:trm (list int)}
-      prog (orImp (olImp (^ (elem X)) (^ (id int L K))) (^ (id int (| int X L) K))).
+      prog (orImp (olImp (^ (elem X)) (^ (id int L K))) (^ (id int (bar int X L) K))).
 id2 :
    {K:trm (list int)} {X:trm int}
       prog
          (orImp (^ (id int (nil int) K))
-             (orImp (^ (elem X)) (^ (id int (nil int) (| int X K))))).
+             (orImp (^ (elem X)) (^ (id int (nil int) (bar int X K))))).
 id3 : {X1:sort} prog (^ (id X1 (nil X1) (nil X1))).
 idl1 :
    {X:trm int} {L:trm (list int)} {K:trm (list int)}
       prog
-         (olImp (olImp (^ (elem X)) (^ (idl int L K))) (^ (idl int (| int X L) K))).
+         (olImp (olImp (^ (elem X)) (^ (idl int L K))) (^ (idl int (bar int X L) K))).
 idl2 :
    {K:trm (list int)} {X:trm int}
       prog
          (orImp (^ (idl int (nil int) K))
-             (orImp (^ (elem X)) (^ (idl int (nil int) (| int X K))))).
+             (orImp (^ (elem X)) (^ (idl int (nil int) (bar int X K))))).
 idl3 : {X1:sort} prog (^ (idl X1 (nil X1) (nil X1))).
 
 
-%query * 1
-(sqnt rnil rnil rnil rnil
-   (^ (perm int
-            (| int '1 (| int '2 (| int '3 (| int '4 (| int '5 
-               (| int '5 (| int '4 (| int '3 (| int '2 (| int '1
-               (nil int)))))))))))
-            L))).
+% %query * 1
+% (sqnt rnil rnil rnil rnil
+%    (^ (perm int
+%             (bar int '1 (bar int '2 (bar int '3 (bar int '4 (bar int '5 
+%                (bar int '5 (bar int '4 (bar int '3 (bar int '2 (bar int '1
+%                (nil int)))))))))))
+%             L))).
+
+
+% %query * 1
+% (sqnt rnil rnil rnil rnil
+%    (^ (perm int
+%             (bar int '1 (bar int '2 (bar int '3 (bar int '4 (bar int '5 
+%                (bar int '5 (bar int '4 (bar int '3 (bar int '2 (bar int '1
+%                (bar int '1 (bar int '2 (bar int '3 (bar int '4 (bar int '5 
+%                (bar int '5 (bar int '4 (bar int '3 (bar int '2 (bar int '1
+%                (nil int)))))))))))))))))))))
+%             L))).
+
+
+% %query * 1
+% (sqnt rnil rnil rnil rnil
+%    (^ (perm int
+%             (bar int '1 (bar int '2 (bar int '3 (bar int '4 (bar int '5 
+%                (bar int '5 (bar int '4 (bar int '3 (bar int '2 (bar int '1
+%                (bar int '1 (bar int '2 (bar int '3 (bar int '4 (bar int '5 
+%                (bar int '5 (bar int '4 (bar int '3 (bar int '2 (bar int '1
+%                (bar int '1 (bar int '2 (bar int '3 (bar int '4 (bar int '5 
+%                (bar int '5 (bar int '4 (bar int '3 (bar int '2 (bar int '1
+%                (nil int)))))))))))))))))))))))))))))))
+%             L))).
+
+
+% %query * 1
+% (sqnt rnil rnil rnil rnil
+%    (^ (perm int
+%             (bar int '1 (bar int '2 (bar int '3 (bar int '4 (bar int '5 
+%                (bar int '5 (bar int '4 (bar int '3 (bar int '2 (bar int '1
+%                (bar int '1 (bar int '2 (bar int '3 (bar int '4 (bar int '5 
+%                (bar int '5 (bar int '4 (bar int '3 (bar int '2 (bar int '1
+%                (bar int '1 (bar int '2 (bar int '3 (bar int '4 (bar int '5 
+%                (bar int '5 (bar int '4 (bar int '3 (bar int '2 (bar int '1
+%                (bar int '1 (bar int '2 (bar int '3 (bar int '4 (bar int '5 
+%                (bar int '5 (bar int '4 (bar int '3 (bar int '2 (bar int '1
+%                (nil int)))))))))))))))))))))))))))))))))))))))))
+%             L))).
 
 
 %query * 1
 (sqnt rnil rnil rnil rnil
    (^ (perm int
-            (| int '1 (| int '2 (| int '3 (| int '4 (| int '5 
-               (| int '5 (| int '4 (| int '3 (| int '2 (| int '1
-               (| int '1 (| int '2 (| int '3 (| int '4 (| int '5 
-               (| int '5 (| int '4 (| int '3 (| int '2 (| int '1
-               (nil int)))))))))))))))))))))
-            L))).
-
-
-%query * 1
-(sqnt rnil rnil rnil rnil
-   (^ (perm int
-            (| int '1 (| int '2 (| int '3 (| int '4 (| int '5 
-               (| int '5 (| int '4 (| int '3 (| int '2 (| int '1
-               (| int '1 (| int '2 (| int '3 (| int '4 (| int '5 
-               (| int '5 (| int '4 (| int '3 (| int '2 (| int '1
-               (| int '1 (| int '2 (| int '3 (| int '4 (| int '5 
-               (| int '5 (| int '4 (| int '3 (| int '2 (| int '1
-               (nil int)))))))))))))))))))))))))))))))
-            L))).
-
-
-%query * 1
-(sqnt rnil rnil rnil rnil
-   (^ (perm int
-            (| int '1 (| int '2 (| int '3 (| int '4 (| int '5 
-               (| int '5 (| int '4 (| int '3 (| int '2 (| int '1
-               (| int '1 (| int '2 (| int '3 (| int '4 (| int '5 
-               (| int '5 (| int '4 (| int '3 (| int '2 (| int '1
-               (| int '1 (| int '2 (| int '3 (| int '4 (| int '5 
-               (| int '5 (| int '4 (| int '3 (| int '2 (| int '1
-               (| int '1 (| int '2 (| int '3 (| int '4 (| int '5 
-               (| int '5 (| int '4 (| int '3 (| int '2 (| int '1
-               (nil int)))))))))))))))))))))))))))))))))))))))))
-            L))).
-
-
-%query * 1
-(sqnt rnil rnil rnil rnil
-   (^ (perm int
-            (| int '1 (| int '2 (| int '3 (| int '4 (| int '5 
-               (| int '5 (| int '4 (| int '3 (| int '2 (| int '1
-               (| int '1 (| int '2 (| int '3 (| int '4 (| int '5 
-               (| int '5 (| int '4 (| int '3 (| int '2 (| int '1
-               (| int '1 (| int '2 (| int '3 (| int '4 (| int '5 
-               (| int '5 (| int '4 (| int '3 (| int '2 (| int '1
-               (| int '1 (| int '2 (| int '3 (| int '4 (| int '5 
-               (| int '5 (| int '4 (| int '3 (| int '2 (| int '1
-               (| int '1 (| int '2 (| int '3 (| int '4 (| int '5 
-               (| int '5 (| int '4 (| int '3 (| int '2 (| int '1
+            (bar int '1 (bar int '2 (bar int '3 (bar int '4 (bar int '5 
+               (bar int '5 (bar int '4 (bar int '3 (bar int '2 (bar int '1
+               (bar int '1 (bar int '2 (bar int '3 (bar int '4 (bar int '5 
+               (bar int '5 (bar int '4 (bar int '3 (bar int '2 (bar int '1
+               (bar int '1 (bar int '2 (bar int '3 (bar int '4 (bar int '5 
+               (bar int '5 (bar int '4 (bar int '3 (bar int '2 (bar int '1
+               (bar int '1 (bar int '2 (bar int '3 (bar int '4 (bar int '5 
+               (bar int '5 (bar int '4 (bar int '3 (bar int '2 (bar int '1
+               (bar int '1 (bar int '2 (bar int '3 (bar int '4 (bar int '5 
+               (bar int '5 (bar int '4 (bar int '3 (bar int '2 (bar int '1
                (nil int)))))))))))))))))))))))))))))))))))))))))))))))))))
             L))).

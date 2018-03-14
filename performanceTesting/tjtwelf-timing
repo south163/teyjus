@@ -11,19 +11,33 @@ then
   done <"queries.txt"
 
   
-  ~/tools/teyjus/tjtwelf -b -e 1 -m 1 "${queries[@]}" $bname.lf> ${lname}.output
+  ../../tjtwelf --heap 131072 -b -e 1 -m 1 "${queries[@]}" $bname.lf> ${lname}.output
 
   grep '^Execution Time(parse sig)' ${lname}.output >> ${lname}.timing
   grep '^Execution Time(translate signature)' ${lname}.output >> ${lname}.timing
   grep '^Execution Time(compile, link, and start simulator)' ${lname}.output >> ${lname}.timing
-  grep '^Execution Time(solve query)' ${lname}.output >> ${lname}.timing
-  grep '^Execution Time(show answer)' ${lname}.output >> ${lname}.timing
   grep '^Execution Time(parse query)' ${lname}.output >> ${lname}.timing
   grep '^Execution Time(translate query)' ${lname}.output >> ${lname}.timing
   grep '^Execution Time(set up simulator to solve query)' ${lname}.output >> ${lname}.timing
+  grep '^Execution Time(solve query)' ${lname}.output >> ${lname}.timing
   grep '^Execution Time(build term)' ${lname}.output >> ${lname}.timing
   grep '^Execution Time(invert term)' ${lname}.output >> ${lname}.timing
+  grep '^Execution Time(print solution)' ${lname}.output >> ${lname}.timing
   cat ${lname}.timing
+
+  rm ${lname}.output
+
+  ../../tjtwelf -t naive -b -e 1 -m 1 "${queries[@]}" $bname.lf> ${lname}.output
+  grep '^Execution Time(solve query)' ${lname}.output >> ${lname}.timing
+  rm ${lname}.output
+
+  ../../tjtwelf -index false -specialize false -b -e 1 -m 1 "${queries[@]}" $bname.lf> ${lname}.output
+  grep '^Execution Time(solve query)' ${lname}.output >> ${lname}.timing
+  rm ${lname}.output
+
+  ../../tjtwelf -index false -b -e 1 -m 1 "${queries[@]}" $bname.lf> ${lname}.output
+  grep '^Execution Time(solve query)' ${lname}.output >> ${lname}.timing
+  rm ${lname}.output
 
   rm top.sig
   rm top.mod
@@ -31,7 +45,8 @@ then
   rm top.lpo
   rm top.md
 
-  rm ${lname}.output
+  #  rm ${lname}.output
+  echo "Done."
   
 else
   echo "Usage: tjtwelf-timing [FILE]"

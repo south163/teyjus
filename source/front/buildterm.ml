@@ -70,7 +70,7 @@ let rec build_term tmPtr freeVarTab constIdxMap =
       | t when t = tag_bvar -> 
           let idx = Ccode_stubs.getBVarData(tmPtr) in
           (Absyn.BoundVarTerm(Absyn.DBIndex(idx),Errormsg.none), freeVarTab)
-      | t when t = tag_abs -> 
+      | t when t = tag_abs ->
           let (numabs, body_tmptr) = Ccode_stubs.getAbsData(tmPtr) in
           let (body, freeVarTab') = build_term_aux body_tmptr freeVarTab in
           let rec build_abs i =
@@ -82,7 +82,7 @@ let rec build_term tmPtr freeVarTab constIdxMap =
                         Errormsg.none))
           in
           (build_abs numabs, freeVarTab')
-      | t when t = tag_app -> 
+      | t when t = tag_app ->
           let (head_tmptr, arg_tmptrs, numArgs) = Ccode_stubs.getAppData(tmPtr) in
           let (head, freeVarTab') = build_term_aux head_tmptr freeVarTab in
           let (args, freeVarTab'') = 
@@ -100,14 +100,15 @@ let rec build_term tmPtr freeVarTab constIdxMap =
 
 let build_subst lpmod freeVarTab constIdxMap = 
   let numfvars = Ccode_stubs.getNumQueryVars() in
-(*  let _ = print_endline ("There are "^(string_of_int numfvars)^" free variables.") in *)
+(*  let _ = print_endline ("There are "^(string_of_int numfvars)^" free variables.") in  *)
   let rec build_subst_aux i freeVarTab =
     if i = numfvars
     then
       ([], freeVarTab)
     else
       match Intmap.find i freeVarTab with
-          Some(tysymb) ->
+        Some(tysymb) ->
+            if Absyn.getTypeSymbolName tysymb = "_" then build_subst_aux (i+1) freeVarTab else
             let (tm, freeVarTab') = (*set_newFV_basename (Absyn.getTypeSymbolName tysymb); *)
                                     build_term (Ccode_stubs.getSubTerm(i)) freeVarTab constIdxMap in
             let (rest, freeVarTab'') = build_subst_aux (i + 1) freeVarTab' in

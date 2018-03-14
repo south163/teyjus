@@ -149,17 +149,89 @@ prod-n : {X : texpr nat}{Y : texpr nat}{Z : texpr nat}
 		)
 		Z.
 
-%query 1 1
-  sum
-	  (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
-	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
-	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
-	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
-	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
-	       z-t))))))))))))))))))))))))))))))))))))))))))))))))))
-	  (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
-	       z-t))))))))))
-    A.
+% %query 1 1
+%   sum
+% 	  (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       z-t))))))))))))))))))))))))))))))))))))))))))))))))))
+% 	  (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       z-t))))))))))
+%     A.
+
+% %query 1 1
+%   sum
+% 	  (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+%                z-t))))))))))))))))))))))))))))))))))))))))))))))))))
+%                ))))))))))))))))))))))))))))))))))))))))))))))))))
+% 	  (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       z-t))))))))))
+%     A.
+
+% %query 1 1
+%   sum
+% 	  (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+%                (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+%                z-t))))))))))))))))))))))))))))))))))))))))))))))))))
+%                ))))))))))))))))))))))))))))))))))))))))))))))))))
+%                ))))))))))))))))))))))))))))))))))))))))))))))))))
+% 	  (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       z-t))))))))))
+%     A.
+
+% %query 1 1
+%   sum
+% 	  (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+%                (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+%                (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+%                z-t))))))))))))))))))))))))))))))))))))))))))))))))))
+%                ))))))))))))))))))))))))))))))))))))))))))))))))))
+%                ))))))))))))))))))))))))))))))))))))))))))))))))))
+%                ))))))))))))))))))))))))))))))))))))))))))))))))))
+% 	  (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+% 	       z-t))))))))))
+%     A.
 
 %query 1 1
   sum
@@ -173,20 +245,12 @@ prod-n : {X : texpr nat}{Y : texpr nat}{Z : texpr nat}
 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
-               z-t))))))))))))))))))))))))))))))))))))))))))))))))))
-               )))))))))))))))))))))))))))))))))))))))))))))))))
-	  (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
-	       z-t))))))))))
-    A.
-
-%query 1 1
-  sum
-	  (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+               (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
-	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
+               (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
@@ -198,34 +262,6 @@ prod-n : {X : texpr nat}{Y : texpr nat}{Z : texpr nat}
 	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
                z-t))))))))))))))))))))))))))))))))))))))))))))))))))
                ))))))))))))))))))))))))))))))))))))))))))))))))))
-               ))))))))))))))))))))))))))))))))))))))))))))))))))
-	  (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
-	       z-t))))))))))
-    A.
-
-%query 1 1
-  sum
-	  (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
-	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
-	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
-	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
-	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
-	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
-	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
-	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
-	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
-	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
-               (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
-	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
-	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
-	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
-	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
-               (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
-	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
-	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
-	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
-	       (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t (s-t
-               z-t))))))))))))))))))))))))))))))))))))))))))))))))))
                ))))))))))))))))))))))))))))))))))))))))))))))))))
                ))))))))))))))))))))))))))))))))))))))))))))))))))
                ))))))))))))))))))))))))))))))))))))))))))))))))))

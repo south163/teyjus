@@ -101,7 +101,7 @@ let _ =
   let solveQueryBatch () =
     let rec solveQueryBatchAux numResults =
       if numResults < !maxSolutions && (time Query.solveQuery "solve query")  then
-        (time (fun () -> Lfquery.show_answers currmod sign md) "show answer";
+         (Lfquery.show_answers currmod sign md;
          solveQueryBatchAux (numResults + 1))
       else
          numResults
@@ -136,7 +136,7 @@ let _ =
     in
     if (time Query.solveQuery "solve query") then
       if (Query.queryHasVars ()) then
-        (time (fun () -> Lfquery.show_answers currmod sign md) "show answer"; 
+         (Lfquery.show_answers currmod sign md; 
          if (moreAnswers ()) then
            solveQueryInteract ()
          else
