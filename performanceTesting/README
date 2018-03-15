@@ -1,8 +1,8 @@
 tjtwelf-timing:
   This script is for running timing benchmarks on tjtwelf.
   The timing output is the amount of (CPU) time to translate and load
-  the specification and queries into the simulator and solve the
-  queries.
+  the specification and queries into the simulator as well as solve and
+  print the queries.
 
   We use Sys.time in a timing wrapper to calculate the time for
   various parts of the process: parsing the signature (includes type
@@ -22,13 +22,15 @@ twelf-timing:
   solve the query in Twelf.
 
   This uses the built-in twelf timers, collecting the
-  Parsing+Reconstruction time as the total time to spent parsing
-  (signature and queries), the Solving time as the total time spent
-  solving queries, and the Printing time as the total time spent
-  printing query solutions.
+  Parsing and Reconstruction time for both the signature and queries and the
+  time to solve and print queries.
 
   To use, create a file with extension `.elf' containing the signature
-  along with query declarations for all queries you wish to be run.
+  along with a set of `.elf' files each containing a query. To run pass
+  the signature file as the first argument and then each of the queries
+  you wish to run. A text file listing the queries, such as
+  twelf_queries.txt, can be useful in making it easier to pass a large
+  number of queries.
 
 
 benchmarks run:
