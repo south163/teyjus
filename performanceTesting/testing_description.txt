@@ -2,6 +2,8 @@ Goal: Build an argument that the translation based approach provides better perf
 Why: To support this approach and the theoretical results in a paper/the thesis
 
 Define better performance:
+  [GN: This part should provide the rationale for what you are
+  measuring, leave the details to the next one. See comments below.]
   1. the setup time for our system is reasonable
      (setup: parse signature, translate signature, setup teyjus simulator)
   2. the time required to solve a query is less than that required using Twelf
@@ -9,24 +11,62 @@ Define better performance:
 	               query in Teyjus(search), invert solution)
 	2.1. If one can show that parsing, translating, simulator setup, and inversion
 	    time is negligible then can directly compare solving times
-  3. the printing time for solutions is reasonable
+  3. the printing time for solutions is reasonable  [GN: why is this
+                                                         separate from 2?]
 	 
 What information will we need for this?
+  [GN: In 1, 2 and 3, the set of example signatures and queries is
+  fixed, so this break up which has different items for 1a, 2a and 3a
+  is at least confusing. I suggest bringing the example signatures and
+  queries to the top and then breaking up the different kinds of
+  information to be collected into subcategories would be better.
+  The other question I have is why this is distinct from the first
+  question at least in the way you have elaborated things.
+
+  I would suggest including the details here and discussing the
+  rationale for including or not including particular components under
+  the first question.]
+  
   1a. A collection of example signatures
   1b. How long is needed to do setup in our system
-  1c. How long is needed to do setup in Twelf
+  1c. How long is needed to do setup in Twelf   [GN: What is the setup
+                                                 time in the case of Twelf?]
 
   2a. A collection of example signatures and queries
   2b. How long is needed to solve each query in our system
     2.1a. A breakdown of the time spent on each aspect of solving in our system
   2c. How long is needed to solve each query in Twelf
 	2.1b. A breakdown of the time spent parsing & searching for solution in Twelf
-	
+	            [GN: you can collect this breakdown, but in the
+                         end only the total time seems important.]
+			 
   3a. A collection of example signatures and queries
   3b. How long is needed to print the solution to each query in our system
   3c. How long is needed to print the solution to each query in Twelf
+       [GN: I don't understand the rationale for separating printing out.]
   
 How will we collect this information?
+  [GN: How are you determining what applications to look at? That is
+  an important part here, the particular examples are just an
+  elaboration. One why to select examples would be based on kinds of
+  applications, e.g.
+     vanilla logic programming examples
+     meta-theoretic applications where most of the work is done
+        via evaluation (i.e. deterministic, lambda conversion)
+     meta-theoretic applications where there is some search but very
+        simple unification (i.e. where you may have multiple choices
+	                    for the same input term which is ground)
+     meta-theoretic applications where both search and unification
+        play a role
+  You would have to look at the examples to figure which categories
+  they fit in such a division.
+  This kind of breakup is not oriented towards the particular
+  strengths of the approaches to implementation, it is oriented
+  towards looking comprehensively at the kinds of applications you can
+  envisage for LF logic programming. A more difficult (and perhaps
+  more informative) breakup would be oriented around expected
+  strengths of the implementations.]
+     
   set of example signatures and queries:
     - reverse : naively reverse a list of length n
 	- miniml : double a number of size n
@@ -38,6 +78,11 @@ How will we collect this information?
 	- kolm : use Kolmogorov translation to translate a classical derivation of 
 	         size n to an intuitionistic derivation
     - cps : closure conversion			 
+
+ [GN: Make sure that you are actually collecting time that is
+  identical in spirit in the two systems. Otherwise it will be
+  difficult to use the data in comparisons. If there are issues, like
+  you mention about printin in Twelf, find a way to get around them.]
   
   in Twelf:
     The twelf system has timers which time various aspects. The aspects relevant
@@ -71,7 +116,12 @@ How will we collect this information?
 	   
 	3. run tjtwelf in batch mode providing each query which corresponds to the 
 	   specified signature and collect the time to print each query's solution.
-	   
+
+[GN: This does not sound like a goal for comparisons to me. It is perhaps
+a question that came up in the course of testing, but that is in a
+separate category---it is something that you have to resolve
+separately to establish the legitimacy of testing. It is best not to
+confuse the two issues, i.e. deal with this separately from this document.]
 Goal: Look into the num example and determine why the larger example queries 
       are causing a "Fatal Error: out of memory".
 Why: Given past work and the behavior of Twelf on this example this behavior
@@ -79,6 +129,9 @@ Why: Given past work and the behavior of Twelf on this example this behavior
 	 
 	 ( looks like issue was in build term and my bug. I constructed the proof term
 	   even though it was implicit and it is veeeery large. )
+     [GN: At the end, I don't see the bottomline. Have you established
+	   that this is an anomaly? Or is this an example that shows
+	   tjtwelf to be weaker than twelf in some cases?]
 	 
 What information will we need?
   1. On which queries does the error occur
@@ -90,3 +143,9 @@ Goal: Understand on what class of examples the translation based approach perfor
 	  Similarly with the class of examples on which is performs worse than Twelf.
 Why:  Not all of the examples (specifically: perm) performed as well given the 
       initial data collected.
+
+[GN: I don't understand this part either. Hasn't it been covered at
+least in part (and entirely in spirit) in the earlier questions?
+I.e. weren't you running examples essentially to tell when one system
+is better and why? In any case, what new testing do you envisage
+here?]
