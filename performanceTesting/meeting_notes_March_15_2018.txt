@@ -1,0 +1,116 @@
+Notes from March 15
+
+1. The Timing Document
+
+  - The content of the discussion of what we mean by "reasonable
+    performance" has the wrong feel.
+    This section should be a more high-level description of what it
+    is we want to be comparing, both between the two systems and
+    within our system
+
+  - Testing is parameterized by examples
+    Since all the testing discussion is parameterized by a collection
+    of examples the example set should be motivated and then given
+    separately from what timing data is going to be collected and how
+
+  - Classes of examples - be able to support choice of example set
+    One must be able to support the choices of tests. Towards this,
+    determine some different categories of examples that we would want
+    to test our system on. Then fit examples into these categories
+    both by changing signatures or changing the sort of query we use.
+
+    - some variations in classes to consider:
+      does the example make use of HOAS?
+      does the example involve search?
+      does the example involve unification?
+
+    - different examples may give rise to different queries
+    
+      eg. evaluation and type checking would lead to different classes
+      
+      eg. some examples we may be interested in increasing "size" to
+      determine if performance degrades or improves, which with others
+      we may just compare some interesting example queries.
+
+      eg. varying the translation may alter the sort of example; in
+      the naive translation where everything is a hastype there may be
+      some search involved, but once all optimizations are used this
+      might be eliminated
+
+2. Selecting Timing Examples
+   (Related to above item, but we went into a bit of detail here)
+
+  - while we may have the tests we want already, need to be able to
+    support why these tests are used
+
+  We discussed some different examples and their category:
+
+     - reverse
+       the naive reversing of lists is like vanilla logic programming,
+       it is deterministic and does not involve any interesting
+       unification
+
+    - eval (in miniml)
+      involves reductions but does not need to deal with bindings and
+      such, would be deterministic based on term structure
+
+    - type checking (in miniml)
+      now we must move under bindings, but except in the
+      constant/variable cases at the end it is still going to be
+      pretty deterministic
+
+    - num
+      this example involves search
+      *** must check if there is unification
+
+    - perm
+      since this example involves the encoding of a logic it could be
+      more complex and involve unification,
+      *** must check the signature & query to determine classification
+
+    - example from teyjus (pcf?)
+      We discussed an example from teyjus in which a term needs to be
+      constructed and so it requires unification
+
+3. The Num Example
+
+  I found that we run out of memory during translation from C to OCaml
+  representation.
+
+  This step was including all the implicit/anonymous variables which
+  are not needed in the inversion or printing steps.
+
+  By eliminating these terms we can prevent the implementation from
+  performing unnecessary computation, saving both space and time
+
+  ***this change may also change the times for performing later
+     processing steps such as inversion and printing so tests need to
+     be re-run
+
+4. Comparisons with Zach
+
+  - Why would we want to perform is comparison?
+    What information would we want to get from such a comparison?
+
+    Zach has published data on the performance of solving a translated
+    & compiled query, and since our data differs from Zach's we should
+    be able to provide an explanation for this.
+
+    Since we only have comparisons with Twelf to compare we would want
+    to run Zach's setup directly and compare.
+
+    ***should we compare our way, or also compile in the query to be
+       solved when comparing with Zach?
+
+  - there is some work that would be required to collect the data
+    to collect a large amount of data on Zach's setup effectively then
+    time would need to be spent on fixing parinati and modifying the
+    way timing data is collected so that it only measures the time
+    that the program is actually being run and not other processes
+
+    ***look into translation and make sure the optimizations are being
+       done in a similar way between our system and Zach's
+
+    ***query solving is different; Zach will compile a query as part
+       of the mod file but we do not. (unless there is something I do
+       not understand about batch mode in Teyjus)
