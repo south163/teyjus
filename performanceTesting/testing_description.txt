@@ -19,304 +19,131 @@ Immediate Tasks:
 Goal: Build an argument that the translation based approach provides better performance
 Why: To support this approach and the theoretical results in a paper/the thesis
 
+A related question of interest:
+  What is the impact of translating and iverting on the cost of a
+  query?
+
+  In other words, how significant is the impact of these processing
+  steps on the time required for our system to solve a query?
+
 Define better performance:
   [GN: This part should provide the rationale for what you are
   measuring, leave the details to the next one. See comments below.]
-  1. the setup time for our system is reasonable
-     (setup: parse signature, translate signature, setup teyjus simulator)
-  2. the time required to solve a query is less than that required using Twelf
-     (solve query: parse query, translate query, setup simulator to solve, solve
-	               query in Teyjus(search), invert solution)
-	2.1. If one can show that parsing, translating, simulator setup, and inversion
-	    time is negligible then can directly compare solving times
-  3. the printing time for solutions is reasonable  [GN: why is this
-                                                         separate from 2?]
-	 
-What information will we need for this?
-  [GN: In 1, 2 and 3, the set of example signatures and queries is
-  fixed, so this break up which has different items for 1a, 2a and 3a
-  is at least confusing. I suggest bringing the example signatures and
-  queries to the top and then breaking up the different kinds of
-  information to be collected into subcategories would be better.
-  The other question I have is why this is distinct from the first
-  question at least in the way you have elaborated things.
 
-  I would suggest including the details here and discussing the
-  rationale for including or not including particular components under
-  the first question.]
-  
-  1a. A collection of example signatures
-  1b. How long is needed to do setup in our system
-  1c. How long is needed to do setup in Twelf   [GN: What is the setup
-                                                 time in the case of Twelf?]
+  1. Our system requires some overhead in handling the signature as it
+     must get translated and then the translated files loaded into
+     Teyjus. Because this overhead cost is expected to be amortized
+     over many queries we will check the overhead time separately and
+     only show that it is reasonable.
 
-  2a. A collection of example signatures and queries
-  2b. How long is needed to solve each query in our system
-    2.1a. A breakdown of the time spent on each aspect of solving in our system
-  2c. How long is needed to solve each query in Twelf
-	2.1b. A breakdown of the time spent parsing & searching for solution in Twelf
-	            [GN: you can collect this breakdown, but in the
-                         end only the total time seems important.]
-			 
-  3a. A collection of example signatures and queries
-  3b. How long is needed to print the solution to each query in our system
-  3c. How long is needed to print the solution to each query in Twelf
-       [GN: I don't understand the rationale for separating printing out.]
-  
-How will we collect this information?
-  [GN: How are you determining what applications to look at? That is
-  an important part here, the particular examples are just an
-  elaboration. One why to select examples would be based on kinds of
-  applications, e.g.
-     vanilla logic programming examples
-     meta-theoretic applications where most of the work is done
-        via evaluation (i.e. deterministic, lambda conversion)
-     meta-theoretic applications where there is some search but very
-        simple unification (i.e. where you may have multiple choices
-	                    for the same input term which is ground)
-     meta-theoretic applications where both search and unification
-        play a role
-  You would have to look at the examples to figure which categories
-  they fit in such a division.
-  This kind of breakup is not oriented towards the particular
-  strengths of the approaches to implementation, it is oriented
-  towards looking comprehensively at the kinds of applications you can
-  envisage for LF logic programming. A more difficult (and perhaps
-  more informative) breakup would be oriented around expected
-  strengths of the implementations.]
+  2. We will also compare the solving time for a collection of queries
+     relative to particular signatures. Our system involves
+     translating between a C representation and an OCaml
+     representation in order to then perform the inversion and
+     printing steps. This step can be costly, but a better
+     implementation could be done completely in C. Such an
+     implementation would be able to be at least as efficient as the
+     inversion and printing functions implemented in OCaml and so we
+     will ignore the time to convert from C to OCaml in our query
+     solving time.
+
      
-  set of example signatures and queries:
-    - reverse : naively reverse a list of length n
-	- miniml : double a number of size n
-	- miniml-typed : add 10 to a number of size n
-	- num : transform an expression of size n into a normal form
-	         the normal form is such that (+ (+ a b) (+ c d))
-			 becomes (+ (+ (+ a b) c) d)
-	- perm : find a permutation of a list of length n
-	- kolm : use Kolmogorov translation to translate a classical derivation of 
-	         size n to an intuitionistic derivation
-    - cps : closure conversion			 
+What information will we need for this?
 
- [GN: Make sure that you are actually collecting time that is
-  identical in spirit in the two systems. Otherwise it will be
-  difficult to use the data in comparisons. If there are issues, like
-  you mention about printin in Twelf, find a way to get around them.]
+  1. A suitible collection of example signatures and related queries
+
+  2a. How long is needed to do setup in our system
+  2b. How long is needed to do setup in Twelf
+      (essentially just parsing the specification)
+
+  3a. How long is needed to solve each query in our system given each
+      version of the translation
+      
+      To answer the additional question stated above, this will be
+      broken down into timing information for the various steps of
+      solving a query. However, in the end any comparisons will be on
+      the total time.
+  3b. How long is needed to solve each query in Twelf
   
+Selection of example specifications and queries:
+
+  The examples will be selected to cover a veriety of potential
+  applications of LF logic programming. Because an example consists of
+  both a specification and a particular sort of query, a single LF
+  signature may be used in multiple examples.
+
+  set of examples:
+  
+    1. naive reverse of a list
+       This is an example of vanilla logic programming.
+
+    2. evaluation of expressions in mini-ml language
+       This is an example of an encoding of an evaluator for a
+       language. It is deterministic and involves reduction.
+
+    3. type checking of expressions in miniml
+       This example makes use of HOAS, is deterministinc, and most of
+       the work invovled is evaluation.
+
+    4. evaluation of expressions in a typed encoding of mini-ml language
+       This is another example of an evaluator for a language. It
+       makes use of dependencies in types.
+
+    5. transformation of simple numerical expressions
+       This is an example of an application in which search plays an
+       important role but unification is very simple. This example
+       also makes use of dependencies in types to encode proofs that
+       the two numerical expressions are equal.
+
+    6. list permutation in INCLL
+       This is an example of encoding a meta-interpreter for a
+       logic. Search and unification both play a role in this
+       example.
+       ***I am still unsure about the role of unification
+          here. Requires more time understanding the example.
+
+    7. cps conversion of expressions
+       This is an example where search does not play much of a role
+       but there is more than just simple unification involved in
+       constructing the transformed expression.
+
+How will we collect this information?  
   in Twelf:
-    The twelf system has timers which time various aspects. The aspects relevant
-	to the data we collect are: Parsing, Reconstructing, Solving, and Printing.
-	According to the Users Guide, there is an issue with the timing of printing
-	in that it is counted in both the solving and printing timers.
+    The twelf system has timers which time various aspects. The
+    aspects relevant to the data we collect are: Parsing,
+    Reconstructing, Solving, and Printing.
+
+    Note: According to the Users Guide, there is an issue with the
+    timing of printing in that it is counted in both the solving and
+    printing timers. The design for testing takes this into account by
+    getting the timing data for solving and for printing separately so
+    that the time for solving is not artificially inflated by the
+    inclusion of printing.
 	
 	1. load base signature file in Twelf and return the total time for
 	   Parsing and Reconstruction
 	   
-	2. set Twelf print depth to 0 (to avoid printing solutions), load the base 
-	   signature and reset the timers. Then load a second file containing the query
-	   to solve and return the total time for parsing, reconstruction, and solving.
+	2. set Twelf print depth to 0 (to avoid printing
+	   solutions). Then reset the timers and load a second file
+	   containing the query to solve and return the total time for
+	   parsing, reconstruction, and solving.
 
-    3. load the base signature, reset the timers, then load file with query. Return
-	   the total time for printing.
+        3. set the print depth to *. Then reset the timers and load
+	   the query again. Return the total time for printing.
   
   in Tjtwelf:
-    Since we did not build in any timers and we want to separate out the cost of
-	various aspects we use the OCaml Sys.time function in determining how long a 
-	particular processing step takes. To do this we wrap particular calls in the 
-	source code with a "time" function which will determine how long it takes to
-	run and prints the result to stdin.
+    Since we did not build in any timers we will use the OCaml
+    Sys.time function to determine the processor time used by the
+    program and compare before and after the part being timed. This
+    process will be performed for each version of the translation.
 	
-	1. run tjtwelf with the base signature and collect the time for parsing, 
-	   reconstruction, translation, and setting up the simulator.
+	1. run tjtwelf with the base signature and collect the
+	   overhead time.
+           (parsing, reconstruction, translation, and setting up the simulator)
 	   
 	2. run tjtwelf in batch mode providing each query which corresponds to the
-	   particular signature and collect the time for each component of solving
-	   each query.
-	   
-	3. run tjtwelf in batch mode providing each query which corresponds to the 
-	   specified signature and collect the time to print each query's solution.
-
-	   
-What has been collected?
-  1. There is data on the time needed for setup using our approach 
-     for examples: reverse, num, miniml, miniml-typed, perm
-  2. There is data on the time needed to solve example queries in Twelf
-     for examples: reverse, num, miniml, miniml-typed, perm
-	 but this included printing solutions.
-  3. There is data on the time needed to solve example queries using Tjtwelf
-     (using the translation with all optimizations)
-	 for examples: reverse, num, miniml, miniml-typed, perm
-  4. There is data on the time needed to print solutions in our system
-     for examples: reverse, num, miniml, miniml-typed, perm 
-	 
-Observations from initial analysis:
-  1. There is clear performance improvement for the miniml and reverse examples
-  2. We get an out of memory error on the num examples of size 256 and 512,
-     but there is performance benefit on the smaller num examples
-  3. The Twelf system has an out of memory error on only the num example of 
-     size 512
-  4. our system performs worse on the perm example
-  5. the miniml-typed examples perform worse as size increases
-  6. times for all examples are less than one second
-  7. The comparison with Twelf solving time is not similar to the data in Zach's 
-     work
-	 
-Tasks based on observations:
-  1. modify the Twelf testing framework to identify parsing/reconstruction time
-     for the query independent of the rest of the signature
-  2. modify the Twelf testing framework to isolate the solving time from the 
-     printing time, relative to the comment in the users guide
-  3. complete testing in both systems for the additional example signatures
-  4. find a way to make the timing data for example queries more significant,
-     to lessen the effect of noise in our data
-	 
-Subgoals to investigate based on analysis:
-  1. Look into the num example and determine why the larger example queries 
-      are causing a "Fatal Error: out of memory".
-  2. Understand on what class of examples the translation based approach performs
-      better than Twelf and why.
-	  Similarly with the class of examples on which is performs worse than Twelf.
-  3. Ensure that our results are consistent with the results in Zach's thesis
-	   
-[GN: This does not sound like a goal for comparisons to me. It is perhaps
-a question that came up in the course of testing, but that is in a
-separate category---it is something that you have to resolve
-separately to establish the legitimacy of testing. It is best not to
-confuse the two issues, i.e. deal with this separately from this document.]
-Subgoal: Look into the num example and determine why the larger example queries 
-      are causing a "Fatal Error: out of memory".
-Why: Given past work and the behavior of Twelf on this example this behavior
-     is unexpected.
-	 ( looks like issue was in build term and my bug. I constructed the proof term
-	   even though it was implicit and it is veeeery large. )
-     [GN: At the end, I don't see the bottomline. Have you established
-	   that this is an anomaly? Or is this an example that shows
-	   tjtwelf to be weaker than twelf in some cases?]
-
-What information will we want?
-  1. what data would Zach have obtained from this example
-  2. is this behavior repeatable in our system when running only a single query
-  3. at what point in the process the out of memory error occurs
-     3.1. is the implementation of this part correct
+	   particular signature and collect the time for solving each query.
+           (parsing, type reconstruction, translation, setting up
+	   query in the simulator, solving, inversion, and printing)
   
-How will we collect this information?
-  1. collect timing data using Zach's timing setup 
-     The raw data from Zach's work is unavailable but we do have access to the
-	 parinati system and his timing scripts. Using these we can run these examples
-	 to check what the behavior would be using his approach.
-
-  2. directly run the problematic queries individually (not using the timing scripts)
-  
-  3. begin by returning after finding the solution using Teyjus and incrementally
-     extend to each step of the solution processing until the problematic component
-	 is identified
-    3.1a. Verify that the solution found (in Teyjus) is correct by inspection
-	3.1b. Verify the translated signature & query we generate is correct by inspection
-	3.1c. Verify that the OCaml representation of the solution we build is correct
-	      through first inspecting result and then ensuring the code correct
-	3.1d. Verify that the result of inversion is the correct LF solution by 
-	      inspecting the resulting solution and ensuring the code is correct
-	3.1e. Verify that the printing routine is correct by observing the output
-	      and inspecting the code
-
-What has been collected?
-  1. Using Zach's testing framework for his system and for Twelf collected timing
-     data for this example
-	 
-  2. Attempted to run the queries individually using our system
-  
-  3. Performed incremental extensions of the processing of solution to find where
-     the error occurs: when building OCaml representation
-    3.1. Inspection of this code was performed
-
-Observations of this data:
-  1. Twelf is able to handle the query of size 512 in Zach's testing framework in 
-     which solutions are not printed.
-	 
-  2. The out of memory error occurs when we are building an OCaml representation 
-     of the solution from the C representation
-	 
-  3. Being confident in the correctness of the implementation I investigated 
-     what terms were part of this solution and which term was being worked on when 
-	 we run out of memory. It turns out that the problem is with the proof term. In
-	 this example, the (anonymous) proof term is quite large, but is not to be
-	 returned as part of the solution. The substitutions for anonymous variables
-	 were being kept during the transition from C to OCaml and removed during the
-	 inversion step.
-	 
-  4. There is no need to process these anonymous variables when building the OCaml
-     representation. By ignoring this term we should not run out of memory on these
-	 examples.
-	 
-Tasks based on these observations:
-  1. verify that this change does make it such that the num queries are solved
-     successfully.
-  2. run a quick test to determine if, with this change, the total run time of
-     our system on a single query (including building the OCaml representation)
-	 is comparable with Twelf. The hugely inflated numbers seen initially may 
-	 have been due to considering proof terms which we now omit.
-	 
-Subgoal: Understand on what class of examples the translation based approach performs
-      better than Twelf and why.
-	  Similarly with the class of examples on which is performs worse than Twelf.
-Why:  Not all of the examples (specifically: perm) performed as well given the 
-      initial data collected.
-[GN: I don't understand this part either. Hasn't it been covered at
-least in part (and entirely in spirit) in the earlier questions?
-I.e. weren't you running examples essentially to tell when one system
-is better and why? In any case, what new testing do you envisage
-here?]
-	  
-What information will we need for this?
-  1. A collection of examples on which our system performs better than Twelf
-     and a collection of examples on which it performs worse than Twelf.
-	 
-  2. Identification of characteristics of these example signatures
-  
-  3. Identification of characteristics of the example queries we ran
-  
-  4. any known inefficiencies or potential pitfalls of the Teyjus system
-  
-How will this information be collected?
-  1. we will use the results of earlier data collection on the set of 
-     examples in handle
-	 
-  2. the signatures should be inspected to determine what sort of structure the
-     types have 
-	 
-  3. each class of example queries should be inspected to determine how the
-     search behaves given the signature
-	 
-  4. ??? More thinking required to come up with more concrete ideas here
-  
-Subgoal : Ensure that our results are consistent with the results in Zach's thesis
-Why: The initial data we collected did not match up with Zach's tables. To gain 
-     confidence in our system we would like to show it is comparable.
-	 
-What information will we need for this?
-  1. Timing data for queries solved using Zach's system, including the various
-     translation optimizations
-  
-  2. Timing data for queries solved using our system under various translation
-     optimization levels
-	 
-How will this information be collected?
-  1. We will use parinati to translate a signature which includes a single query
-     which gets encoded as a special "main" predicate. We time the simulator using
-	 the query "true." to determine overhead, and then time it solving the 
-	 translated query. The difference of these two is kept as the time to solve
-	 the query. 
-	 This process will be repeated using the various versions of translation
-	 available in parinati.
-	 
-  2. We will run our system using each version of translation and provide the
-     queries for each example signature to be solved. We will collect the timing
-	 data for the search portion of the query solving.
-	 
-Tasks for this subgoal:
-  1. fix available parinati implementation to properly generate the translated query
-     such that manual fixing is not required.
-  2. create a testing framework, based on Zach's timing script, that is not sensitive
-     to weather or not other processes run during the testing.
-  ***3. consider if this work is worth doing (specifically: fixing parinati and
-     Zach's timing framework)
 
