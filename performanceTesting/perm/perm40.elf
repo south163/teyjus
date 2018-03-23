@@ -1,0 +1,17 @@
+
+
+%query * 1
+(sqnt rnil rnil rnil rnil
+   (^ (perm int
+            (bar int '1 (bar int '2 (bar int '3 (bar int '4 (bar int '5 
+               (bar int '5 (bar int '4 (bar int '3 (bar int '2 (bar int '1
+               (bar int '1 (bar int '2 (bar int '3 (bar int '4 (bar int '5 
+               (bar int '5 (bar int '4 (bar int '3 (bar int '2 (bar int '1
+               (bar int '1 (bar int '2 (bar int '3 (bar int '4 (bar int '5 
+               (bar int '5 (bar int '4 (bar int '3 (bar int '2 (bar int '1
+               (bar int '1 (bar int '2 (bar int '3 (bar int '4 (bar int '5 
+               (bar int '5 (bar int '4 (bar int '3 (bar int '2 (bar int '1
+               (nil int)))))))))))))))))))))))))))))))))))))))))
+            L))).
+
+
