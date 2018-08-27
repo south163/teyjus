@@ -20,6 +20,13 @@
 ****************************************************************************)
 open Parseargs
 
+let time f dscr =
+  let start = Sys.time () in
+  let x = f () in
+  Printf.printf "Execution Time(%s): %fs\n" dscr (Sys.time () -. start);
+  x
+
+  
 let minSolutions = ref 0
 let maxSolutions = ref max_int
 let quiet = ref false
@@ -66,7 +73,7 @@ let usageMsg =
 let solveQueries () =
   let solveQueryBatch () =
     let rec solveQueryBatchAux numResults =
-      if Query.solveQuery () && numResults < !maxSolutions then
+      if (time Query.solveQuery "solve query") && numResults < !maxSolutions then
         (if not !quiet then Query.showAnswers ();
          solveQueryBatchAux (numResults + 1))
       else

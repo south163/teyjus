@@ -58,3 +58,4 @@ let show_answers lpmodule ((Lfsig.Signature(types,objmap)) as lfsig) metadata =
   let lfsol = time (fun () -> Inverse.invert lfsig metadata (!fvar_types) lpsol) "invert term" in
   (print_endline "\nThe answer substitution:";
    print_endline (time (fun () -> (PrintLF.string_of_solution_implicit types objmap lfsol)) "print solution") )
+

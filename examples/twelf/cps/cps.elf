@@ -1,0 +1,367 @@
+
+typ : type.                             %name  typ A a.
+
+=>   : typ -> typ -> typ.               %infix right 8 =>.
+&    : typ -> typ -> typ.               %infix none 9 &.
+unit : typ.
+
+%% expressions
+
+exp : type.
+val : type.
+
+%% values are expressions, too.
+value  : val -> exp.
+
+lam    : (val -> exp) -> val.
+app    : exp -> exp -> exp.
+mkpair : exp -> exp -> exp.
+pair   : val -> val -> val.
+fst    : exp -> exp.
+snd    : exp -> exp.
+1      : val.
+let    : exp -> (val -> exp) -> exp.
+
+% |- e : t
+of : exp -> typ -> type.
+% |- v : t
+ofv : val -> typ -> type.
+
+ofvalue : of (value V) A <- ofv V A.
+
+unitI : ofv 1 unit.
+
+=>I : ofv (lam [x:val] M x) (A => B)
+     <- ({x:val} ofv x A ->
+                 of (M x) B).
+
+=>E : 
+      of M1 (A => B) ->
+      of M2 A ->
+      of (app M1 M2) B.
+
+
+&Iv : 
+     ofv V1 A ->
+     ofv V2 B ->
+     ofv (pair V1 V2) (A & B).
+
+&I : 
+     of M1 A ->
+     of M2 B ->
+     of (mkpair M1 M2) (A & B).
+
+&E1 : of (fst M) A
+   <- of M (A & B).
+
+&E2 : of (snd M) B
+   <- of M (A & B).
+
+oflet :
+     of M A ->
+     ({y:val}{ofy : ofv y A}
+        of (N y) C) ->
+     of (let M N) C.
+
+%% CPS language
+
+cexp : type.    %name cexp C c.
+ctyp : type.    %name ctyp A a.
+cval : type.    %name cval V v.
+
+ccont  : ctyp -> ctyp.                      %postfix 8 ccont.
+c&     : ctyp -> ctyp -> ctyp.              %infix none 9 c&.
+cunit  : ctyp.
+
+
+% continuation expressions
+cmkpair : cval -> cval -> (cval -> cexp) -> cexp.
+cfst    : cval -> (cval -> cexp) -> cexp.
+csnd    : cval -> (cval -> cexp) -> cexp.
+
+% continuations can end with a call to a function
+ccall : cval -> cval -> cexp.
+chalt : cexp.
+
+
+% continuation values
+cpair : cval -> cval -> cval.
+clam  : (cval -> cexp) -> cval.
+c1    : cval.
+
+% |- c ok
+cof : cexp -> type.              %name cof WC wc.
+%mode cof *C.
+
+% |- cv : A
+cofv : cval -> ctyp -> type.     %name cofv WV wv.
+%mode cofv *A *B.
+
+co_halt : cof chalt.
+
+co_mkpair :  cofv V1 A ->
+             cofv V2 B ->
+             ({v:cval} cofv v (A c& B) -> 
+                cof (K v)) ->
+             cof (cmkpair V1 V2 K).
+
+co_call : cofv F (A ccont) ->
+          cofv V A ->
+          cof (ccall F V).
+
+co_fst : cofv V (A c& B) ->
+         ({v}{ov : cofv v A} cof (C v)) ->
+         cof (cfst V C).
+
+co_snd : cofv V (A c& B) ->
+         ({v}{ov : cofv v B} cof (C v)) ->
+         cof (csnd V C).
+
+cov_unit : cofv c1 cunit.
+
+cov_pair : cofv V1 A ->
+           cofv V2 B ->
+           cofv (cpair V1 V2) (A c& B).
+
+cov_lam : ({x} cofv x A ->
+               cof (C x)) ->
+          cofv (clam C) (A ccont).
+
+ttoct : typ -> ctyp -> type.
+%mode ttoct +A -CA.
+
+ttoct/unit : ttoct unit cunit.
+ttoct/& : ttoct (A & B) (A' c& B') <- ttoct B B' <- ttoct A A'.
+ttoct/=> : ttoct (A => B) ((A' c& (B' ccont)) ccont) 
+	     <- ttoct B B' <- ttoct A A'.
+
+%worlds () (ttoct _ _).
+%total D (ttoct D _).
+
+tocpsv+ : {WV  : ofv V A}
+	  {CT  : ttoct A CA}
+	  {WCV : cofv CV CA}
+	  type.
+%mode tocpsv+ +WV +CT -WCV.
+
+tocpsv- : {WV  : ofv V A}
+	  {CT  : ttoct A CA}
+	  {WCV : cofv CV CA}
+	  type.
+%mode tocpsv- +WV -CT -WCV.
+
+tocps- : {M  : exp}
+	 {WM : of M A}
+ 	 {CT : ttoct A CA}
+	 % term representing the result of conversion
+	 {CC : (cval -> cexp) -> cexp}
+	 % typing for result of conversion
+         {WCC : {C : cval -> cexp}
+                ({cv : cval}
+                 {wcv : cofv cv CA}
+                 cof (C cv)) ->
+                cof (CC C)}
+	 type.
+%mode tocps- +M +WM -CT -CC -WCC.
+
+tocps+ : {M  : exp}
+         {WM : of M A}
+         {CT : ttoct A CA}
+         {CC : (cval -> cexp) -> cexp}
+         {WCC : {C : cval -> cexp}
+                ({cv : cval}
+                 {wcv : cofv cv CA}
+                 cof (C cv)) ->
+                cof (CC C)}
+         type.
+%mode tocps+ +M +WM +CT -CC -WCC.
+
+ceqtyp : ctyp -> ctyp -> type.
+ceqtyp_ : ceqtyp A A.
+
+ceqtyp_& : ceqtyp A A' -> ceqtyp B B' -> ceqtyp (A c& B) (A' c& B') -> type.
+%mode ceqtyp_& +A +B -C.
+- : ceqtyp_& ceqtyp_ ceqtyp_ ceqtyp_.
+
+ceqtyp_cont : ceqtyp A A' -> ceqtyp (A ccont) (A' ccont) -> type.
+%mode ceqtyp_cont +A -C.
+- : ceqtyp_cont ceqtyp_ ceqtyp_.
+
+cofv_resp : cofv C A -> ceqtyp A A' -> cofv C A' -> type.
+%mode cofv_resp +COF +EQ -COF'.
+- : cofv_resp D ceqtyp_ D.
+
+wcc_resp : {WCC :
+	     ({C  : cval -> cexp}
+	      ({cv : cval}
+	       {wcv : cofv cv A}
+	       cof (C cv)) ->
+	      cof (CC C))}
+
+	    {EQ : ceqtyp A A'} 
+
+	    {K' :
+	     ({C  : cval -> cexp}
+	      ({cv : cval}
+	       {wcv : cofv cv A'}
+	       cof (C cv)) ->
+	      cof (CC C))}
+
+	    type.
+%mode wcc_resp +K +EQ -K'.
+
+wcc_resp_ : wcc_resp D ceqtyp_ D.
+
+% uniqueness
+ttoct_fun : ttoct A A' -> ttoct A A'' -> ceqtyp A' A'' -> type.
+%mode ttoct_fun +X +Y -Z.
+
+- : ttoct_fun (ttoct/& A B) (ttoct/& C D) OUT
+ <- ttoct_fun A C EQ1
+ <- ttoct_fun B D EQ2
+ <- ceqtyp_& EQ1 EQ2 OUT.
+
+- : ttoct_fun (ttoct/=> A B) (ttoct/=> C D) OUT
+ <- ttoct_fun A C EQ1
+ <- ttoct_fun B D EQ2
+ <- ceqtyp_cont EQ2 EQ3
+ <- ceqtyp_& EQ1 EQ3 EQ4
+ <- ceqtyp_cont EQ4 OUT.
+
+- : ttoct_fun ttoct/unit ttoct/unit ceqtyp_.
+
+% effectiveness
+ttoct_gimme : {A:typ} {A':ctyp} ttoct A A' -> type.
+%mode ttoct_gimme +A -A' -D.
+
+- : ttoct_gimme (A & B) _ (ttoct/& CT1 CT2)
+ <- ttoct_gimme A A' CT1
+ <- ttoct_gimme B B' CT2.
+
+- : ttoct_gimme (A => B) _ (ttoct/=> CT1 CT2)
+ <- ttoct_gimme A A' CT1
+ <- ttoct_gimme B B' CT2.
+
+- : ttoct_gimme unit cunit ttoct/unit.
+
+%worlds () (ttoct_fun _ _ _) (ceqtyp_& _ _ _) (ceqtyp_cont _ _).
+
+%total D (ceqtyp_& D _ _).
+%total D (ceqtyp_cont D _).
+%total D (ttoct_fun D _ _).
+
+tocps+/- : tocps+ V WV CTi CC K
+        <- tocps- V WV CTo CC K'
+        <- ttoct_fun CTo CTi EQ
+        <- wcc_resp K' EQ K.
+
+tocpsv+/- : tocpsv+ WV CTi WCV'
+         <- tocpsv- WV CTo WCV
+         <- ttoct_fun CTo CTi EQ
+         <- cofv_resp WCV EQ WCV'.
+
+c_fst : tocps- (fst M) (&E1 WM) CT
+              % parameterized expression resulting from translation
+              ([tail:cval -> cexp]
+                 CC ([v:cval] cfst v ([a:cval] tail a)))
+              % its parameterized typing derivation
+              ([c][wc]
+                 F _ ([v][wv] co_fst wv wc))
+     <- tocps- M WM (ttoct/& CT _) CC F.
+
+c_snd : tocps- (snd M) (&E2 WM) CT _
+              ([c][wc]
+                 F _ ([v][wv] co_snd wv wc))
+     <- tocps- M WM (ttoct/& _ CT) _ F.
+
+c_mkpair : tocps- (mkpair M1 M2) (&I WM1 WM2) (ttoct/& CT1 CT2) _
+              ([c][wc] 
+                  F1 _ ([v1][wv1]
+                          F2 _ ([v2][wv2]
+                                 co_mkpair wv1 wv2 wc)))
+        <- tocps- M1 WM1 CT1 _ F1
+        <- tocps- M2 WM2 CT2 _ F2.
+
+c_app : tocps- (app M N) (=>E WM WN) CTB _
+           ([c][wc]
+              FM _ ([f][wf]
+                      FN _ ([a][wa]
+                              % making argument of type A' c& (B ccont)
+                              co_mkpair wa (cov_lam ([r][wr] wc r wr)) [p][wp]
+                              co_call wf wp)))
+     <- ttoct_gimme (A => B) (A' c& (B' ccont) ccont) (ttoct/=> CTA CTB)
+     <- tocps+ M WM (ttoct/=> CTA CTB) _ FM
+     <- tocps+ N WN CTA _ FN.
+
+c_let : tocps- (let M N) (oflet WM WN) CTN _
+          ([c][wc] FM _ ([v][wv] FN v wv c wc))
+
+     <- ttoct_gimme A A' CTM
+     <- tocps+ M WM CTM _ FM
+     <- ( {x}{xof : ofv x A}
+          {x'}{x'of : cofv x' A'}
+          {thm:tocpsv- xof CTM x'of}
+
+         tocps- (N x) (WN x xof) CTN (CC x') (FN x' x'of)).
+
+c_val : tocps- (value V) (ofvalue WV) CT _ ([c][wc] wc CV WCV)
+     <- tocpsv- WV CT WCV.
+
+cv_pair : tocpsv- (&Iv WV1 WV2) (ttoct/& CT1 CT2)  (cov_pair WV1' WV2')
+       <- tocpsv- WV1 CT1 WV1'
+       <- tocpsv- WV2 CT2 WV2'.
+
+cv_unit : tocpsv- unitI ttoct/unit cov_unit.
+
+cv_lam : tocpsv- ((=>I WM) : ofv (lam M) (A => B)) (ttoct/=> CTA CTB)
+          (cov_lam [arg][argof : cofv arg (A' c& (B' ccont))]
+             co_fst argof [x:cval][xof:cofv x A']
+             co_snd argof [r:cval][rof:cofv r (B' ccont)]
+             F x xof r rof ([v:cval] ccall r v) 
+                ([v:cval][wv:cofv v B'] co_call rof wv))
+    <- ttoct_gimme A A' CTA
+    <- (% original argument
+        {x}{xof : ofv x A}
+        {x'}{x'of : cofv x' A'}
+        % how to convert it
+        {thm:tocpsv- xof CTA x'of}
+
+        % (object language) return continuation
+        {r}{rof : cofv r (B' ccont)}
+
+          tocps- (M x) (WM x xof) CTB (CC x' r) (F x' x'of r rof)).
+
+%block blockcvar : 
+              some {A : typ} {A' : ctyp} {CTA : ttoct A A'}
+              block
+               {x}{xof : ofv x A}
+               {x'}{x'of : cofv x' A'}
+               {thm:tocpsv- xof CTA x'of}.
+
+%block blockwcv :
+             some {CA : ctyp}
+             block {r}{rof : cofv r CA}.
+
+%block blockcv : block {v : cval}.
+
+%worlds (blockcv) (cval) (cexp).
+%worlds (blockwcv) (cofv _ _) (cof _).
+
+%worlds (blockcvar | blockwcv) 
+                   (tocps+ _ _ _ _ _)
+                   (tocps- _ _ _ _ _)
+                   (tocpsv+ _ _ _)
+                   (tocpsv- _ _ _)
+                   (cofv_resp _ _ _)
+                   (ttoct_gimme _ _ _)
+                   (wcc_resp _ _ _).
+
+%total A (cofv_resp _ A _).
+%total A (wcc_resp _ A _).
+%total A (ttoct_gimme A _ _).
+
+%total (A B C D) 
+          (tocpsv- A _ _) 
+          (tocpsv+ B _ _) 
+          (tocps- _ C _ _ _) 
+          (tocps+ _ D _ _ _).

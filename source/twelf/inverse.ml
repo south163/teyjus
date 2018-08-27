@@ -136,7 +136,10 @@ let invert_subst (Lfsig.Signature(types, objs)) metadata fvars subst =
               ((Lfabsyn.PiType(s,bty,tybody,dep)),(arg :: args')) ->
                  let lfarg = invert_term bvars (bty, subst) arg in
                  (lfarg :: trans_arglst tybody ((s, lfarg) :: subst) args')
-            | (_,[]) -> [] )
+            | (_,[]) -> []
+            | _ -> print_endline ("Error in trans_arglst: the type\n" ^ (PrintLF.string_of_typ typ)
+                                 ^"\n does not take more arguments");
+              [])
           in
           let lfheadty = get_type (Lfsig.Signature(types, objs)) metadata fvars bvars lphead in
           let Lfabsyn.IdTerm(lfhead) = invert_term bvars (lfheadty, tysub) lphead in
@@ -203,4 +206,8 @@ let invert_disprs (Lfsig.Signature(types, objs)) metadata fvars disprs =
   aux disprs []
   
 let invert lfsig metadata fvars (subst, disprs) =
-  (invert_subst lfsig metadata fvars subst, invert_disprs lfsig metadata fvars disprs)
+  match disprs with
+  | [] ->
+    print_endline "Disagreement set empty";
+    (invert_subst lfsig metadata fvars subst, invert_disprs lfsig metadata fvars disprs)
+  | _ -> print_endline "Disagreement set not empty"; (invert_subst lfsig metadata fvars subst, invert_disprs lfsig metadata fvars disprs)

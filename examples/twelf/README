@@ -1,0 +1,16 @@
+This contains a collection of Twelf examples for use with tjtwelf.
+
+ccc -
+cps -
+cpsocc -
+incll - 
+kolm -
+lp -
+map - mapping over lists
+mini-ml - interpreter for mini-ml language
+mini-ml-typed - interpreter for a typed mini-ml language
+polylam -
+prop-calc -
+reverse - naive list reverse
+ski -
+stlc - simply typed lambda calculus

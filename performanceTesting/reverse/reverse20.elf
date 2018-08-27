@@ -1,5 +1,0 @@
-%query 1 *  reverse (cons a (cons a (cons a (cons a (cons a
-                       (cons a (cons a (cons a (cons a (cons a 
-                       (cons a (cons a (cons a (cons a (cons a
-                       (cons a (cons a (cons a (cons a (cons a 
-                       nil)))))))))))))))))))) L.
