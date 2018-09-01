@@ -24,6 +24,5 @@ val set_translation : string -> unit
 module NaiveTranslation : Translator
 
 (** An implementation of the translation from LF to LP signatures 
-    which uses strictness to reduce the size of generated 
-    clauses. Will run optimizations that have been set. *)
+    which uses flattened LF types and specialized predicates. *)
 module OptimizedTranslation : Translator

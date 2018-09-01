@@ -49,10 +49,6 @@ let specList = Parseargs.dualArgs
       " Specifies name of the generated Lambda Prolog module. Default is `top'.") ;
    ("-t", "--translation", Arg.String(Translator.set_translation),
       " Specifies the desired translation. Options: naive, optimized. Default is `optimized'.") ;
-   ("-index", "--opt-index", Arg.Bool(Optimization.Swap.set),
-      " Set whether the indexing optimization is run. Default is true.") ;
-   ("-specialize", "--opt-specialize", Arg.Bool(Optimization.Specialize.set),
-      " Set whether the specialized predicates optimization is run. Default is true.") ;
    ("-b", "--batch", Arg.Set batch,
     " Suppress system interaction; send all output without stopping") ;
    ("-q", "--query", Arg.String addQuery,
