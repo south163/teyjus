@@ -66,7 +66,9 @@ and exp_to_type bvars e =
           else Symb.symbol name
         in
         let b = exp_to_type ((s,t)::bvars) body in
-        Lfabsyn.PiType(s, t, b, (dep = IntSyn.No))
+        Lfabsyn.PiType(s, t, b, (match dep with
+                                   IntSyn.No -> false
+                                 | _ -> true))
      | IntSyn.Root(IntSyn.Const(cid),IntSyn.Nil) ->
         let Names.Qid(_,name) = Names.constQid(cid) in
         Lfabsyn.IdType(Lfabsyn.Const(Symb.symbol name))

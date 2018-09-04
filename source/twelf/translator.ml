@@ -78,56 +78,6 @@ let initialize_metadata types objs =
 (* sets of names *)                   
 module StringSet = Set.Make(String)
 
-(* processes a given type and ensures that the dependency flag
-   on pi-types is accurate (i.e. it is only true if the variable
-   acctually appears somewhere. *)
-let get_vars_appear typ =
-  let rec vars_appear_ty varlst typ =
-    match typ with
-      Lfabsyn.PiType(s,t1,t2,dep) ->
-        let n = Symb.name s in
-        let (t1',vars1) = vars_appear_ty varlst t1 in
-        let (t2',vars2) = vars_appear_ty (if dep then (StringSet.add n varlst) else varlst) t2 in
-        let vars = StringSet.union vars1 vars2 in
-        (Lfabsyn.PiType(s,t1',t2',StringSet.mem n vars), StringSet.remove n vars)
-    | Lfabsyn.AppType(id, tms) ->
-        let (tms', vars) =
-          List.fold_right
-            (fun t (ts,vs) ->
-               let (t',v) = vars_appear_tm varlst t in
-               ((t'::ts), StringSet.union vs v))
-            tms 
-            ([],StringSet.empty)
-        in
-        (Lfabsyn.AppType(id, tms'), vars)
-    | Lfabsyn.IdType (id) -> (typ, StringSet.empty)
-  and vars_appear_tm varlst tm =
-    match tm with
-      Lfabsyn.AbsTerm(s,ty,tm) ->
-        let n = Symb.name s in
-        let (ty', varsty) = vars_appear_ty varlst ty in
-        let (tm', varstm) = vars_appear_tm (StringSet.remove n varlst) tm in
-        let vars = StringSet.union varsty varstm in
-        (Lfabsyn.AbsTerm(s,ty',tm'), vars)
-    | Lfabsyn.AppTerm(id,tms) ->
-        let n = Lfabsyn.get_id_name id in
-        let (tms', vars) =
-          List.fold_right
-            (fun t (ts,vs) ->
-               let (t',v) = vars_appear_tm varlst t in
-               ((t'::ts), StringSet.union vs v))
-            tms 
-            ([],(if StringSet.mem n varlst then StringSet.singleton n else StringSet.empty))
-        in
-        (Lfabsyn.AppTerm(id,tms'),vars)
-    | Lfabsyn.IdTerm(id) ->     
-       let n = Lfabsyn.get_id_name id in
-       let vars = if StringSet.mem n varlst then StringSet.singleton n else StringSet.empty in
-       (tm, vars)
-  in
-  let (typ', vars) = vars_appear_ty StringSet.empty typ in
-  typ'
-                   
   
 module OriginalTranslation : Translator =
 struct
@@ -331,8 +281,12 @@ struct
        let bvar = Absyn.BoundVar(s', ref None, ref false, ref (Some(encode_type ty))) in
        let vars' = Table.add s' bvar vars in
        let vartm = Absyn.makeBoundVarTerm bvar Errormsg.none in
-       (* NOTE: check to ensure that dep is accurate, otherwise need to actually check
-          occurences here *)
+       (* NOTE: The dependency information is accurate for how we
+                translate. The type reconstruction code from Twelf
+                performs the appropriate analysis to ensure that by
+                this point we do not need to check if a variable
+                appears in the type.
+                (see piDepend in abstract.ml) *)
        if dep
        then
          (fun m ->
@@ -397,8 +351,7 @@ struct
                (match (Table.find s constants) with
                     Some(c) ->
                       let aterm = Absyn.ConstantTerm(c, [], Errormsg.none) in
-                      let typ' = get_vars_appear typ in
-                      let clause = (encode_neg metadata constants Table.empty [] typ') aterm in
+                      let clause = (encode_neg metadata constants Table.empty [] typ) aterm in
                       List.append clauselst [clause]
                   | None ->
                       Errormsg.error Errormsg.none
@@ -450,8 +403,7 @@ struct
     let pt_typsymb = Absyn.ImplicitVar(Symbol.symbol (Symb.name prooftermSymb), ref None, ref true, ref (Some(encode_type querytype))) in
     let typesymbTable' = Table.add (Absyn.getTypeSymbolSymbol pt_typsymb) pt_typsymb typesymbTable in
     let varterm = Absyn.makeFreeVarTerm pt_typsymb Errormsg.none in
-    let querytype' = get_vars_appear querytype in
-    let enctype =  (encode_pos metadata constTab typesymbTable' [] querytype') varterm in
+    let enctype =  (encode_pos metadata constTab typesymbTable' [] querytype) varterm in
     (enctype, pt_typsymb :: fvarlist)
 
   
@@ -578,8 +530,12 @@ struct
        let bvar = Absyn.BoundVar(s', ref None, ref false, ref (Some(flatten_type metadata kinds ty))) in
        let vars' = Table.add s' bvar vars in
        let vartm = Absyn.makeBoundVarTerm bvar Errormsg.none in
-       (* NOTE: check to ensure that dep is accurate, otherwise need to actually check
-          occurences here *)
+       (* NOTE: The dependency information is accurate for how we
+                translate. The type reconstruction code from Twelf
+                performs the appropriate analysis to ensure that by
+                this point we do not need to check if a variable
+                appears in the type. 
+                (see piDepend in abstract.ml) *)
        if dep
        then
          (fun m ->
@@ -650,8 +606,7 @@ struct
         let s = Option.get (Metadata.getLP metadata symb) in
         let c = Option.get (Table.find s constants) in
         let aterm = Absyn.ConstantTerm(c, [], Errormsg.none) in
-        let typ' = get_vars_appear typ in 
-        let clause = (encode_neg metadata kinds constants Table.empty [] typ') aterm in
+        let clause = (encode_neg metadata kinds constants Table.empty [] typ) aterm in
         List.append clauselst [clause]
       in
       let perType symb ((Lfabsyn.TypeFam(symb,kind,_,_,_,objects,_)) as t) clauselst =
@@ -678,7 +633,6 @@ struct
     let pt_typsymb = Absyn.ImplicitVar(Symbol.symbol (Symb.name prooftermSymb), ref None, ref true, ref (Some(flatten_type metadata kindTab querytype))) in
     let typesymbTable' = Table.add (Absyn.getTypeSymbolSymbol pt_typsymb) pt_typsymb typesymbTable in
     let varterm = Absyn.makeFreeVarTerm pt_typsymb Errormsg.none in
-    let querytype' = get_vars_appear querytype in
-    let enctype =  (encode_pos metadata kindTab constTab typesymbTable' [] querytype') varterm in
+    let enctype =  (encode_pos metadata kindTab constTab typesymbTable' [] querytype) varterm in
     (enctype, pt_typsymb :: fvarlist)
 end
