@@ -53,7 +53,7 @@ let rec exp_to_kind bvars e =
 
 and exp_to_type bvars e =
   match e with
-      IntSyn.Pi ((IntSyn.Dec(name_op,ty),_), body) ->
+      IntSyn.Pi ((IntSyn.Dec(name_op,ty),dep), body) ->
         let t = exp_to_type bvars ty in
         let name =
           if Option.isSome name_op
@@ -66,7 +66,7 @@ and exp_to_type bvars e =
           else Symb.symbol name
         in
         let b = exp_to_type ((s,t)::bvars) body in
-        Lfabsyn.PiType(s, t, b, Option.isSome name_op)
+        Lfabsyn.PiType(s, t, b, (dep = IntSyn.No))
      | IntSyn.Root(IntSyn.Const(cid),IntSyn.Nil) ->
         let Names.Qid(_,name) = Names.constQid(cid) in
         Lfabsyn.IdType(Lfabsyn.Const(Symb.symbol name))
