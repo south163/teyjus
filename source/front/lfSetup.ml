@@ -39,7 +39,7 @@ let load_metadata name =
 let translate_sig sign = 
     match Translator.get_translation () with
         "optimized" -> Translator.OptimizedTranslation.translate sign 
-      | "naive" -> Translator.NaiveTranslation.translate sign
+      | "original" -> Translator.OriginalTranslation.translate sign
 
 
 (* Compile and link the module before loading *)

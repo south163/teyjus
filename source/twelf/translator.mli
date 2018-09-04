@@ -19,9 +19,9 @@ val get_translation : unit -> string
 
 val set_translation : string -> unit
 
-(** An implementation of the basic, naive translation from LF to 
+(** An implementation of the original translation from LF to 
     LP signatures. *)
-module NaiveTranslation : Translator
+module OriginalTranslation : Translator
 
 (** An implementation of the translation from LF to LP signatures 
     which uses flattened LF types and specialized predicates. *)

@@ -73,7 +73,7 @@ let initialize_metadata types objs =
   Symboltable.fold objs perObj (Symboltable.fold types perType Metadata.empty)
       
   
-module NaiveTranslation : Translator =
+module OriginalTranslation : Translator =
 struct
 
   (* Construct the two kinds lftype and lfobj *)
