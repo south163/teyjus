@@ -36,8 +36,8 @@ let submit_query query metadata kinds constants =
     time 
       (fun () ->
         match Translator.get_translation () with
-        | "naive" ->
-          Translator.NaiveTranslation.translate_query query metadata kinds constants
+        | "original" ->
+          Translator.OriginalTranslation.translate_query query metadata kinds constants
         | "optimized" ->
           Translator.OptimizedTranslation.translate_query query metadata kinds constants)
       "translate query"
