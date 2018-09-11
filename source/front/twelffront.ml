@@ -75,7 +75,8 @@ let parse_args () =
 let time f dscr =
   let start = Sys.time () in
   let x = f () in
-  Printf.printf "Execution Time(%s): %fs\n" dscr (Sys.time () -. start);
+  let theend = Sys.time () in
+  Printf.printf "Execution Time(%s): %fs\n" dscr (theend -. start);
   x
             
 
