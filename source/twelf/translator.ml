@@ -95,7 +95,7 @@ struct
   let hastypeStr = "hastype"
   let hastypeSymb = Symbol.symbol hastypeStr
   let hastype = Absyn.Constant(hastypeSymb, ref Absyn.NoFixity, ref 0, ref true, ref false, ref false,
-  			       ref false, ref false, ref false,
+  			       ref true, ref false, ref false,
   			       ref (Some(Absyn.Skeleton(Absyn.ArrowType(Absyn.ApplicationType(lftype,[]),
 							                Absyn.ArrowType(Absyn.ApplicationType(lfobj, []),
 									                Absyn.ApplicationType(Pervasive.kbool,[]))),
@@ -188,7 +188,7 @@ struct
       let lpsymb = Option.get (Metadata.getLP metadata s) in
       let objconst =
         Absyn.Constant(lpsymb, ref Absyn.NoFixity, ref 0,
-                       ref true, ref false, ref false, ref false, ref false, ref false,
+                       ref false, ref false, ref false, ref false, ref false, ref false,
                        ref (Some(Absyn.Skeleton(encode_type ty, ref None, ref false))),
                        ref 0, ref None, ref None, ref None, ref Absyn.GlobalConstant,
                        ref 0, Errormsg.none)
@@ -199,7 +199,7 @@ struct
       let lpsymb = Option.get (Metadata.getLP metadata symb) in
       let tyconst =
         Absyn.Constant(lpsymb, ref Absyn.NoFixity, ref 0,
-	  	       ref true, ref false, ref false, ref false, ref false, ref false,
+	  	       ref false, ref false, ref false, ref false, ref false, ref false,
 		       ref (Some(Absyn.Skeleton(encode_kind kind, ref None, ref false))),
 		       ref 0, ref None, ref None, ref None, ref Absyn.GlobalConstant,
   		       ref 0, Errormsg.none)
@@ -577,7 +577,7 @@ struct
         let lpsymb = Option.get (Metadata.getLP metadata s) in
         let objconst =
           Absyn.Constant(lpsymb, ref Absyn.NoFixity, ref 0,
-                         ref true, ref false, ref false, ref false, ref false, ref false,
+                         ref false, ref false, ref false, ref false, ref false, ref false,
                          ref (Some(Absyn.Skeleton(flatten_type metadata kinds ty, ref None, ref false))),
                          ref 0, ref None, ref None, ref None, ref Absyn.GlobalConstant,
                          ref 0, Errormsg.none)
