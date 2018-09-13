@@ -59,7 +59,7 @@ let output_files (metadata, kinds, constants, clauses) name =
     "kind " ^ (Absyn.string_of_kind kind) ^ " " ^ (getKindType (Absyn.getKindArity kind)) ^"."
   in
   let per_const constant =
-    "type " ^ (Absyn.getConstantPrintName constant) ^ " " ^(Absyn.string_of_skeleton (Absyn.getConstantSkeletonValue constant)) ^ "."
+    "exportdef " ^ (Absyn.getConstantPrintName constant) ^ " " ^(Absyn.string_of_skeleton (Absyn.getConstantSkeletonValue constant)) ^ "."
   in
   let per_clause c =
     (Absyn.string_of_term c) ^ "."
