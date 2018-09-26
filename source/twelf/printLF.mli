@@ -13,8 +13,6 @@ val pr_obj : Format.formatter -> Lfabsyn.obj -> unit
 val pr_query : Format.formatter -> Lfabsyn.query -> unit
 val pr_query_explicit : Format.formatter -> Lfabsyn.query -> unit
 val pr_solution : Format.formatter -> Lfabsyn.solution -> unit
-val pr_posanntype : Format.formatter -> Strictness.aposanntype -> unit
-val pr_neganntype : Format.formatter -> Strictness.aneganntype -> unit
                                                             
 val print_id : Lfabsyn.id -> unit
 val print_term : Lfabsyn.term -> unit
@@ -35,9 +33,6 @@ val string_of_obj : Lfabsyn.obj -> string
 val string_of_query : Lfabsyn.query -> string
 val string_of_query_explicit : Lfabsyn.query -> string
 val string_of_solution : Lfabsyn.solution -> string
-val string_of_posanntype : Strictness.aposanntype -> string
-val string_of_neganntype : Strictness.aneganntype -> string
-
 
   
 (* General printing functions for implicit LF expressions *)

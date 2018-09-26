@@ -217,7 +217,6 @@ LF_ML[] =
     $(FNT)/lfSetup
     $(FNT)/lfquery
     $(FNT)/parseTwelf
-    $(LF)/strictness
     $(LF)/translator
     $(LF)/inverse
     $(FNT)/buildterm
