@@ -49,6 +49,8 @@ let specList = Parseargs.dualArgs
       " Specifies name of the generated Lambda Prolog module. Default is `top'.") ;
    ("-t", "--translation", Arg.String(Translator.set_translation),
       " Specifies the desired translation. Options: original, optimized. Default is `optimized'.") ;
+   ("-l", "--linearize", Arg.Bool Translator.linearize,
+      " Set if linear heads transformation is to be run after translation. Default is `false'.") ;
    ("-b", "--batch", Arg.Set batch,
     " Suppress system interaction; send all output without stopping") ;
    ("-q", "--query", Arg.String addQuery,

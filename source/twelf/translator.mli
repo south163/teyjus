@@ -19,6 +19,8 @@ val get_translation : unit -> string
 
 val set_translation : string -> unit
 
+val linearize : bool -> unit
+  
 (** An implementation of the original translation from LF to 
     LP signatures. *)
 module OriginalTranslation : Translator

@@ -24,7 +24,10 @@ let set_translation s =
     | _ -> Errormsg.warning Errormsg.none ("Invalid translation: " ^ s)
 
 let get_translation () = !currentTranslation
-  
+
+(* option to run linear heads optimization after translating a clause. *)
+let linearization = ref false
+let linearize b = linearization := b
 
 (* makeApp: takes a head term `h' and a list of argument terms `a1', `a2', ..., `an' 
             and returns an application term `(((h a1) a2) ... an)'
@@ -352,7 +355,10 @@ struct
                     Some(c) ->
                       let aterm = Absyn.ConstantTerm(c, [], Errormsg.none) in
                       let clause = (encode_neg metadata constants Table.empty [] typ) aterm in
-                      List.append clauselst [clause]
+                      List.append clauselst
+                                  [if (!linearization)
+                                   then Linearize.linearize clause
+                                   else clause]
                   | None ->
                       Errormsg.error Errormsg.none
                                      ("No constant found for LP symbol: '" ^ (Symbol.printName s) ^
@@ -607,7 +613,10 @@ struct
         let c = Option.get (Table.find s constants) in
         let aterm = Absyn.ConstantTerm(c, [], Errormsg.none) in
         let clause = (encode_neg metadata kinds constants Table.empty [] typ) aterm in
-        List.append clauselst [clause]
+        List.append clauselst
+                    [if (!linearization)
+                     then Linearize.linearize clause
+                     else clause]
       in
       let perType symb ((Lfabsyn.TypeFam(symb,kind,_,_,_,objects,_)) as t) clauselst =
         let s = Option.get (Metadata.getLP metadata symb) in
