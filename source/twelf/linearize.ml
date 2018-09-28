@@ -152,9 +152,18 @@ let rec lh_c ctx t =
     let l' = lh_g ctx l in
     let r' = lh_c ctx r in
             makeImp l' r' 
-  | _ ->
-    let (_,new',t',eqns) = lh_t ctx Table.empty Table.empty [] t in
-    finalize new' eqns t'
+(*  | _ ->
+    let (_,newvars,t',eqns) = lh_t ctx Table.empty Table.empty [] t in
+    finalize newvars eqns t' *)
+  | Absyn.ApplicationTerm(Absyn.CurriedApplication(lf_ty, lf_pt),_) ->
+    let (_,newvars,lf_ty',eqns) =
+      lh_t ctx Table.empty Table.empty [] lf_ty
+    in
+    finalize newvars
+             eqns
+             (Absyn.ApplicationTerm(
+                Absyn.CurriedApplication(lf_ty', lf_pt), Errormsg.none))
+              
 (* lh_g : Absyn.atypesymbol Table.SymbolTable.t -> Absyn.aterm -> Absyn.aterm
    given (1) the universally quantified variables in scope and (2) a 
          term representation of a goal to be transformed,
