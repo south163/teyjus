@@ -1,5 +1,62 @@
 (** Translators for translating LF specifications into LP programs. *)
 
+(* rev_imp takes a term representing a clause and reverses the order 
+   of all the iplications. Only needed while teyjus code solves
+   implications in reverse order.*)
+let makeApp h args =
+  List.fold_left (fun t a -> Absyn.ApplicationTerm(Absyn.CurriedApplication(t,a),Errormsg.none))
+                 h
+                 args
+let makeAll body tysymb =
+  makeApp (Absyn.ConstantTerm(Pervasive.allConstant, [], Errormsg.none))
+          [Absyn.AbstractionTerm(Absyn.NestedAbstraction(tysymb, body), Errormsg.none)]
+let makeImp l r =
+  makeApp (Absyn.ConstantTerm(Pervasive.implConstant, [], Errormsg.none)) [l;r]
+    
+let rev_imp tm =
+  let rec aux uvars tms t =
+    match t with
+    | Absyn.ApplicationTerm(
+        Absyn.CurriedApplication(
+          Absyn.ConstantTerm(c,_,_),
+          Absyn.AbstractionTerm(Absyn.NestedAbstraction(tysymb,body),_)),_)
+          when c = Pervasive.allConstant ->
+      aux (tysymb :: uvars) tms body
+    | Absyn.ApplicationTerm(
+        Absyn.CurriedApplication(
+          Absyn.ApplicationTerm(
+            Absyn.CurriedApplication(Absyn.ConstantTerm(c,_,_),l),_), r),_)
+          when c = Pervasive.implConstant ->
+      aux uvars ((aux' [] [] l) :: tms) r
+    | _ ->
+      List.fold_left makeAll
+                    (List.fold_right makeImp tms t)
+                    uvars 
+(*    | _ ->
+      (List.fold_left (fun f tm ->(fun d ->f (makeImp tm d))) (fun x -> x) tms) t  *)
+(*    | _ ->
+      List.fold_right (fun tysymb t -> makeAll t tysymb)
+                      uvars
+      (List.fold_right makeImp tms t)  *)
+  and aux' uvars tms t =
+    match t with
+    | Absyn.ApplicationTerm(
+        Absyn.CurriedApplication(
+          Absyn.ConstantTerm(c,_,_),
+          Absyn.AbstractionTerm(Absyn.NestedAbstraction(tysymb,body),_)),_)
+          when c = Pervasive.allConstant ->
+      (aux' (tysymb :: uvars) tms body)
+    | Absyn.ApplicationTerm(
+        Absyn.CurriedApplication(
+          Absyn.ApplicationTerm(
+            Absyn.CurriedApplication(Absyn.ConstantTerm(c,_,_),l),_), r),_)
+          when c = Pervasive.implConstant ->
+      aux' uvars ((aux [] [] l) :: tms) r 
+    | _ ->
+      List.fold_left makeAll (List.fold_left (fun x y -> makeImp y x) t tms) uvars      
+  in
+  aux [] [] tm
+  
 module type Translator =
 sig
   (** Translate the given LF signature into an LP signature. *)
@@ -355,6 +412,7 @@ struct
                     Some(c) ->
                       let aterm = Absyn.ConstantTerm(c, [], Errormsg.none) in
                       let clause = (encode_neg metadata constants Table.empty [] typ) aterm in
+                      let clause = rev_imp clause in
                       List.append clauselst
                                   [if (!linearization)
                                    then Linearize.linearize clause
@@ -613,6 +671,7 @@ struct
         let c = Option.get (Table.find s constants) in
         let aterm = Absyn.ConstantTerm(c, [], Errormsg.none) in
         let clause = (encode_neg metadata kinds constants Table.empty [] typ) aterm in
+        let clause = rev_imp clause in
         List.append clauselst
                     [if (!linearization)
                      then Linearize.linearize clause
